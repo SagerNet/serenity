@@ -1,0 +1,24 @@
+{
+  "log": {
+    "level": "info"
+  },
+  "listen": "[::]:443",
+  "tls": {
+    "enabled": true,
+    "acme": {
+      "email": "me@example.org",
+      "domain": "example.org"
+    }
+  },
+  "subscriptions": [],
+  "profiles": [
+    {
+      "name": "default",
+      "template": "default",
+      "authorization": {
+        "username": "hello",
+        "password": "world"
+      }
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+[Unit]
+Description=serenity service
+Documentation=https://sing-box.sagernet.org
+After=network.target nss-lookup.target
+
+[Service]
+ExecStart=/usr/bin/serenity run -c /etc/serenity/config.json
+Restart=on-failure
+RestartSec=10s
+LimitNOFILE=infinity
+
+[Install]
+WantedBy=multi-user.target

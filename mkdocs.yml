@@ -1,0 +1,95 @@
+site_name: serenity
+site_author: nekohasekai
+repo_url: https://github.com/SagerNet/serenity
+repo_name: SagerNet/serenity
+copyright: Copyright &copy; 2022 nekohasekai
+site_description: The configuration generator for sing-box.
+remote_branch: docs
+edit_uri: ""
+theme:
+  name: material
+  logo: assets/icon.svg
+  favicon: assets/icon.svg
+  palette:
+    - scheme: default
+      primary: white
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: black
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    #    - navigation.instant
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.indexes
+    - navigation.expand
+    - navigation.sections
+    - header.autohide
+nav:
+  - Getting Started:
+      - index.md
+      - Support: support.md
+      - Change Log: changelog.md
+  - Installation:
+      - From source: installation/from-source.md
+  - Configuration:
+      - configuration/index.md
+      - Subscription: configuration/subscription.md
+      - Profile: configuration/profile.md
+  - Examples:
+      - examples/index.md
+      - Linux Server Installation: examples/linux-server-installation.md
+markdown_extensions:
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.details
+  - pymdownx.critic
+  - pymdownx.caret
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.tilde
+  - admonition
+  - attr_list
+  - md_in_html
+  - footnotes
+  - def_list
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/SagerNet/sing-box
+  generator: false
+plugins:
+  - i18n:
+      default_language: en
+      languages:
+        en:
+          name: English
+          build: false
+        zh:
+          name: 简体中文
+      material_alternate: true
+      nav_translations:
+        zh:
+          Getting Started: 开始
+          Support: 支持
+          Change Log: 更新日志
+
+          Installation: 安装
+          From source: 从源代码
+
+          Configuration: 配置
+          Log: 日志
+
+          Examples: 示例
+          Linux Server Installation: Linux 服务器安装

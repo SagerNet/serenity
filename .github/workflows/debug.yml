@@ -1,0 +1,115 @@
+name: Debug build
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '**.md'
+      - '.github/**'
+      - '!.github/workflows/debug.yml'
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Debug build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Get latest go version
+        id: version
+        run: |
+          echo go_version=$(curl -s https://raw.githubusercontent.com/actions/go-versions/main/versions-manifest.json | grep -oE '"version": "[0-9]{1}.[0-9]{1,}(.[0-9]{1,})?"' | head -1 | cut -d':' -f2 | sed 's/ //g; s/"//g') >> $GITHUB_OUTPUT
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: ${{ steps.version.outputs.go_version }}
+      - name: Cache go module
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/go/pkg/mod
+          key: go-${{ hashFiles('**/go.sum') }}
+      - name: Add cache to Go proxy
+        run: |
+          version=`git rev-parse HEAD`
+          mkdir build
+          pushd build
+          go mod init build
+          go get -v github.com/sagernet/serenity@$version
+          popd
+        continue-on-error: true
+      - name: Run Test
+        run: |
+          go test -v ./...
+  cross:
+    strategy:
+      matrix:
+        include:
+          - name: windows-amd64
+            goos: windows
+            goarch: amd64
+            goamd64: v1
+          - name: windows-386
+            goos: windows
+            goarch: 386
+          - name: linux-amd64
+            goos: linux
+            goarch: amd64
+            goamd64: v1
+          - name: linux-386
+            goos: linux
+            goarch: 386
+          - name: linux-arm64
+            goos: linux
+            goarch: arm64
+          - name: darwin-amd64
+            goos: darwin
+            goarch: amd64
+            goamd64: v1
+          - name: darwin-arm64
+            goos: darwin
+            goarch: arm64
+
+      fail-fast: false
+    runs-on: ubuntu-latest
+    env:
+      GOOS: ${{ matrix.goos }}
+      GOARCH: ${{ matrix.goarch }}
+      GOAMD64: ${{ matrix.goamd64 }}
+      GOARM: ${{ matrix.goarm }}
+      GOMIPS: ${{ matrix.gomips }}
+      CGO_ENABLED: 0
+      TAGS: with_clash_api,with_quic
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Get latest go version
+        id: version
+        run: |
+          echo go_version=$(curl -s https://raw.githubusercontent.com/actions/go-versions/main/versions-manifest.json | grep -oE '"version": "[0-9]{1}.[0-9]{1,}(.[0-9]{1,})?"' | head -1 | cut -d':' -f2 | sed 's/ //g; s/"//g') >> $GITHUB_OUTPUT
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: ${{ steps.version.outputs.go_version }}
+      - name: Cache go module
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/go/pkg/mod
+          key: go-${{ hashFiles('**/go.sum') }}
+      - name: Build
+        id: build
+        run: make
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: serenity-${{ matrix.name }}
+          path: serenity*

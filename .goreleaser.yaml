@@ -1,0 +1,75 @@
+project_name: serenity
+builds:
+  - id: main
+    main: ./cmd/serenity
+    flags:
+      - -v
+      - -trimpath
+    asmflags:
+      - all=-trimpath={{.Env.GOPATH}}
+    gcflags:
+      - all=-trimpath={{.Env.GOPATH}}
+    ldflags:
+      - -s -w -buildid=
+    tags:
+      - with_acme
+    env:
+      - CGO_ENABLED=0
+    targets:
+      - linux_amd64_v1
+      - linux_386
+      - linux_arm64
+      - windows_amd64_v1
+      - windows_386
+      - darwin_amd64_v1
+      - darwin_arm64
+    mod_timestamp: '{{ .CommitTimestamp }}'
+snapshot:
+  name_template: "{{ .Version }}.{{ .ShortCommit }}"
+archives:
+  - id: archive
+    format: tar.gz
+    format_overrides:
+      - goos: windows
+        format: zip
+    wrap_in_directory: true
+    files:
+      - LICENSE
+    name_template: '{{ .ProjectName }}-{{ .Version }}-{{ .Os }}-{{ .Arch }}{{ with .Arm }}v{{ . }}{{ end }}{{ with .Mips }}_{{ . }}{{ end }}{{ if not (eq .Amd64 "v1") }}{{ .Amd64 }}{{ end }}'
+nfpms:
+  - id: package
+    package_name: serenity
+    file_name_template: '{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ with .Arm }}v{{ . }}{{ end }}{{ with .Mips }}_{{ . }}{{ end }}{{ if not (eq .Amd64 "v1") }}{{ .Amd64 }}{{ end }}'
+    vendor: sagernet
+    homepage: https://serenity.sagernet.org/
+    maintainer: nekohasekai <contact-git@sekai.icu>
+    description: The sing-box configuration generator
+    license: GPLv3 or later
+    formats:
+      - deb
+      - rpm
+    priority: extra
+    contents:
+      - src: release/config/config.json
+        dst: /etc/serenity/config.json
+        type: config
+      - src: release/config/serenity.service
+        dst: /etc/systemd/system/serenity.service
+      - src: LICENSE
+        dst: /usr/share/licenses/serenity/LICENSE
+source:
+  enabled: false
+  name_template: '{{ .ProjectName }}-{{ .Version }}.source'
+  prefix_template: '{{ .ProjectName }}-{{ .Version }}/'
+checksum:
+  disable: true
+  name_template: '{{ .ProjectName }}-{{ .Version }}.checksum'
+signs:
+  - artifacts: checksum
+release:
+  github:
+    owner: SagerNet
+    name: serenity
+  name_template: '{{ if .IsSnapshot }}{{ nightly }}{{ else }}{{ .Version }}{{ end }}'
+  draft: true
+  mode: replace
