@@ -1,6 +1,7 @@
 package serenity
 
 import (
+	N "github.com/sagernet/sing/common/network"
 	"net/netip"
 
 	"github.com/sagernet/sing-box/common/badversion"
@@ -78,6 +79,10 @@ func DefaultTemplate(platform string, version *badversion.Version) *Profile {
 			Type: C.TypeDirect,
 		},
 		{
+			Tag:  "block",
+			Type: C.TypeBlock,
+		},
+		{
 			Tag:  "dns",
 			Type: C.TypeDNS,
 		},
@@ -105,6 +110,21 @@ func DefaultTemplate(platform string, version *badversion.Version) *Profile {
 					Geosite:      []string{"cn"},
 					DomainSuffix: []string{"download.jetbrains.com"},
 					Outbound:     "direct",
+				},
+			},
+			{
+				Type: C.RuleTypeDefault,
+				DefaultOptions: option.DefaultRule{
+					Protocol: []string{"stun"},
+					Outbound: "block",
+				},
+			},
+			{
+				Type: C.RuleTypeDefault,
+				DefaultOptions: option.DefaultRule{
+					Network: []string{N.NetworkUDP},
+					Port:    []uint16{443},
+					Outbound: "block",
 				},
 			},
 		},
