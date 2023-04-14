@@ -1,13 +1,13 @@
 package serenity
 
 import (
-	N "github.com/sagernet/sing/common/network"
 	"net/netip"
 
 	"github.com/sagernet/sing-box/common/badversion"
 	C "github.com/sagernet/sing-box/constant"
 	"github.com/sagernet/sing-box/option"
 	"github.com/sagernet/sing-dns"
+	N "github.com/sagernet/sing/common/network"
 )
 
 func DefaultTemplate(platform string, version *badversion.Version) *Profile {
@@ -99,17 +99,31 @@ func DefaultTemplate(platform string, version *badversion.Version) *Profile {
 			{
 				Type: C.RuleTypeDefault,
 				DefaultOptions: option.DefaultRule{
-					ClashMode: "direct",
-					Outbound:  "direct",
+					Network:  []string{N.NetworkUDP},
+					Port:     []uint16{53},
+					Outbound: "dns",
 				},
 			},
 			{
 				Type: C.RuleTypeDefault,
 				DefaultOptions: option.DefaultRule{
-					GeoIP:        []string{"cn", "private"},
-					Geosite:      []string{"cn"},
-					DomainSuffix: []string{"download.jetbrains.com"},
-					Outbound:     "direct",
+					Port:     []uint16{853},
+					Outbound: "block",
+				},
+			},
+			{
+				Type: C.RuleTypeDefault,
+				DefaultOptions: option.DefaultRule{
+					Network:  []string{N.NetworkUDP},
+					Port:     []uint16{443},
+					Outbound: "block",
+				},
+			},
+			{
+				Type: C.RuleTypeDefault,
+				DefaultOptions: option.DefaultRule{
+					ClashMode: "direct",
+					Outbound:  "direct",
 				},
 			},
 			{
@@ -122,9 +136,10 @@ func DefaultTemplate(platform string, version *badversion.Version) *Profile {
 			{
 				Type: C.RuleTypeDefault,
 				DefaultOptions: option.DefaultRule{
-					Network: []string{N.NetworkUDP},
-					Port:    []uint16{443},
-					Outbound: "block",
+					GeoIP:        []string{"cn", "private"},
+					Geosite:      []string{"cn"},
+					DomainSuffix: []string{"download.jetbrains.com"},
+					Outbound:     "direct",
 				},
 			},
 		},
@@ -137,7 +152,7 @@ func DefaultTemplate(platform string, version *badversion.Version) *Profile {
 			StoreSelected:      true,
 		},
 	}
-	if version != nil || version.After(badversion.Parse("1.3-beta1")) {
+	if version == nil || version.After(badversion.Parse("1.3-beta1")) {
 		options.Experimental.ClashAPI.ExternalUI = "clash-dashboard"
 	}
 	return &Profile{
