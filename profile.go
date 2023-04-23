@@ -85,6 +85,7 @@ func (p *Profile) GenerateConfig(platform string, version *badversion.Version, o
 	}
 	if version != nil && badversion.Parse("1.3-beta9").After(*version) {
 		outbounds = common.Filter(outbounds, filterH2Mux)
+		outbounds = common.Filter(outbounds, filterMuxPadding)
 	}
 	groupOutbounds := common.Map(common.Filter(options.Outbounds, func(it option.Outbound) bool {
 		return common.Contains(groupTag, it.Tag)

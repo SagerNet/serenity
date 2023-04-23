@@ -12,3 +12,11 @@ func filterH2Mux(outbound option.Outbound) bool {
 		common.PtrValueOrDefault(outbound.TrojanOptions.Multiplex).Protocol,
 	}, "h2mux")
 }
+
+func filterMuxPadding(outbound option.Outbound) bool {
+	return !common.Contains([]bool{
+		common.PtrValueOrDefault(outbound.ShadowsocksOptions.MultiplexOptions).Padding,
+		common.PtrValueOrDefault(outbound.VMessOptions.Multiplex).Padding,
+		common.PtrValueOrDefault(outbound.TrojanOptions.Multiplex).Padding,
+	}, true)
+}

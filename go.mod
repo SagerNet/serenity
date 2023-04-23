@@ -6,7 +6,7 @@ require (
 	github.com/Dreamacro/clash v1.15.0
 	github.com/go-chi/chi/v5 v5.0.8
 	github.com/sagernet/sing v0.2.4
-	github.com/sagernet/sing-box v1.2.7-0.20230422122500-26b7a5e260bc
+	github.com/sagernet/sing-box v1.2.7-0.20230423053127-d92e7730bcac
 	github.com/sagernet/sing-dns v0.1.5-0.20230415085626-111ecf799dfc
 	github.com/spf13/cobra v1.7.0
 	golang.org/x/net v0.9.0
