@@ -25,6 +25,7 @@ type Profile struct {
 	filterSubscription []string
 	filterOutbound     []string
 	authorization      *UserOptions
+	debug              bool
 }
 
 func NewProfile(options ProfileOptions) (*Profile, error) {
@@ -51,6 +52,7 @@ func NewProfile(options ProfileOptions) (*Profile, error) {
 		filterSubscription: options.FilterSubscription,
 		filterOutbound:     options.FilterOutbound,
 		authorization:      options.Authorization,
+		debug:              options.Debug,
 	}, nil
 }
 
@@ -64,7 +66,7 @@ func (p *Profile) GenerateConfig(platform string, version *badversion.Version, o
 	var template *Profile
 	switch p.template {
 	case "default":
-		template = DefaultTemplate(platform, version)
+		template = DefaultTemplate(platform, version, p.debug)
 	}
 	if template != nil {
 		options, _ = badjsonmerge.MergeOptions(options, template.options)

@@ -52,6 +52,7 @@ type ProfileOptions struct {
 	FilterSubscription option.Listable[string] `json:"filter_subscription,omitempty"`
 	FilterOutbound     option.Listable[string] `json:"filter_outbound,omitempty"`
 	Authorization      *UserOptions            `json:"authorization,omitempty"`
+	Debug              bool                    `json:"debug,omitempty"`
 }
 
 type Options _Options

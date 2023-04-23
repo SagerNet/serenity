@@ -10,7 +10,7 @@ import (
 	N "github.com/sagernet/sing/common/network"
 )
 
-func DefaultTemplate(platform string, version *badversion.Version) *Profile {
+func DefaultTemplate(platform string, version *badversion.Version, debug bool) *Profile {
 	var options option.Options
 	options.Log = &option.LogOptions{
 		Level: "info",
@@ -151,6 +151,11 @@ func DefaultTemplate(platform string, version *badversion.Version) *Profile {
 			ExternalController: "127.0.0.1:9090",
 			StoreSelected:      true,
 		},
+	}
+	if debug && (version == nil || version.After(badversion.Parse("1.3-beta8"))) {
+		options.Experimental.Debug = &option.DebugOptions{
+			Listen: "0.0.0.0:8965",
+		}
 	}
 	if version == nil || version.After(badversion.Parse("1.3-beta1")) {
 		options.Experimental.ClashAPI.ExternalUI = "clash-dashboard"
