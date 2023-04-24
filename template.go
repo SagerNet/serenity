@@ -137,7 +137,7 @@ func DefaultTemplate(platform string, version *badversion.Version, debug bool) *
 				Type: C.RuleTypeDefault,
 				DefaultOptions: option.DefaultRule{
 					GeoIP:        []string{"cn", "private"},
-					Geosite:      []string{"cn"},
+					Geosite:      []string{"cn", "apple@cn"},
 					DomainSuffix: []string{"download.jetbrains.com"},
 					Outbound:     "direct",
 				},
