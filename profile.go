@@ -66,7 +66,7 @@ func (p *Profile) GenerateConfig(platform string, version *badversion.Version, o
 	var template *Profile
 	switch p.template {
 	case "default":
-		template = DefaultTemplate(platform, version, p.debug)
+		template = DefaultTemplate(p.name, platform, version, p.debug)
 	}
 	if template != nil {
 		options, _ = badjsonmerge.MergeOptions(options, template.options)
