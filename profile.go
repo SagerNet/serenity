@@ -135,7 +135,7 @@ func (p *Profile) GenerateConfig(platform string, version *badversion.Version, o
 				switch groupOutbound.Type {
 				case C.TypeSelector:
 					groupOutbound.SelectorOptions.Outbounds = append(groupOutbound.SelectorOptions.Outbounds, subscriptionSelector.Tag)
-					if groupOutbound.SelectorOptions.Default == "" {
+					if groupOutbound.SelectorOptions.Default == "" && !subscription.GenerateURLTest {
 						groupOutbound.SelectorOptions.Default = subscriptionSelector.Tag
 					}
 				case C.TypeURLTest:
