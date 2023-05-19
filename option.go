@@ -48,6 +48,7 @@ type ProfileOptions struct {
 	Template           string                  `json:"template,omitempty"`
 	Config             option.Listable[string] `json:"config,omitempty"`
 	ConfigDirectory    option.Listable[string] `json:"config_directory,omitempty"`
+	Options            *option.Options         `json:"options,omitempty"`
 	GroupTag           option.Listable[string] `json:"group_tag,omitempty"`
 	FilterSubscription option.Listable[string] `json:"filter_subscription,omitempty"`
 	FilterOutbound     option.Listable[string] `json:"filter_outbound,omitempty"`

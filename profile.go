@@ -36,11 +36,11 @@ func NewProfile(options ProfileOptions) (*Profile, error) {
 			return nil, E.New("unknown template: ", options.Template)
 		}
 	} else {
-		if len(options.Config) == 0 && len(options.ConfigDirectory) == 0 {
+		if len(options.Config) == 0 && len(options.ConfigDirectory) == 0 && options.Options == nil {
 			return nil, E.New("missing configuration")
 		}
 	}
-	mergedConfig, err := readConfigAndMerge(options.Config, options.ConfigDirectory)
+	mergedConfig, err := readConfigAndMerge(options.Options, options.Config, options.ConfigDirectory)
 	if err != nil {
 		return nil, err
 	}
@@ -250,10 +250,13 @@ func readConfig(configPath []string, configDirectory []string) ([]*profileOption
 	return optionsList, nil
 }
 
-func readConfigAndMerge(configPath []string, configDirectory []string) (option.Options, error) {
+func readConfigAndMerge(options *option.Options, configPath []string, configDirectory []string) (option.Options, error) {
 	optionsList, err := readConfig(configPath, configDirectory)
 	if err != nil {
 		return option.Options{}, err
+	}
+	if options != nil {
+		optionsList = append([]*profileOptionsEntry{{path: "options", options: *options}}, optionsList...)
 	}
 	if len(optionsList) == 1 {
 		return optionsList[0].options, nil
