@@ -43,6 +43,7 @@ func ParseClashSubscription(content string) ([]Server, error) {
 					Server:     ssOption.Server,
 					ServerPort: uint16(ssOption.Port),
 				},
+				Password:      ssOption.Password,
 				Method:        clashShadowsocksCipher(ssOption.Cipher),
 				Plugin:        clashPluginName(ssOption.Plugin),
 				PluginOptions: clashPluginOptions(ssOption.Plugin, ssOption.PluginOpts),
