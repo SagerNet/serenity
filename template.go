@@ -138,7 +138,7 @@ func DefaultTemplate(profileName string, platform string, version *badversion.Ve
 				DefaultOptions: option.DefaultRule{
 					GeoIP:        []string{"cn", "private"},
 					Geosite:      []string{"cn", "apple@cn"},
-					DomainSuffix: []string{"download.jetbrains.com"},
+					DomainSuffix: []string{"download.jetbrains.com", "icloud.com", "cloud-content.com", "cdn-apple.com"},
 					Outbound:     "direct",
 				},
 			},
@@ -162,7 +162,6 @@ func DefaultTemplate(profileName string, platform string, version *badversion.Ve
 	}
 	if version == nil || version.After(badversion.Parse("1.3-beta11")) {
 		options.Experimental.ClashAPI.CacheID = profileName
-
 	}
 	return &Profile{
 		options:  options,
