@@ -133,12 +133,21 @@ func DefaultTemplate(profileName string, platform string, version *Version, debu
 				},
 			},
 			{
-				Type: C.RuleTypeDefault,
-				DefaultOptions: option.DefaultRule{
-					GeoIP:        []string{"cn", "private"},
-					Geosite:      []string{"cn", "apple@cn"},
-					DomainSuffix: []string{"download.jetbrains.com", "icloud.com", "cloud-content.com", "cdn-apple.com"},
-					Outbound:     "direct",
+				Type: C.RuleTypeLogical,
+				LogicalOptions: option.LogicalRule{
+					Mode: "and",
+					Rules: []option.DefaultRule{
+						{
+							Geosite:      []string{"google@cn"},
+							Invert: true,
+						},
+						{
+							GeoIP:        []string{"cn", "private"},
+							Geosite:      []string{"cn", "apple@cn"},
+							DomainSuffix: []string{"download.jetbrains.com", "icloud.com", "cloud-content.com", "cdn-apple.com"},
+						},
+					},
+					Outbound: "direct",
 				},
 			},
 		},
