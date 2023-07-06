@@ -13,7 +13,6 @@ import (
 
 	"github.com/sagernet/sing-box"
 	"github.com/sagernet/sing-box/adapter"
-	"github.com/sagernet/sing-box/common/badversion"
 	"github.com/sagernet/sing-box/common/tls"
 	"github.com/sagernet/sing-box/log"
 	"github.com/sagernet/sing-box/option"
@@ -128,6 +127,8 @@ func (s *Server) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 		platform = PlatformAndroid
 	} else if strings.HasPrefix(userAgent, "SFI") {
 		platform = PlatformiOS
+	} else if strings.HasPrefix(userAgent, "SFM") {
+		platform = PlatformiOS
 	}
 	var versionName string
 	if strings.Contains(userAgent, "sing-box ") {
@@ -135,9 +136,9 @@ func (s *Server) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 		versionName = strings.Split(versionName, " ")[0]
 		versionName = strings.Split(versionName, ")")[0]
 	}
-	var versionPtr *badversion.Version
+	var versionPtr *Version
 	if versionName != "" {
-		version := badversion.Parse(versionName)
+		version := ParseVersion(versionName)
 		versionPtr = &version
 	}
 	writer.Header().Set("Content-Type", "application/json; charset=utf-8")

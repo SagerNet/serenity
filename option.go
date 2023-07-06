@@ -14,6 +14,7 @@ import (
 const (
 	PlatformAndroid = "android"
 	PlatformiOS     = "ios"
+	PlatformMacOS   = "macos"
 )
 
 type _Options struct {

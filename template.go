@@ -3,14 +3,13 @@ package serenity
 import (
 	"net/netip"
 
-	"github.com/sagernet/sing-box/common/badversion"
 	C "github.com/sagernet/sing-box/constant"
 	"github.com/sagernet/sing-box/option"
 	"github.com/sagernet/sing-dns"
 	N "github.com/sagernet/sing/common/network"
 )
 
-func DefaultTemplate(profileName string, platform string, version *badversion.Version, debug bool) *Profile {
+func DefaultTemplate(profileName string, platform string, version *Version, debug bool) *Profile {
 	var options option.Options
 	options.Log = &option.LogOptions{
 		Level: "info",
@@ -152,15 +151,15 @@ func DefaultTemplate(profileName string, platform string, version *badversion.Ve
 			StoreSelected:      true,
 		},
 	}
-	if debug && (version == nil || version.After(badversion.Parse("1.3-beta8"))) {
+	if debug && (version == nil || version.After(ParseVersion("1.3-beta8"))) {
 		options.Experimental.Debug = &option.DebugOptions{
 			Listen: "0.0.0.0:8965",
 		}
 	}
-	if version == nil || version.After(badversion.Parse("1.3-beta1")) {
+	if version == nil || version.After(ParseVersion("1.3-beta1")) {
 		options.Experimental.ClashAPI.ExternalUI = "clash-dashboard"
 	}
-	if version == nil || version.After(badversion.Parse("1.3-beta11")) {
+	if version == nil || version.After(ParseVersion("1.3-beta11")) {
 		options.Experimental.ClashAPI.CacheID = profileName
 	}
 	return &Profile{

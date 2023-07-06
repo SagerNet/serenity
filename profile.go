@@ -10,7 +10,6 @@ import (
 	"strings"
 
 	"github.com/sagernet/sing-box/common/badjsonmerge"
-	"github.com/sagernet/sing-box/common/badversion"
 	C "github.com/sagernet/sing-box/constant"
 	"github.com/sagernet/sing-box/option"
 	"github.com/sagernet/sing/common"
@@ -60,7 +59,7 @@ func (p *Profile) Name() string {
 	return p.name
 }
 
-func (p *Profile) GenerateConfig(platform string, version *badversion.Version, outbounds []option.Outbound, subscriptions []*SubscriptionOptions) option.Options {
+func (p *Profile) GenerateConfig(platform string, version *Version, outbounds []option.Outbound, subscriptions []*SubscriptionOptions) option.Options {
 	options := p.options
 	groupTag := p.groupTag
 	var template *Profile
@@ -83,7 +82,7 @@ func (p *Profile) GenerateConfig(platform string, version *badversion.Version, o
 			return common.Contains(p.filterSubscription, it.Name)
 		})
 	}
-	if version != nil && badversion.Parse("1.3-beta9").After(*version) {
+	if version != nil && ParseVersion("1.3-beta9").After(*version) {
 		outbounds = common.Filter(outbounds, filterH2Mux)
 		outbounds = common.Filter(outbounds, filterMuxPadding)
 	}
