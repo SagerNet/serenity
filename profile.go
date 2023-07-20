@@ -30,7 +30,7 @@ type Profile struct {
 func NewProfile(options ProfileOptions) (*Profile, error) {
 	if options.Template != "" {
 		switch options.Template {
-		case "default":
+		case "default", "empty":
 		default:
 			return nil, E.New("unknown template: ", options.Template)
 		}
@@ -66,6 +66,8 @@ func (p *Profile) GenerateConfig(platform string, version *Version, outbounds []
 	switch p.template {
 	case "default":
 		template = DefaultTemplate(p.name, platform, version, p.debug)
+	case "empty":
+		template = EmptyTemplate(p.name, platform, version, p.debug)
 	}
 	if template != nil {
 		options, _ = badjsonmerge.MergeOptions(options, template.options)

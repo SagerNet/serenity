@@ -9,7 +9,7 @@ import (
 	N "github.com/sagernet/sing/common/network"
 )
 
-func DefaultTemplate(profileName string, platform string, version *Version, debug bool) *Profile {
+func EmptyTemplate(profileName string, platform string, version *Version, debug bool) *Profile {
 	var options option.Options
 	options.Log = &option.LogOptions{
 		Level: "info",
@@ -22,34 +22,6 @@ func DefaultTemplate(profileName string, platform string, version *Version, debu
 			{
 				Tag:     "google",
 				Address: "tls://8.8.8.8",
-			},
-			{
-				Tag:     "local",
-				Address: "114.114.114.114",
-				Detour:  "direct",
-			},
-		},
-		Rules: []option.DNSRule{
-			{
-				Type: C.RuleTypeDefault,
-				DefaultOptions: option.DefaultDNSRule{
-					ClashMode: "direct",
-					Server:    "local",
-				},
-			},
-			{
-				Type: C.RuleTypeDefault,
-				DefaultOptions: option.DefaultDNSRule{
-					Geosite: []string{"cn"},
-					Server:  "local",
-				},
-			},
-			{
-				Type: C.RuleTypeDefault,
-				DefaultOptions: option.DefaultDNSRule{
-					Outbound: []string{"any"},
-					Server:   "local",
-				},
 			},
 		},
 	}
@@ -74,14 +46,6 @@ func DefaultTemplate(profileName string, platform string, version *Version, debu
 			Type: C.TypeSelector,
 		},
 		{
-			Tag:  "direct",
-			Type: C.TypeDirect,
-		},
-		{
-			Tag:  "block",
-			Type: C.TypeBlock,
-		},
-		{
 			Tag:  "dns",
 			Type: C.TypeDNS,
 		},
@@ -89,65 +53,19 @@ func DefaultTemplate(profileName string, platform string, version *Version, debu
 	options.Route = &option.RouteOptions{
 		Rules: []option.Rule{
 			{
-				Type: C.RuleTypeDefault,
-				DefaultOptions: option.DefaultRule{
-					Protocol: []string{"dns"},
-					Outbound: "dns",
-				},
-			},
-			{
-				Type: C.RuleTypeDefault,
-				DefaultOptions: option.DefaultRule{
-					Network:  []string{N.NetworkUDP},
-					Port:     []uint16{53},
-					Outbound: "dns",
-				},
-			},
-			{
-				Type: C.RuleTypeDefault,
-				DefaultOptions: option.DefaultRule{
-					Port:     []uint16{853},
-					Outbound: "block",
-				},
-			},
-			{
-				Type: C.RuleTypeDefault,
-				DefaultOptions: option.DefaultRule{
-					Network:  []string{N.NetworkUDP},
-					Port:     []uint16{443},
-					Outbound: "block",
-				},
-			},
-			{
-				Type: C.RuleTypeDefault,
-				DefaultOptions: option.DefaultRule{
-					ClashMode: "direct",
-					Outbound:  "direct",
-				},
-			},
-			{
-				Type: C.RuleTypeDefault,
-				DefaultOptions: option.DefaultRule{
-					Protocol: []string{"stun"},
-					Outbound: "block",
-				},
-			},
-			{
 				Type: C.RuleTypeLogical,
 				LogicalOptions: option.LogicalRule{
-					Mode: "and",
+					Mode: "or",
 					Rules: []option.DefaultRule{
 						{
-							Geosite: []string{"google@cn"},
-							Invert:  true,
+							Protocol: []string{"dns"},
 						},
 						{
-							GeoIP:        []string{"cn", "private"},
-							Geosite:      []string{"cn", "apple@cn"},
-							DomainSuffix: []string{"download.jetbrains.com", "icloud.com", "cloud-content.com", "cdn-apple.com"},
+							Network:  []string{N.NetworkUDP},
+							Port:     []uint16{53},
 						},
 					},
-					Outbound: "direct",
+					Outbound: "dns",
 				},
 			},
 		},
