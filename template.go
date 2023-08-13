@@ -40,6 +40,13 @@ func DefaultTemplate(profileName string, platform string, version *Version, debu
 			{
 				Type: C.RuleTypeDefault,
 				DefaultOptions: option.DefaultDNSRule{
+					ClashMode: "global",
+					Server:    "google",
+				},
+			},
+			{
+				Type: C.RuleTypeDefault,
+				DefaultOptions: option.DefaultDNSRule{
 					Geosite: []string{"cn"},
 					Server:  "local",
 				},
@@ -128,6 +135,13 @@ func DefaultTemplate(profileName string, platform string, version *Version, debu
 			{
 				Type: C.RuleTypeDefault,
 				DefaultOptions: option.DefaultRule{
+					ClashMode: "global",
+					Outbound:  "default",
+				},
+			},
+			{
+				Type: C.RuleTypeDefault,
+				DefaultOptions: option.DefaultRule{
 					Protocol: []string{"stun"},
 					Outbound: "block",
 				},
@@ -170,6 +184,30 @@ func DefaultTemplate(profileName string, platform string, version *Version, debu
 	}
 	if version == nil || version.After(ParseVersion("1.3-beta11")) {
 		options.Experimental.ClashAPI.CacheID = profileName
+	}
+	if version == nil || version.After(ParseVersion("1.4.0-beta.3")) {
+		options.Inbounds[0].TunOptions.Platform = &option.TunPlatformOptions{
+			HTTPProxy: &option.HTTPProxyOptions{
+				Enabled: true,
+				ServerOptions: option.ServerOptions{
+					Server:     "127.0.0.1",
+					ServerPort: 8100,
+				},
+			},
+		}
+		options.Inbounds = append(options.Inbounds, option.Inbound{
+			Type: C.TypeHTTP,
+			HTTPOptions: option.HTTPMixedInboundOptions{
+				ListenOptions: option.ListenOptions{
+					Listen:     option.NewListenAddress(netip.AddrFrom4([4]byte{127, 0, 0, 1})),
+					ListenPort: 8100,
+					InboundOptions: option.InboundOptions{
+						SniffEnabled:   true,
+						DomainStrategy: option.DomainStrategy(dns.DomainStrategyUseIPv4),
+					},
+				},
+			},
+		})
 	}
 	return &Profile{
 		options:  options,
