@@ -33,14 +33,21 @@ func DefaultTemplate(profileName string, platform string, version *Version, debu
 			{
 				Type: C.RuleTypeDefault,
 				DefaultOptions: option.DefaultDNSRule{
-					ClashMode: "direct",
+					Outbound: []string{"any"},
+					Server:   "local",
+				},
+			},
+			{
+				Type: C.RuleTypeDefault,
+				DefaultOptions: option.DefaultDNSRule{
+					ClashMode: "Direct",
 					Server:    "local",
 				},
 			},
 			{
 				Type: C.RuleTypeDefault,
 				DefaultOptions: option.DefaultDNSRule{
-					ClashMode: "global",
+					ClashMode: "Global",
 					Server:    "google",
 				},
 			},
@@ -49,13 +56,6 @@ func DefaultTemplate(profileName string, platform string, version *Version, debu
 				DefaultOptions: option.DefaultDNSRule{
 					Geosite: []string{"cn"},
 					Server:  "local",
-				},
-			},
-			{
-				Type: C.RuleTypeDefault,
-				DefaultOptions: option.DefaultDNSRule{
-					Outbound: []string{"any"},
-					Server:   "local",
 				},
 			},
 		},
@@ -128,14 +128,14 @@ func DefaultTemplate(profileName string, platform string, version *Version, debu
 			{
 				Type: C.RuleTypeDefault,
 				DefaultOptions: option.DefaultRule{
-					ClashMode: "direct",
+					ClashMode: "Direct",
 					Outbound:  "direct",
 				},
 			},
 			{
 				Type: C.RuleTypeDefault,
 				DefaultOptions: option.DefaultRule{
-					ClashMode: "global",
+					ClashMode: "Global",
 					Outbound:  "default",
 				},
 			},
@@ -208,6 +208,9 @@ func DefaultTemplate(profileName string, platform string, version *Version, debu
 				},
 			},
 		})
+	}
+	if version == nil || version.After(ParseVersion("1.4.0-rc.2")) {
+		options.Experimental.ClashAPI.StoreMode = true
 	}
 	return &Profile{
 		options:  options,

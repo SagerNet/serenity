@@ -81,7 +81,7 @@ func (c *SubscriptionClient) Update() error {
 	for i, subscription := range c.subscriptions {
 		err := c.update(httpClient, subscription)
 		if err != nil {
-			return E.Cause(err, "update subscription[", i, "]: ", subscription.URL)
+			c.logger.Error(E.Cause(err, "update subscription[", i, "]: ", subscription.URL))
 		}
 		c.logger.Info("updated subscription[", i, "]: ", len(subscription.ServerCache), " servers")
 	}

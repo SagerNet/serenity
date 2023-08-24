@@ -61,8 +61,8 @@ func EmptyTemplate(profileName string, platform string, version *Version, debug 
 							Protocol: []string{"dns"},
 						},
 						{
-							Network:  []string{N.NetworkUDP},
-							Port:     []uint16{53},
+							Network: []string{N.NetworkUDP},
+							Port:    []uint16{53},
 						},
 					},
 					Outbound: "dns",
@@ -87,7 +87,7 @@ func EmptyTemplate(profileName string, platform string, version *Version, debug 
 		options.Experimental.ClashAPI.ExternalUI = "clash-dashboard"
 	}
 	if version == nil || version.After(ParseVersion("1.3-beta11")) {
-		options.Experimental.ClashAPI.CacheID = profileName
+		options.Experimental.ClashAPI.StoreMode = true
 	}
 	return &Profile{
 		options:  options,

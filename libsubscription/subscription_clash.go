@@ -126,7 +126,7 @@ func ParseClashSubscription(content string) ([]Server, error) {
 				continue
 			}
 
-			outbound.Type = C.TypeSocks
+			outbound.Type = C.TypeSOCKS
 			outbound.SocksOptions = option.SocksOutboundOptions{
 				ServerOptions: option.ServerOptions{
 					Server:     socks5Option.Server,
