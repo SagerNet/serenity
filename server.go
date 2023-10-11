@@ -80,7 +80,7 @@ func NewServer(ctx context.Context, options Options) (*Server, error) {
 	}
 	server.httpServer.Addr = listen
 	if options.TLS != nil {
-		tlsConfig, err := tls.NewServer(ctx, boxService.Router(), logFactory.NewLogger("tls"), common.PtrValueOrDefault(options.TLS))
+		tlsConfig, err := tls.NewServer(ctx, logFactory.NewLogger("tls"), common.PtrValueOrDefault(options.TLS))
 		if err != nil {
 			return nil, err
 		}
