@@ -78,11 +78,31 @@ func (p *Profile) GenerateConfig(platform string, version *Version, outbounds []
 		outbounds = common.Filter(outbounds, func(it option.Outbound) bool {
 			return common.Contains(p.filterOutbound, it.Tag)
 		})
+		newOutbounds := make([]option.Outbound, 0, len(outbounds))
+		for _, outboundTag := range p.filterOutbound {
+			for _, outbound := range outbounds {
+				if outbound.Tag == outboundTag {
+					newOutbounds = append(newOutbounds, outbound)
+					break
+				}
+			}
+		}
+		outbounds = newOutbounds
 	}
 	if len(p.filterSubscription) > 0 {
 		subscriptions = common.Filter(subscriptions, func(it *SubscriptionOptions) bool {
 			return common.Contains(p.filterSubscription, it.Name)
 		})
+		newSubscriptions := make([]*SubscriptionOptions, 0, len(subscriptions))
+		for _, subscriptionName := range p.filterSubscription {
+			for _, subscription := range subscriptions {
+				if subscription.Name == subscriptionName {
+					newSubscriptions = append(newSubscriptions, subscription)
+					break
+				}
+			}
+		}
+		subscriptions = newSubscriptions
 	}
 	if version != nil && ParseVersion("1.3-beta9").After(*version) {
 		outbounds = common.Filter(outbounds, filterH2Mux)
