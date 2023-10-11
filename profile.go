@@ -130,6 +130,18 @@ func (p *Profile) GenerateConfig(platform string, version *Version, outbounds []
 				}
 			}
 		}
+		if subscription.GenerateURLTest {
+			options.Outbounds = append(options.Outbounds, subscriptionURLTest)
+			for _, groupOutbound := range groupOutbounds {
+				switch groupOutbound.Type {
+				case C.TypeSelector:
+					groupOutbound.SelectorOptions.Outbounds = append(groupOutbound.SelectorOptions.Outbounds, subscriptionURLTest.Tag)
+					if groupOutbound.SelectorOptions.Default == "" {
+						groupOutbound.SelectorOptions.Default = subscriptionURLTest.Tag
+					}
+				}
+			}
+		}
 		if subscription.GenerateSelector {
 			options.Outbounds = append(options.Outbounds, subscriptionSelector)
 			for _, groupOutbound := range groupOutbounds {
@@ -141,18 +153,6 @@ func (p *Profile) GenerateConfig(platform string, version *Version, outbounds []
 					}
 				case C.TypeURLTest:
 					groupOutbound.URLTestOptions.Outbounds = append(groupOutbound.URLTestOptions.Outbounds, subscriptionSelector.Tag)
-				}
-			}
-		}
-		if subscription.GenerateURLTest {
-			options.Outbounds = append(options.Outbounds, subscriptionURLTest)
-			for _, groupOutbound := range groupOutbounds {
-				switch groupOutbound.Type {
-				case C.TypeSelector:
-					groupOutbound.SelectorOptions.Outbounds = append(groupOutbound.SelectorOptions.Outbounds, subscriptionURLTest.Tag)
-					if groupOutbound.SelectorOptions.Default == "" {
-						groupOutbound.SelectorOptions.Default = subscriptionURLTest.Tag
-					}
 				}
 			}
 		}
