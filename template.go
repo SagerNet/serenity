@@ -142,6 +142,13 @@ func DefaultTemplate(profileName string, platform string, version *Version, debu
 			{
 				Type: C.RuleTypeDefault,
 				DefaultOptions: option.DefaultRule{
+					GeoIP:    []string{"private"},
+					Outbound: "direct",
+				},
+			},
+			{
+				Type: C.RuleTypeDefault,
+				DefaultOptions: option.DefaultRule{
 					Protocol: []string{"stun"},
 					Outbound: "block",
 				},
@@ -156,7 +163,7 @@ func DefaultTemplate(profileName string, platform string, version *Version, debu
 							Invert:  true,
 						},
 						{
-							GeoIP:        []string{"cn", "private"},
+							GeoIP:        []string{"cn"},
 							Geosite:      []string{"cn", "apple@cn"},
 							DomainSuffix: []string{"download.jetbrains.com", "icloud.com", "cloud-content.com", "cdn-apple.com"},
 						},

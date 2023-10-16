@@ -1,7 +1,6 @@
 package serenity
 
 import (
-	"encoding/base64"
 	"io"
 	"net/http"
 	"os"
@@ -193,17 +192,8 @@ func (p *Profile) CheckBasicAuthorization(request *http.Request) bool {
 	if options == nil || options.Username == "" {
 		return true
 	}
-	header := request.Header.Get("Authorization")
-	basic, encoded, found := strings.Cut(header, " ")
-	if !found || basic != "Basic" {
-		return false
-	}
-	decoded, err := base64.StdEncoding.DecodeString(encoded)
-	if err != nil {
-		return false
-	}
-	username, password, found := strings.Cut(string(decoded), ":")
-	if !found {
+	username, password, ok := request.BasicAuth()
+	if !ok {
 		return false
 	}
 	return username == options.Username && password == options.Password
