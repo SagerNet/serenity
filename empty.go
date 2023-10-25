@@ -53,41 +53,16 @@ func EmptyTemplate(profileName string, platform string, version *Version, debug 
 	options.Route = &option.RouteOptions{
 		Rules: []option.Rule{
 			{
-				Type: C.RuleTypeLogical,
-				LogicalOptions: option.LogicalRule{
-					Mode: "or",
-					Rules: []option.DefaultRule{
-						{
-							Protocol: []string{"dns"},
-						},
-						{
-							Network: []string{N.NetworkUDP},
-							Port:    []uint16{53},
-						},
-					},
+				Type: C.RuleTypeDefault,
+				DefaultOptions: option.DefaultRule{
+					Network:  []string{N.NetworkUDP},
+					Port:     []uint16{53},
 					Outbound: "dns",
 				},
 			},
 		},
 		Final:               "default",
 		AutoDetectInterface: true,
-	}
-	options.Experimental = &option.ExperimentalOptions{
-		ClashAPI: &option.ClashAPIOptions{
-			ExternalController: "127.0.0.1:9090",
-			StoreSelected:      true,
-		},
-	}
-	if debug && (version == nil || version.After(ParseVersion("1.3-beta8"))) {
-		options.Experimental.Debug = &option.DebugOptions{
-			Listen: "0.0.0.0:8965",
-		}
-	}
-	if version == nil || version.After(ParseVersion("1.3-beta1")) {
-		options.Experimental.ClashAPI.ExternalUI = "clash-dashboard"
-	}
-	if version == nil || version.After(ParseVersion("1.3-beta11")) {
-		options.Experimental.ClashAPI.StoreMode = true
 	}
 	return &Profile{
 		options:  options,
