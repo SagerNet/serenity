@@ -52,10 +52,22 @@ func DefaultTemplate(profileName string, platform string, version *Version, debu
 				},
 			},
 			{
-				Type: C.RuleTypeDefault,
-				DefaultOptions: option.DefaultDNSRule{
-					Geosite: []string{"cn"},
-					Server:  "local",
+				Type: C.RuleTypeLogical,
+				LogicalOptions: option.LogicalDNSRule{
+					Mode: C.LogicalTypeAnd,
+					Rules: []option.DefaultDNSRule{
+						{
+							Geosite: []string{"geolocation-!cn"},
+							Invert:  true,
+						},
+						{
+							Geosite: []string{
+								"cn",
+								"category-companies@cn",
+							},
+						},
+					},
+					Server: "local",
 				},
 			},
 		},
@@ -128,6 +140,13 @@ func DefaultTemplate(profileName string, platform string, version *Version, debu
 			{
 				Type: C.RuleTypeDefault,
 				DefaultOptions: option.DefaultRule{
+					GeoIP:    []string{"private"},
+					Outbound: "direct",
+				},
+			},
+			{
+				Type: C.RuleTypeDefault,
+				DefaultOptions: option.DefaultRule{
 					ClashMode: "Direct",
 					Outbound:  "direct",
 				},
@@ -142,13 +161,6 @@ func DefaultTemplate(profileName string, platform string, version *Version, debu
 			{
 				Type: C.RuleTypeDefault,
 				DefaultOptions: option.DefaultRule{
-					GeoIP:    []string{"private"},
-					Outbound: "direct",
-				},
-			},
-			{
-				Type: C.RuleTypeDefault,
-				DefaultOptions: option.DefaultRule{
 					Protocol: []string{"stun"},
 					Outbound: "block",
 				},
@@ -156,16 +168,16 @@ func DefaultTemplate(profileName string, platform string, version *Version, debu
 			{
 				Type: C.RuleTypeLogical,
 				LogicalOptions: option.LogicalRule{
-					Mode: "and",
+					Mode: C.LogicalTypeAnd,
 					Rules: []option.DefaultRule{
 						{
-							Geosite: []string{"google@cn"},
+							Geosite: []string{"geolocation-!cn"},
 							Invert:  true,
 						},
 						{
 							GeoIP:        []string{"cn"},
-							Geosite:      []string{"cn", "apple@cn"},
-							DomainSuffix: []string{"download.jetbrains.com", "icloud.com", "cloud-content.com", "cdn-apple.com"},
+							Geosite:      []string{"cn", "category-companies@cn"},
+							DomainSuffix: []string{"download.jetbrains.com"},
 						},
 					},
 					Outbound: "direct",
