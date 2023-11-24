@@ -29,7 +29,7 @@ func EmptyTemplate(profileName string, platform string, version *Version, debug 
 		{
 			Type: C.TypeTun,
 			TunOptions: option.TunInboundOptions{
-				Inet4Address:           []option.ListenPrefix{option.ListenPrefix(netip.MustParsePrefix("172.19.0.1/30"))},
+				Inet4Address:           []netip.Prefix{netip.MustParsePrefix("172.19.0.1/30")},
 				AutoRoute:              true,
 				StrictRoute:            true,
 				EndpointIndependentNat: true,
