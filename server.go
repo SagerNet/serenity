@@ -128,7 +128,9 @@ func (s *Server) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	} else if strings.HasPrefix(userAgent, "SFI") {
 		platform = PlatformiOS
 	} else if strings.HasPrefix(userAgent, "SFM") {
-		platform = PlatformiOS
+		platform = PlatformMacOS
+	} else if strings.HasPrefix(userAgent, "SFT") {
+		platform = PlatformAppleTVOS
 	}
 	var versionName string
 	if strings.Contains(userAgent, "sing-box ") {

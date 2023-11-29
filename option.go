@@ -12,9 +12,10 @@ import (
 )
 
 const (
-	PlatformAndroid = "android"
-	PlatformiOS     = "ios"
-	PlatformMacOS   = "macos"
+	PlatformAndroid   = "android"
+	PlatformiOS       = "ios"
+	PlatformMacOS     = "macos"
+	PlatformAppleTVOS = "tvos"
 )
 
 type _Options struct {

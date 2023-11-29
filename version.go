@@ -16,6 +16,10 @@ type Version struct {
 	PreReleaseVersion    int
 }
 
+func (v Version) EqualAfter(anotherVersion Version) bool {
+	return v == anotherVersion || v.After(anotherVersion)
+}
+
 func (v Version) After(anotherVersion Version) bool {
 	if v.Major > anotherVersion.Major {
 		return true
