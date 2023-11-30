@@ -3,17 +3,17 @@ package libsubscription
 import (
 	"strings"
 
-	"github.com/Dreamacro/clash/adapter"
-	clash_outbound "github.com/Dreamacro/clash/adapter/outbound"
-	"github.com/Dreamacro/clash/common/structure"
-	"github.com/Dreamacro/clash/config"
-	"github.com/Dreamacro/clash/constant"
-
 	C "github.com/sagernet/sing-box/constant"
 	"github.com/sagernet/sing-box/option"
 	E "github.com/sagernet/sing/common/exceptions"
 	"github.com/sagernet/sing/common/format"
 	N "github.com/sagernet/sing/common/network"
+
+	"github.com/Dreamacro/clash/adapter"
+	clash_outbound "github.com/Dreamacro/clash/adapter/outbound"
+	"github.com/Dreamacro/clash/common/structure"
+	"github.com/Dreamacro/clash/config"
+	"github.com/Dreamacro/clash/constant"
 )
 
 func ParseClashSubscription(content string) ([]Server, error) {

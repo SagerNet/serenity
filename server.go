@@ -11,9 +11,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/go-chi/chi/v5"
-	"golang.org/x/net/http2"
-
 	"github.com/sagernet/sing-box"
 	"github.com/sagernet/sing-box/adapter"
 	"github.com/sagernet/sing-box/common/tls"
@@ -22,6 +19,9 @@ import (
 	"github.com/sagernet/sing/common"
 	E "github.com/sagernet/sing/common/exceptions"
 	"github.com/sagernet/sing/common/logger"
+
+	"github.com/go-chi/chi/v5"
+	"golang.org/x/net/http2"
 )
 
 var _ adapter.Service = (*Server)(nil)

@@ -7,10 +7,10 @@ import (
 	"runtime/debug"
 	"syscall"
 
-	"github.com/spf13/cobra"
-
 	"github.com/sagernet/serenity"
 	"github.com/sagernet/sing-box/log"
+
+	"github.com/spf13/cobra"
 )
 
 var configPath string

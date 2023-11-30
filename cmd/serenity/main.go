@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/spf13/cobra"
-
 	"github.com/sagernet/sing-box/log"
+
+	"github.com/spf13/cobra"
 )
 
 var command = &cobra.Command{
