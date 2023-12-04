@@ -1,0 +1,11 @@
+/.idea/
+/vendor/
+/*.json
+/*.db
+/site/
+/bin/
+/dist/
+/build/
+.DS_Store
+/serenity
+/serenity.exe
