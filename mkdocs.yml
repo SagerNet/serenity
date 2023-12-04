@@ -1,0 +1,113 @@
+site_name: serenity
+site_author: nekohasekai
+repo_url: https://github.com/SagerNet/serenity
+repo_name: SagerNet/serenity
+copyright: Copyright &copy; 2022 nekohasekai
+site_description: The configuration generator for sing-box.
+remote_branch: docs
+edit_uri: ""
+theme:
+  name: material
+  logo: assets/icon.svg
+  favicon: assets/icon.svg
+  palette:
+    - scheme: default
+      primary: white
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: black
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    #    - navigation.instant
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.indexes
+    - navigation.expand
+    - navigation.sections
+    - header.autohide
+    - content.code.copy
+    - content.code.select
+    - content.code.annotate
+  icon:
+    admonition:
+      question: material/new-box
+nav:
+  - Home:
+      - index.md
+      - Change Log: changelog.md
+      - Support: support.md
+  - Installation:
+      - Package Manager: installation/package-manager.md
+      - Docker: installation/docker.md
+      - Build from source: installation/build-from-source.md
+  - Configuration:
+      - configuration/index.md
+      - Subscription: configuration/subscription.md
+      - Template: configuration/template.md
+      - Profile: configuration/profile.md
+      - User: configuration/user.md
+markdown_extensions:
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.details
+  - pymdownx.critic
+  - pymdownx.caret
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.tilde
+  - pymdownx.magiclink
+  - admonition
+  - attr_list
+  - md_in_html
+  - footnotes
+  - def_list
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/SagerNet/serenity
+  generator: false
+plugins:
+  - search
+  - i18n:
+      docs_structure: suffix
+      fallback_to_default: true
+      languages:
+        - build: true
+          default: true
+          locale: en
+          name: English
+        - build: true
+          default: false
+          locale: zh
+          name: 简体中文
+          nav_translations:
+            Home: 开始
+            Change Log: 更新日志
+            Support: 支持
+
+            Installation: 安装
+            Package Manager: 包管理器
+            Build from source: 从源代码构建
+
+            Configuration: 配置
+      reconfigure_material: true
+      reconfigure_search: true
