@@ -9,7 +9,7 @@ require (
 	github.com/go-chi/render v1.0.3
 	github.com/miekg/dns v1.1.57
 	github.com/sagernet/bbolt v0.0.0-20231014093535-ea5cb2fe9f0a
-	github.com/sagernet/sing v0.3.0-rc.5
+	github.com/sagernet/sing v0.3.0-rc.6
 	github.com/sagernet/sing-box v1.8.0-rc.4
 	github.com/sagernet/sing-dns v0.1.12
 	github.com/spf13/cobra v1.8.0
