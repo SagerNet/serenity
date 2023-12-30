@@ -1,9 +1,11 @@
 package option
 
 import (
+	M "github.com/sagernet/serenity/common/metadata"
 	"github.com/sagernet/serenity/common/semver"
 	"github.com/sagernet/sing-box/option"
-	dns "github.com/sagernet/sing-dns"
+	"github.com/sagernet/sing-dns"
+	"github.com/sagernet/sing/common"
 	"github.com/sagernet/sing/common/json/badjson"
 )
 
@@ -65,6 +67,20 @@ type Template struct {
 
 func (t Template) DisableIPv6() bool {
 	return t.DomainStrategy == option.DomainStrategy(dns.DomainStrategyUseIPv4)
+}
+
+func (t Template) ChinaGeositeList(metadata M.Metadata) []string {
+	chinaCodes := []string{"cn", "category-companies@cn"}
+	if metadata.Platform.IsApple() {
+		chinaCodes = append(chinaCodes, "apple-update")
+	}
+	return chinaCodes
+}
+
+func (t Template) ChinaGeositeRuleSetList(metadata M.Metadata) []string {
+	return common.Map(t.ChinaGeositeList(metadata), func(it string) string {
+		return "geosite-" + it
+	})
 }
 
 type ExtraGroup struct {

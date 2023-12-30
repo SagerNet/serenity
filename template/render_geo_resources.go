@@ -56,7 +56,6 @@ func (t *Template) renderGeoResources(metadata M.Metadata, options *option.Optio
 			downloadURL = "https://raw.githubusercontent.com/"
 			branchSplit = "/"
 		}
-
 		options.Route.RuleSet = []option.RuleSet{
 			{
 				Type:   C.RuleSetTypeRemote,
@@ -94,6 +93,17 @@ func (t *Template) renderGeoResources(metadata M.Metadata, options *option.Optio
 					DownloadDetour: downloadDetour,
 				},
 			},
+		}
+		if metadata.Platform.IsApple() {
+			options.Route.RuleSet = append(options.Route.RuleSet, option.RuleSet{
+				Type:   C.RuleSetTypeRemote,
+				Tag:    "geosite-apple-update",
+				Format: C.RuleSetFormatBinary,
+				RemoteOptions: option.RemoteRuleSet{
+					URL:            downloadURL + "SagerNet/sing-geosite" + branchSplit + "rule-set/geosite-apple-update.srs",
+					DownloadDetour: downloadDetour,
+				},
+			})
 		}
 	}
 }

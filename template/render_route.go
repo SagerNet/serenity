@@ -136,7 +136,7 @@ func (t *Template) renderRoute(metadata M.Metadata, options *option.Options) err
 								Type: C.RuleTypeDefault,
 								DefaultOptions: option.DefaultRule{
 									GeoIP:   []string{"cn"},
-									Geosite: []string{"cn", "category-companies@cn"},
+									Geosite: t.ChinaGeositeList(metadata),
 									Domain:  []string{"download.jetbrains.com"},
 								},
 							},
@@ -160,7 +160,7 @@ func (t *Template) renderRoute(metadata M.Metadata, options *option.Options) err
 							{
 								Type: C.RuleTypeDefault,
 								DefaultOptions: option.DefaultRule{
-									RuleSet: []string{"geoip-cn", "geosite-cn", "geosite-category-companies@cn"},
+									RuleSet: append([]string{"geoip-cn"}, t.ChinaGeositeRuleSetList(metadata)...),
 									Domain:  []string{"download.jetbrains.com"},
 								},
 							},
