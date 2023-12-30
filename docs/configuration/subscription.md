@@ -11,7 +11,7 @@
       "exclude": [],
       "filter_outbound_type": [],
       "exclude_outbound_type": [],
-      "rename": [],
+      "rename": {},
       "remove_emoji": false
     }
   ],
@@ -19,7 +19,7 @@
   "update_interval": "5m",
   "generate_selector": false,
   "generate_urltest": false,
-  "urltest_suffix": false,
+  "urltest_suffix": "",
   "custom_selector": {},
   "custom_urltest": {}
 }
@@ -107,7 +107,7 @@ Tag suffix of generated `URLTest` outbound.
 
 #### custom_selector
 
-Custom [Selector](https://sing-box.w.org/configuration/outbound/selector/) template.
+Custom [Selector](https://sing-box.sagernet.org/configuration/outbound/selector/) template.
 
 #### custom_urltest
 
