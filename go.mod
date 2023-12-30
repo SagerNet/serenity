@@ -9,8 +9,8 @@ require (
 	github.com/go-chi/render v1.0.3
 	github.com/miekg/dns v1.1.57
 	github.com/sagernet/bbolt v0.0.0-20231014093535-ea5cb2fe9f0a
-	github.com/sagernet/sing v0.3.0-rc.6
-	github.com/sagernet/sing-box v1.8.0-rc.4
+	github.com/sagernet/sing v0.3.0-rc.7
+	github.com/sagernet/sing-box v1.8.0-rc.8
 	github.com/sagernet/sing-dns v0.1.12
 	github.com/spf13/cobra v1.8.0
 	golang.org/x/mod v0.14.0
@@ -61,10 +61,10 @@ require (
 	github.com/sagernet/cloudflare-tls v0.0.0-20231208171750-a4483c1b7cd1 // indirect
 	github.com/sagernet/gvisor v0.0.0-20231209105102-8d27a30e436e // indirect
 	github.com/sagernet/netlink v0.0.0-20220905062125-8043b4a9aa97 // indirect
-	github.com/sagernet/quic-go v0.40.0 // indirect
+	github.com/sagernet/quic-go v0.40.1-beta.2 // indirect
 	github.com/sagernet/reality v0.0.0-20230406110435-ee17307e7691 // indirect
 	github.com/sagernet/sing-mux v0.1.7-rc.1 // indirect
-	github.com/sagernet/sing-quic v0.1.7-rc.1 // indirect
+	github.com/sagernet/sing-quic v0.1.7-rc.2 // indirect
 	github.com/sagernet/sing-shadowsocks2 v0.1.6-rc.1 // indirect
 	github.com/sagernet/sing-shadowtls v0.1.4 // indirect
 	github.com/sagernet/sing-tun v0.2.0-rc.1 // indirect
@@ -88,15 +88,15 @@ require (
 	go.uber.org/zap v1.26.0 // indirect
 	go4.org/netipx v0.0.0-20231129151722-fdeea329fbba // indirect
 	golang.org/x/crypto v0.17.0 // indirect
-	golang.org/x/exp v0.0.0-20231219180239-dc181d75b848 // indirect
+	golang.org/x/exp v0.0.0-20231226003508-02704c960a9b // indirect
 	golang.org/x/sync v0.5.0 // indirect
 	golang.org/x/sys v0.15.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 	golang.org/x/time v0.5.0 // indirect
 	golang.org/x/tools v0.16.0 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20230822172742-b8732ec3820d // indirect
-	google.golang.org/grpc v1.59.0 // indirect
-	google.golang.org/protobuf v1.31.0 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20231002182017-d307bd883b97 // indirect
+	google.golang.org/grpc v1.60.1 // indirect
+	google.golang.org/protobuf v1.32.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	lukechampine.com/blake3 v1.2.1 // indirect
 )
