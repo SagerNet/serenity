@@ -43,7 +43,7 @@ Subscription URL.
 
 User-Agent in HTTP request.
 
-`ClashForAndroid/serenity` is used by default.
+`serenity/$version (sing-box $sing-box-version; Clash compatible)` is used by default.
 
 #### process
 
