@@ -151,9 +151,9 @@ func (t *Template) renderOutbounds(metadata M.Metadata, options *option.Options,
 		}
 		switch group.Type {
 		case C.TypeSelector:
-			groupOutbound.SelectorOptions.Outbounds = extraTags
+			groupOutbound.SelectorOptions.Outbounds = append(groupOutbound.SelectorOptions.Outbounds, extraTags...)
 		case C.TypeURLTest:
-			groupOutbound.URLTestOptions.Outbounds = extraTags
+			groupOutbound.URLTestOptions.Outbounds = append(groupOutbound.URLTestOptions.Outbounds, extraTags...)
 		}
 		options.Outbounds = append(options.Outbounds, groupOutbound)
 	}
