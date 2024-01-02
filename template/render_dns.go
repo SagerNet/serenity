@@ -128,7 +128,7 @@ func (t *Template) renderDNS(metadata M.Metadata, options *option.Options) error
 							{
 								Type: C.RuleTypeDefault,
 								DefaultOptions: option.DefaultDNSRule{
-									Geosite: t.ChinaGeositeList(metadata),
+									Geosite: []string{"cn"},
 								},
 							},
 						},
@@ -151,8 +151,7 @@ func (t *Template) renderDNS(metadata M.Metadata, options *option.Options) error
 							{
 								Type: C.RuleTypeDefault,
 								DefaultOptions: option.DefaultDNSRule{
-									RuleSet:      t.ChinaGeositeRuleSetList(metadata),
-									DomainSuffix: []string{"download.jetbrains.com"},
+									RuleSet: []string{"geosite-cn"},
 								},
 							},
 						},
