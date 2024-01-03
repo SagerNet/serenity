@@ -10,7 +10,7 @@ require (
 	github.com/miekg/dns v1.1.57
 	github.com/sagernet/bbolt v0.0.0-20231014093535-ea5cb2fe9f0a
 	github.com/sagernet/sing v0.3.0-rc.7
-	github.com/sagernet/sing-box v1.8.0-rc.8
+	github.com/sagernet/sing-box v1.8.0-rc.11
 	github.com/sagernet/sing-dns v0.1.12
 	github.com/spf13/cobra v1.8.0
 	golang.org/x/mod v0.14.0
@@ -63,7 +63,7 @@ require (
 	github.com/sagernet/netlink v0.0.0-20220905062125-8043b4a9aa97 // indirect
 	github.com/sagernet/quic-go v0.40.1-beta.2 // indirect
 	github.com/sagernet/reality v0.0.0-20230406110435-ee17307e7691 // indirect
-	github.com/sagernet/sing-mux v0.1.7-rc.1 // indirect
+	github.com/sagernet/sing-mux v0.1.8-rc.1 // indirect
 	github.com/sagernet/sing-quic v0.1.7-rc.2 // indirect
 	github.com/sagernet/sing-shadowsocks2 v0.1.6-rc.1 // indirect
 	github.com/sagernet/sing-shadowtls v0.1.4 // indirect
