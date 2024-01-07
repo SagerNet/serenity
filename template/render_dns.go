@@ -95,16 +95,25 @@ func (t *Template) renderDNS(metadata M.Metadata, options *option.Options) error
 		},
 	}
 	if !t.DisableClashMode {
+		modeGlobal := t.ClashModeGlobal
+		modeDirect := t.ClashModeDirect
+		if modeGlobal == "" {
+			modeGlobal = "Global"
+		}
+		if modeDirect == "" {
+			modeDirect = "Direct"
+		}
+
 		options.DNS.Rules = append(options.DNS.Rules, option.DNSRule{
 			Type: C.RuleTypeDefault,
 			DefaultOptions: option.DefaultDNSRule{
-				ClashMode: "Direct",
+				ClashMode: modeDirect,
 				Server:    DNSLocalTag,
 			},
 		}, option.DNSRule{
 			Type: C.RuleTypeDefault,
 			DefaultOptions: option.DefaultDNSRule{
-				ClashMode: "Global",
+				ClashMode: modeGlobal,
 				Server:    DNSDefaultTag,
 			},
 		})
