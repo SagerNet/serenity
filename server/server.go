@@ -44,6 +44,7 @@ func New(ctx context.Context, options option.Options) (*Server, error) {
 	ctx = service.ContextWithDefaultRegistry(ctx)
 	createdAt := time.Now()
 	logFactory, err := log.New(log.Options{
+		Context:       ctx,
 		Options:       common.PtrValueOrDefault(options.Log),
 		DefaultWriter: os.Stderr,
 		BaseTime:      createdAt,
@@ -51,6 +52,11 @@ func New(ctx context.Context, options option.Options) (*Server, error) {
 	if err != nil {
 		return nil, E.Cause(err, "create log factory")
 	}
+
+	if err := logFactory.Start(); err != nil {
+		return nil, E.Cause(err, "start log factory failed")
+	}
+
 	chiRouter := chi.NewRouter()
 	httpServer := &http.Server{
 		Addr:    options.Listen,
