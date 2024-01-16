@@ -112,7 +112,7 @@ func (t *Template) renderDNS(metadata M.Metadata, options *option.Options) error
 	options.DNS.Rules = append(options.DNS.Rules, t.PreDNSRules...)
 	if len(t.CustomDNSRules) == 0 {
 		if !t.DisableTrafficBypass {
-			if t.DisableRuleSet || (metadata.Version == nil || metadata.Version.LessThan(semver.ParseVersion("1.8.0-alpha.10"))) {
+			if t.DisableRuleSet || (metadata.Version != nil && metadata.Version.LessThan(semver.ParseVersion("1.8.0-alpha.10"))) {
 				options.DNS.Rules = append(options.DNS.Rules, option.DNSRule{
 					Type: C.RuleTypeLogical,
 					LogicalOptions: option.LogicalDNSRule{

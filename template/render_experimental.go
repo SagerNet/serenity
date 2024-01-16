@@ -13,7 +13,7 @@ func (t *Template) renderExperimental(metadata M.Metadata, options *option.Optio
 		return nil
 	}
 	options.Experimental = &option.ExperimentalOptions{}
-	disable18Features := metadata.Version == nil || metadata.Version.LessThan(semver.ParseVersion("1.8.0-alpha.10"))
+	disable18Features := metadata.Version != nil && metadata.Version.LessThan(semver.ParseVersion("1.8.0-alpha.10"))
 	if !t.DisableCacheFile {
 		if disable18Features {
 			//nolint:staticcheck

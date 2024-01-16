@@ -19,7 +19,7 @@ func (t *Template) renderRoute(metadata M.Metadata, options *option.Options) err
 	if !t.DisableTrafficBypass {
 		t.renderGeoResources(metadata, options)
 	}
-	disable18Features := metadata.Version == nil || metadata.Version.LessThan(semver.ParseVersion("1.8.0-alpha.10"))
+	disable18Features := metadata.Version != nil && metadata.Version.LessThan(semver.ParseVersion("1.8.0-alpha.10"))
 	options.Route.Rules = []option.Rule{
 		{
 			Type: C.RuleTypeLogical,

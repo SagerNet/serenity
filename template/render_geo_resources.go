@@ -8,7 +8,7 @@ import (
 )
 
 func (t *Template) renderGeoResources(metadata M.Metadata, options *option.Options) {
-	if t.DisableRuleSet || (metadata.Version == nil || metadata.Version.LessThan(semver.ParseVersion("1.8.0-alpha.10"))) {
+	if t.DisableRuleSet || (metadata.Version != nil && metadata.Version.LessThan(semver.ParseVersion("1.8.0-alpha.10"))) {
 		var (
 			geoipDownloadURL   string
 			geositeDownloadURL string
