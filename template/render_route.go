@@ -121,50 +121,19 @@ func (t *Template) renderRoute(metadata M.Metadata, options *option.Options) err
 		if !t.DisableTrafficBypass {
 			if t.DisableRuleSet || disable18Features {
 				options.Route.Rules = append(options.Route.Rules, option.Rule{
-					Type: C.RuleTypeLogical,
-					LogicalOptions: option.LogicalRule{
-						Mode: C.LogicalTypeAnd,
-						Rules: []option.Rule{
-							{
-								Type: C.RuleTypeDefault,
-								DefaultOptions: option.DefaultRule{
-									Geosite: []string{"geolocation-!cn"},
-									Invert:  true,
-								},
-							},
-							{
-								Type: C.RuleTypeDefault,
-								DefaultOptions: option.DefaultRule{
-									GeoIP:   []string{"cn"},
-									Geosite: []string{"cn"},
-									Domain:  []string{"download.jetbrains.com"},
-								},
-							},
-						},
+					Type: C.RuleTypeDefault,
+					DefaultOptions: option.DefaultRule{
+						GeoIP:    []string{"cn"},
+						Geosite:  []string{"geolocation-cn"},
 						Outbound: directTag,
 					},
 				})
 			} else {
 				options.Route.Rules = append(options.Route.Rules, option.Rule{
-					Type: C.RuleTypeLogical,
-					LogicalOptions: option.LogicalRule{
-						Mode: C.LogicalTypeAnd,
-						Rules: []option.Rule{
-							{
-								Type: C.RuleTypeDefault,
-								DefaultOptions: option.DefaultRule{
-									RuleSet: []string{"geosite-geolocation-!cn"},
-									Invert:  true,
-								},
-							},
-							{
-								Type: C.RuleTypeDefault,
-								DefaultOptions: option.DefaultRule{
-									RuleSet: []string{"geoip-cn", "geosite-cn"},
-								},
-							},
-						},
-						Outbound: "direct",
+					Type: C.RuleTypeDefault,
+					DefaultOptions: option.DefaultRule{
+						RuleSet:  []string{"geoip-cn", "geosite-geolocation-cn"},
+						Outbound: directTag,
 					},
 				})
 			}

@@ -114,48 +114,18 @@ func (t *Template) renderDNS(metadata M.Metadata, options *option.Options) error
 		if !t.DisableTrafficBypass {
 			if t.DisableRuleSet || (metadata.Version != nil && metadata.Version.LessThan(semver.ParseVersion("1.8.0-alpha.10"))) {
 				options.DNS.Rules = append(options.DNS.Rules, option.DNSRule{
-					Type: C.RuleTypeLogical,
-					LogicalOptions: option.LogicalDNSRule{
-						Mode: C.LogicalTypeAnd,
-						Rules: []option.DNSRule{
-							{
-								Type: C.RuleTypeDefault,
-								DefaultOptions: option.DefaultDNSRule{
-									Geosite: []string{"geolocation-!cn"},
-									Invert:  true,
-								},
-							},
-							{
-								Type: C.RuleTypeDefault,
-								DefaultOptions: option.DefaultDNSRule{
-									Geosite: []string{"cn"},
-								},
-							},
-						},
-						Server: DNSLocalTag,
+					Type: C.RuleTypeDefault,
+					DefaultOptions: option.DefaultDNSRule{
+						Geosite: []string{"geolocation-cn"},
+						Server:  DNSLocalTag,
 					},
 				})
 			} else {
 				options.DNS.Rules = append(options.DNS.Rules, option.DNSRule{
-					Type: C.RuleTypeLogical,
-					LogicalOptions: option.LogicalDNSRule{
-						Mode: C.LogicalTypeAnd,
-						Rules: []option.DNSRule{
-							{
-								Type: C.RuleTypeDefault,
-								DefaultOptions: option.DefaultDNSRule{
-									RuleSet: []string{"geosite-geolocation-!cn"},
-									Invert:  true,
-								},
-							},
-							{
-								Type: C.RuleTypeDefault,
-								DefaultOptions: option.DefaultDNSRule{
-									RuleSet: []string{"geosite-cn"},
-								},
-							},
-						},
-						Server: DNSLocalTag,
+					Type: C.RuleTypeDefault,
+					DefaultOptions: option.DefaultDNSRule{
+						RuleSet: []string{"geosite-geolocation-cn"},
+						Server:  DNSLocalTag,
 					},
 				})
 			}

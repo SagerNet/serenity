@@ -68,19 +68,10 @@ func (t *Template) renderGeoResources(metadata M.Metadata, options *option.Optio
 			},
 			{
 				Type:   C.RuleSetTypeRemote,
-				Tag:    "geosite-cn",
+				Tag:    "geosite-geolocation-cn",
 				Format: C.RuleSetFormatBinary,
 				RemoteOptions: option.RemoteRuleSet{
-					URL:            downloadURL + "SagerNet/sing-geosite" + branchSplit + "rule-set/geosite-cn.srs",
-					DownloadDetour: downloadDetour,
-				},
-			},
-			{
-				Type:   C.RuleSetTypeRemote,
-				Tag:    "geosite-geolocation-!cn",
-				Format: C.RuleSetFormatBinary,
-				RemoteOptions: option.RemoteRuleSet{
-					URL:            downloadURL + "SagerNet/sing-geosite" + branchSplit + "rule-set/geosite-geolocation-!cn.srs",
+					URL:            downloadURL + "SagerNet/sing-geosite" + branchSplit + "rule-set/geosite-geolocation-cn.srs",
 					DownloadDetour: downloadDetour,
 				},
 			},
