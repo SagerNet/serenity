@@ -9,9 +9,9 @@ require (
 	github.com/go-chi/render v1.0.3
 	github.com/miekg/dns v1.1.58
 	github.com/sagernet/bbolt v0.0.0-20231014093535-ea5cb2fe9f0a
-	github.com/sagernet/sing v0.4.0-beta.3
-	github.com/sagernet/sing-box v1.9.0-beta.10
-	github.com/sagernet/sing-dns v0.2.0-beta.15
+	github.com/sagernet/sing v0.4.0-beta.5
+	github.com/sagernet/sing-box v1.9.0-rc.2
+	github.com/sagernet/sing-dns v0.2.0-beta.16
 	github.com/spf13/cobra v1.8.0
 	golang.org/x/mod v0.16.0
 	golang.org/x/net v0.22.0
@@ -59,15 +59,15 @@ require (
 	github.com/quic-go/qpack v0.4.0 // indirect
 	github.com/quic-go/qtls-go1-20 v0.4.1 // indirect
 	github.com/sagernet/cloudflare-tls v0.0.0-20231208171750-a4483c1b7cd1 // indirect
-	github.com/sagernet/gvisor v0.0.0-20240214044702-a3d61928a32f // indirect
+	github.com/sagernet/gvisor v0.0.0-20240315080113-799fb6b6d311 // indirect
 	github.com/sagernet/netlink v0.0.0-20220905062125-8043b4a9aa97 // indirect
-	github.com/sagernet/quic-go v0.41.0-beta.2 // indirect
+	github.com/sagernet/quic-go v0.42.0-beta.2 // indirect
 	github.com/sagernet/reality v0.0.0-20230406110435-ee17307e7691 // indirect
 	github.com/sagernet/sing-mux v0.2.0 // indirect
-	github.com/sagernet/sing-quic v0.1.9-beta.1 // indirect
+	github.com/sagernet/sing-quic v0.1.9-beta.3 // indirect
 	github.com/sagernet/sing-shadowsocks2 v0.2.0 // indirect
 	github.com/sagernet/sing-shadowtls v0.1.4 // indirect
-	github.com/sagernet/sing-tun v0.2.4-beta.1 // indirect
+	github.com/sagernet/sing-tun v0.2.6-beta.1 // indirect
 	github.com/sagernet/sing-vmess v0.1.8 // indirect
 	github.com/sagernet/smux v0.0.0-20231208180855-7041f6ea79e7 // indirect
 	github.com/sagernet/tfo-go v0.0.0-20231209031829-7b5343ac1dc6 // indirect
@@ -75,7 +75,6 @@ require (
 	github.com/sagernet/wireguard-go v0.0.0-20231215174105-89dec3b2f3e8 // indirect
 	github.com/sagernet/ws v0.0.0-20231204124109-acfe8907c854 // indirect
 	github.com/samber/lo v1.38.1 // indirect
-	github.com/scjalliance/comshim v0.0.0-20230315213746-5e51f40bd3b9 // indirect
 	github.com/sirupsen/logrus v1.9.3 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/u-root/uio v0.0.0-20230220225925-ffce2a382923 // indirect
@@ -88,15 +87,15 @@ require (
 	go.uber.org/zap v1.27.0 // indirect
 	go4.org/netipx v0.0.0-20231129151722-fdeea329fbba // indirect
 	golang.org/x/crypto v0.21.0 // indirect
-	golang.org/x/exp v0.0.0-20240222234643-814bf88cf225 // indirect
+	golang.org/x/exp v0.0.0-20240318143956-a85f2c67cd81 // indirect
 	golang.org/x/sync v0.6.0 // indirect
 	golang.org/x/sys v0.18.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 	golang.org/x/time v0.5.0 // indirect
-	golang.org/x/tools v0.18.0 // indirect
+	golang.org/x/tools v0.19.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240123012728-ef4313101c80 // indirect
-	google.golang.org/grpc v1.62.0 // indirect
-	google.golang.org/protobuf v1.32.0 // indirect
+	google.golang.org/grpc v1.62.1 // indirect
+	google.golang.org/protobuf v1.33.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	lukechampine.com/blake3 v1.2.1 // indirect
 )

@@ -21,6 +21,7 @@ type Template struct {
 	DNSDefault     string           `json:"dns_default,omitempty"`
 	DNSLocal       string           `json:"dns_local,omitempty"`
 	EnableFakeIP   bool             `json:"enable_fakeip,omitempty"`
+	DisableDNSLeak bool             `json:"disable_dns_leak,omitempty"`
 	PreDNSRules    []option.DNSRule `json:"pre_dns_rules,omitempty"`
 	CustomDNSRules []option.DNSRule `json:"custom_dns_rules,omitempty"`
 
@@ -55,6 +56,7 @@ type Template struct {
 	DisableExternalController bool `json:"disable_external_controller,omitempty"`
 	DisableClashMode          bool `json:"disable_clash_mode,omitempty"`
 
+	ClashModeLeak   string                                `json:"clash_mode_leak,omitempty"`
 	ClashModeRule   string                                `json:"clash_mode_rule,omitempty"`
 	ClashModeGlobal string                                `json:"clash_mode_global,omitempty"`
 	ClashModeDirect string                                `json:"clash_mode_direct,omitempty"`

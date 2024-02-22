@@ -30,6 +30,9 @@ func (t *Template) renderExperimental(metadata M.Metadata, options *option.Optio
 				CacheID:     profileName,
 				StoreFakeIP: t.EnableFakeIP,
 			}
+			if !t.DisableDNSLeak && (metadata.Version != nil && metadata.Version.GreaterThanOrEqual(semver.ParseVersion("1.9.0-alpha.8"))) {
+				options.Experimental.CacheFile.StoreRDRC = true
+			}
 		}
 	}
 
@@ -48,7 +51,15 @@ func (t *Template) renderExperimental(metadata M.Metadata, options *option.Optio
 	}
 
 	if !t.DisableClashMode {
-		options.Experimental.ClashAPI.DefaultMode = t.ClashModeRule
+		if !t.DisableDNSLeak && (metadata.Version != nil && metadata.Version.GreaterThanOrEqual(semver.ParseVersion("1.9.0-alpha.1"))) {
+			clashModeLeak := t.ClashModeLeak
+			if clashModeLeak == "" {
+				clashModeLeak = "Leak"
+			}
+			options.Experimental.ClashAPI.DefaultMode = clashModeLeak
+		} else {
+			options.Experimental.ClashAPI.DefaultMode = t.ClashModeRule
+		}
 	}
 	if t.PProfListen != "" {
 		if options.Experimental.Debug == nil {

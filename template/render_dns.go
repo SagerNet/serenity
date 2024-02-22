@@ -94,18 +94,31 @@ func (t *Template) renderDNS(metadata M.Metadata, options *option.Options) error
 			},
 		},
 	}
+	clashModeRule := t.ClashModeRule
+	if clashModeRule == "" {
+		clashModeRule = "Rule"
+	}
+	clashModeGlobal := t.ClashModeGlobal
+	if clashModeGlobal == "" {
+		clashModeGlobal = "Global"
+	}
+	clashModeDirect := t.ClashModeDirect
+	if clashModeDirect == "" {
+		clashModeDirect = "Direct"
+	}
+
 	if !t.DisableClashMode {
 		options.DNS.Rules = append(options.DNS.Rules, option.DNSRule{
 			Type: C.RuleTypeDefault,
 			DefaultOptions: option.DefaultDNSRule{
-				ClashMode: "Direct",
-				Server:    DNSLocalTag,
+				ClashMode: clashModeGlobal,
+				Server:    DNSDefaultTag,
 			},
 		}, option.DNSRule{
 			Type: C.RuleTypeDefault,
 			DefaultOptions: option.DefaultDNSRule{
-				ClashMode: "Global",
-				Server:    DNSDefaultTag,
+				ClashMode: clashModeDirect,
+				Server:    DNSLocalTag,
 			},
 		})
 	}
@@ -126,6 +139,36 @@ func (t *Template) renderDNS(metadata M.Metadata, options *option.Options) error
 					DefaultOptions: option.DefaultDNSRule{
 						RuleSet: []string{"geosite-geolocation-cn"},
 						Server:  DNSLocalTag,
+					},
+				})
+			}
+			if !t.DisableDNSLeak && (metadata.Version != nil && metadata.Version.GreaterThanOrEqual(semver.ParseVersion("1.9.0-alpha.1"))) {
+				options.DNS.Rules = append(options.DNS.Rules, option.DNSRule{
+					Type: C.RuleTypeDefault,
+					DefaultOptions: option.DefaultDNSRule{
+						ClashMode: clashModeRule,
+						Server:    DNSDefaultTag,
+					},
+				}, option.DNSRule{
+					Type: C.RuleTypeLogical,
+					LogicalOptions: option.LogicalDNSRule{
+						Mode: C.LogicalTypeAnd,
+						Rules: []option.DNSRule{
+							{
+								Type: C.RuleTypeDefault,
+								DefaultOptions: option.DefaultDNSRule{
+									RuleSet: []string{"geosite-geolocation-!cn"},
+									Invert:  true,
+								},
+							},
+							{
+								Type: C.RuleTypeDefault,
+								DefaultOptions: option.DefaultDNSRule{
+									RuleSet: []string{"geoip-cn"},
+								},
+							},
+						},
+						Server: DNSLocalTag,
 					},
 				})
 			}
