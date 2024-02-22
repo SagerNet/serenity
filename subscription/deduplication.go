@@ -9,7 +9,6 @@ import (
 	"github.com/sagernet/sing-box/option"
 	"github.com/sagernet/sing-dns"
 	"github.com/sagernet/sing/common"
-	M "github.com/sagernet/sing/common/metadata"
 	N "github.com/sagernet/sing/common/network"
 	"github.com/sagernet/sing/common/task"
 )
@@ -21,8 +20,14 @@ func Deduplication(ctx context.Context, servers []option.Outbound) []option.Outb
 			DisableExpire: true,
 			Logger:        log.NewNOPFactory().Logger(),
 		}),
-		dnsTransport: common.Must1(dns.NewTLSTransport("google", ctx, N.SystemDialer, M.ParseSocksaddr("1.1.1.1"))),
+		dnsTransport: common.Must1(dns.NewTLSTransport(dns.TransportOptions{
+			Context:      ctx,
+			Dialer:       N.SystemDialer,
+			Address:      "tls://1.1.1.1",
+			ClientSubnet: netip.MustParseAddr("114.114.114.114"),
+		})),
 	}
+
 	uniqueServers := make([]netip.AddrPort, len(servers))
 	var (
 		resolveGroup task.Group
