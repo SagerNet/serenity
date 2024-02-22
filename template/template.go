@@ -18,7 +18,7 @@ const (
 	DNSLocalSetupTag  = "local_setup"
 	DNSFakeIPTag      = "remote"
 	DefaultDNS        = "tls://8.8.8.8"
-	DefaultDNSLocal   = "114.114.114.114"
+	DefaultDNSLocal   = "https://223.5.5.5/dns-query"
 	DefaultDefaultTag = "Default"
 	DefaultDirectTag  = "direct"
 	BlockTag          = "block"
