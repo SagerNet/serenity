@@ -11,6 +11,7 @@ import (
 	boxOption "github.com/sagernet/sing-box/option"
 	"github.com/sagernet/sing/common"
 	E "github.com/sagernet/sing/common/exceptions"
+	"github.com/sagernet/sing/common/json/badjson"
 	"github.com/sagernet/sing/common/logger"
 )
 
@@ -140,5 +141,13 @@ func (p *Profile) Render(metadata metadata.Metadata) (*boxOption.Options, error)
 	subscriptions := common.Filter(p.manager.subscription.Subscriptions(), func(it *subscription.Subscription) bool {
 		return common.Contains(p.Subscription, it.Name)
 	})
-	return selectedTemplate.Render(metadata, p.Name, outbounds, subscriptions)
+	options, err := selectedTemplate.Render(metadata, p.Name, outbounds, subscriptions)
+	if err != nil {
+		return nil, err
+	}
+	options, err = badjson.Omitempty(options)
+	if err != nil {
+		return nil, E.Cause(err, "omitempty")
+	}
+	return options, nil
 }

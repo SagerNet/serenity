@@ -39,10 +39,11 @@ func (t *Template) renderExperimental(metadata M.Metadata, options *option.Optio
 			return err
 		}
 		options.Experimental.ClashAPI = newClashOptions
-	} else {
-		if options.Experimental.ClashAPI == nil {
-			options.Experimental.ClashAPI = &option.ClashAPIOptions{}
-		}
+	} else if options.Experimental.ClashAPI == nil {
+		options.Experimental.ClashAPI = &option.ClashAPIOptions{}
+	}
+
+	if !t.DisableExternalController && options.Experimental.ClashAPI.ExternalController == "" {
 		options.Experimental.ClashAPI.ExternalController = "127.0.0.1:9090"
 	}
 

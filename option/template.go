@@ -51,12 +51,14 @@ type Template struct {
 	CustomRuleSet                 []option.RuleSet                                `json:"custom_rule_set,omitempty"`
 
 	//  Experimental
-	DisableCacheFile bool                                  `json:"disable_cache_file,omitempty"`
-	DisableClashMode bool                                  `json:"disable_clash_mode,omitempty"`
-	ClashModeRule    string                                `json:"clash_mode_rule,omitempty"`
-	ClashModeGlobal  string                                `json:"clash_mode_global,omitempty"`
-	ClashModeDirect  string                                `json:"clash_mode_direct,omitempty"`
-	CustomClashAPI   *TypedMessage[option.ClashAPIOptions] `json:"custom_clash_api,omitempty"`
+	DisableCacheFile          bool `json:"disable_cache_file,omitempty"`
+	DisableExternalController bool `json:"disable_external_controller,omitempty"`
+	DisableClashMode          bool `json:"disable_clash_mode,omitempty"`
+
+	ClashModeRule   string                                `json:"clash_mode_rule,omitempty"`
+	ClashModeGlobal string                                `json:"clash_mode_global,omitempty"`
+	ClashModeDirect string                                `json:"clash_mode_direct,omitempty"`
+	CustomClashAPI  *TypedMessage[option.ClashAPIOptions] `json:"custom_clash_api,omitempty"`
 
 	// Debug
 	PProfListen string             `json:"pprof_listen,omitempty"`
