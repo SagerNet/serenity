@@ -5,10 +5,6 @@ builds:
     flags:
       - -v
       - -trimpath
-    asmflags:
-      - all=-trimpath={{.Env.GOPATH}}
-    gcflags:
-      - all=-trimpath={{.Env.GOPATH}}
     ldflags:
       - -X github.com/sagernet/serenity/constant.Version={{ .Version }} -s -w -buildid=
     env:
