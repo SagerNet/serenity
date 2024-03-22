@@ -61,6 +61,10 @@ func (t *Template) Render(metadata M.Metadata, profileName string, outbounds [][
 	if err != nil {
 		return nil, E.Cause(err, "render experimental")
 	}
+	err = t.RenderNTP(&options)
+	if err != nil {
+		return nil, E.Cause(err, "render ntp")
+	}
 	filter.Filter(metadata, &options)
 	return &options, nil
 }

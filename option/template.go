@@ -16,6 +16,8 @@ type Template struct {
 	DisableTrafficBypass bool                  `json:"disable_traffic_bypass,omitempty"`
 	DisableRuleSet       bool                  `json:"disable_rule_set,omitempty"`
 	RemoteResolve        bool                  `json:"remote_resolve,omitempty"`
+	EnableNTP            bool                  `json:"enable_ntp,omitempty"`
+	CustomNTP            *option.NTPOptions    `json:"custom_ntp,omitempty"`
 
 	// DNS
 	DNSDefault     string           `json:"dns_default,omitempty"`
