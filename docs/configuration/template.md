@@ -65,6 +65,11 @@
   "clash_mode_direct": "",
   "custom_clash_api": {},
   
+    // NTP
+  
+  "enable_ntp": true,
+  "custom_ntp": {},
+
   // Debug
   
   "pprof_listen": "",
@@ -271,6 +276,15 @@ Name of the 'Direct' Clash mode.
 #### custom_clash_api
 
 Custom [Clash API](https://sing-box.sagernet.org/configuration/experimental/clash-api/) template.
+
+
+#### enable_ntp
+
+Enabling NTP settings in the output.
+
+#### custom_ntp
+
+Custom [NTP](https://sing-box.sagernet.org/configuration/ntp/) template.
 
 #### pprof_listen
 
