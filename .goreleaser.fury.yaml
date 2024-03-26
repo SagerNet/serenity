@@ -19,23 +19,13 @@ builds:
     mod_timestamp: '{{ .CommitTimestamp }}'
 snapshot:
   name_template: "{{ .Version }}.{{ .ShortCommit }}"
-archives:
-  - id: archive
-    builds:
-      - main
-      - android
-    format: tar.gz
-    format_overrides:
-      - goos: windows
-        format: zip
-    wrap_in_directory: true
-    files:
-      - LICENSE
-    name_template: '{{ .ProjectName }}-{{ .Version }}-{{ .Os }}-{{ .Arch }}{{ with .Arm }}v{{ . }}{{ end }}{{ with .Mips }}_{{ . }}{{ end }}{{ if not (eq .Amd64 "v1") }}{{ .Amd64 }}{{ end }}'
 nfpms:
-  - id: package
+  - &template
+    id: package
     package_name: serenity
     file_name_template: '{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ with .Arm }}v{{ . }}{{ end }}{{ with .Mips }}_{{ . }}{{ end }}{{ if not (eq .Amd64 "v1") }}{{ .Amd64 }}{{ end }}'
+    builds:
+      - main
     vendor: sagernet
     homepage: https://serenity.sagernet.org/
     maintainer: nekohasekai <contact-git@sekai.icu>
@@ -44,7 +34,6 @@ nfpms:
     formats:
       - deb
       - rpm
-      - archlinux
     priority: extra
     contents:
       - src: release/config/config.json
@@ -56,25 +45,9 @@ nfpms:
         dst: /etc/systemd/system/serenity@.service
       - src: LICENSE
         dst: /usr/share/licenses/serenity/LICENSE
-    deb:
-      signature:
-        key_file: "{{ .Env.NFPM_KEY_PATH }}"
-    rpm:
-      signature:
-        key_file: "{{ .Env.NFPM_KEY_PATH }}"
-source:
-  enabled: false
-  name_template: '{{ .ProjectName }}-{{ .Version }}.source'
-  prefix_template: '{{ .ProjectName }}-{{ .Version }}/'
-checksum:
-  disable: true
-  name_template: '{{ .ProjectName }}-{{ .Version }}.checksum'
-signs:
-  - artifacts: checksum
 release:
-  github:
-    owner: SagerNet
-    name: serenity
-  name_template: '{{ if .IsSnapshot }}{{ nightly }}{{ else }}{{ .Version }}{{ end }}'
-  draft: true
-  mode: replace
+  disable: true
+furies:
+  - account: sagernet
+    ids:
+      - package

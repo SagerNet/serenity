@@ -36,11 +36,14 @@ lint_install:
 	go install -v github.com/golangci/golangci-lint/cmd/golangci-lint@latest
 
 release:
-	goreleaser release --clean --skip-publish || exit 1
+	goreleaser release --clean --skip publish
 	mkdir dist/release
 	mv dist/*.tar.gz dist/*.deb dist/*.rpm dist/*.pkg.tar.zst dist/release
 	ghr --replace --draft --prerelease -p 3 "v${VERSION}" dist/release
 	rm -r dist/release
+
+release_repo:
+	goreleaser release -f .goreleaser.fury.yaml --clean
 
 release_install:
 	go install -v github.com/goreleaser/goreleaser@latest
