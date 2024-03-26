@@ -1,0 +1,6 @@
+[serentry]
+name=serentry
+baseurl=https://rpm.sagernet.org/
+enabled=1
+gpgcheck=1
+gpgkey=https://deb.sagernet.org/gpg.key
