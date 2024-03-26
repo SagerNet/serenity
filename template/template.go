@@ -49,13 +49,13 @@ func (t *Template) Render(metadata M.Metadata, profileName string, outbounds [][
 	if err != nil {
 		return nil, E.Cause(err, "render inbounds")
 	}
-	err = t.renderOutbounds(metadata, &options, outbounds, subscriptions)
-	if err != nil {
-		return nil, E.Cause(err, "render outbounds")
-	}
 	err = t.renderRoute(metadata, &options)
 	if err != nil {
 		return nil, E.Cause(err, "render route")
+	}
+	err = t.renderOutbounds(metadata, &options, outbounds, subscriptions)
+	if err != nil {
+		return nil, E.Cause(err, "render outbounds")
 	}
 	err = t.renderExperimental(metadata, &options, profileName)
 	if err != nil {
