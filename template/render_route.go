@@ -5,6 +5,7 @@ import (
 	"github.com/sagernet/serenity/common/semver"
 	C "github.com/sagernet/sing-box/constant"
 	"github.com/sagernet/sing-box/option"
+	"github.com/sagernet/sing/common"
 	N "github.com/sagernet/sing/common/network"
 )
 
@@ -18,6 +19,18 @@ func (t *Template) renderRoute(metadata M.Metadata, options *option.Options) err
 	}
 	if !t.DisableTrafficBypass {
 		t.renderGeoResources(metadata, options)
+	}
+	if t.CustomRuleSet != nil {
+		for _, ruleset := range t.CustomRuleSet {
+			index := common.Index(options.Route.RuleSet, func(it option.RuleSet) bool {
+				return it.Tag == ruleset.Tag
+			})
+			if index != -1 {
+				options.Route.RuleSet[index] = ruleset
+				continue
+			}
+			options.Route.RuleSet = append(options.Route.RuleSet, ruleset)
+		}
 	}
 	disable18Features := metadata.Version != nil && metadata.Version.LessThan(semver.ParseVersion("1.8.0-alpha.10"))
 	options.Route.Rules = []option.Rule{
