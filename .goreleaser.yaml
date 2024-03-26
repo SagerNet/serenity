@@ -51,9 +51,9 @@ nfpms:
         dst: /etc/serenity/config.json
         type: config
       - src: release/config/serenity.service
-        dst: /etc/systemd/system/serenity.service
+        dst: /usr/lib/systemd/system/serenity.service
       - src: release/config/serenity@.service
-        dst: /etc/systemd/system/serenity@.service
+        dst: /usr/lib/systemd/system/serenity@.service
       - src: LICENSE
         dst: /usr/share/licenses/serenity/LICENSE
     deb:
