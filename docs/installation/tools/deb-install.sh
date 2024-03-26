@@ -12,11 +12,12 @@ case "${ARCH_RAW}" in
     *)          echo "Unsupported architecture: ${ARCH_RAW}"; exit 1;;
 esac
 
-VERSION=$(curl -s https://api.github.com/repos/SagerNet/serenity/releases/latest \
+VERSION=$(curl -s https://api.github.com/repos/SagerNet/serentry/releases/latest \
     | grep tag_name \
     | cut -d ":" -f2 \
     | sed 's/\"//g;s/\,//g;s/\ //g;s/v//')
 
-curl -Lo serenity.rpm "https://github.com/SagerNet/serenity/releases/download/v${VERSION}/serenity_${VERSION}_linux_${ARCH}.rpm"
-sudo rpm -i serenity.rpm
-rm serenity.rpm
+curl -Lo serentry.deb "https://github.com/SagerNet/serentry/releases/download/v${VERSION}/serentry_${VERSION}_linux_${ARCH}.deb"
+sudo dpkg -i serentry.deb
+rm serentry.deb
+
