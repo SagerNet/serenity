@@ -145,6 +145,7 @@ func (p *Profile) Render(metadata metadata.Metadata) (*boxOption.Options, error)
 	if err != nil {
 		return nil, err
 	}
+	options.Log = selectedTemplate.Log
 	options, err = badjson.Omitempty(options)
 	if err != nil {
 		return nil, E.Cause(err, "omitempty")

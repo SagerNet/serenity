@@ -17,6 +17,9 @@ type Template struct {
 	DisableRuleSet       bool                  `json:"disable_rule_set,omitempty"`
 	RemoteResolve        bool                  `json:"remote_resolve,omitempty"`
 
+	// Log
+	Log *option.LogOptions `json:"log,omitempty"`
+
 	// DNS
 	DNSDefault     string           `json:"dns_default,omitempty"`
 	DNSLocal       string           `json:"dns_local,omitempty"`
