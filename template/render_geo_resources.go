@@ -38,7 +38,7 @@ func (t *Template) renderGeoResources(metadata M.Metadata, options *option.Optio
 				DownloadDetour: downloadDetour,
 			}
 		}
-	} else if len(t.CustomDNSRules) == 0 {
+	} else if len(t.CustomRuleSet) == 0 {
 		var (
 			downloadURL    string
 			downloadDetour string
