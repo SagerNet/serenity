@@ -15,9 +15,6 @@ func (t *Template) renderOutbounds(metadata M.Metadata, options *option.Options,
 	if defaultTag == "" {
 		defaultTag = DefaultDefaultTag
 	}
-	if options.Route == nil {
-		options.Route = &option.RouteOptions{}
-	}
 	options.Route.Final = defaultTag
 	directTag := t.DirectTag
 	if directTag == "" {

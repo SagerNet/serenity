@@ -45,6 +45,10 @@ func (t *Template) Render(metadata M.Metadata, profileName string, outbounds [][
 	if err != nil {
 		return nil, E.Cause(err, "render dns")
 	}
+	err = t.renderRoute(metadata, &options)
+	if err != nil {
+		return nil, E.Cause(err, "render route")
+	}
 	err = t.renderInbounds(metadata, &options)
 	if err != nil {
 		return nil, E.Cause(err, "render inbounds")
@@ -52,10 +56,6 @@ func (t *Template) Render(metadata M.Metadata, profileName string, outbounds [][
 	err = t.renderOutbounds(metadata, &options, outbounds, subscriptions)
 	if err != nil {
 		return nil, E.Cause(err, "render outbounds")
-	}
-	err = t.renderRoute(metadata, &options)
-	if err != nil {
-		return nil, E.Cause(err, "render route")
 	}
 	err = t.renderExperimental(metadata, &options, profileName)
 	if err != nil {

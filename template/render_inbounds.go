@@ -26,9 +26,6 @@ func (t *Template) renderInbounds(metadata M.Metadata, options *option.Options) 
 	}
 	disableTun := t.DisableTUN && !metadata.Platform.TunOnly()
 	if !disableTun {
-		if options.Route == nil {
-			options.Route = &option.RouteOptions{}
-		}
 		options.Route.AutoDetectInterface = true
 
 		var inet6Address []netip.Prefix
