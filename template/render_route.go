@@ -128,7 +128,7 @@ func (t *Template) renderRoute(metadata M.Metadata, options *option.Options) err
 						Outbound: directTag,
 					},
 				})
-			} else {
+			} else if len(t.CustomRuleSet) == 0 {
 				options.Route.Rules = append(options.Route.Rules, option.Rule{
 					Type: C.RuleTypeDefault,
 					DefaultOptions: option.DefaultRule{
