@@ -133,7 +133,7 @@ func (t *Template) renderDNS(metadata M.Metadata, options *option.Options) error
 						Server:  DNSLocalTag,
 					},
 				})
-			} else {
+			} else if len(t.CustomRuleSet) == 0 {
 				options.DNS.Rules = append(options.DNS.Rules, option.DNSRule{
 					Type: C.RuleTypeDefault,
 					DefaultOptions: option.DefaultDNSRule{
@@ -149,28 +149,31 @@ func (t *Template) renderDNS(metadata M.Metadata, options *option.Options) error
 						ClashMode: clashModeRule,
 						Server:    DNSDefaultTag,
 					},
-				}, option.DNSRule{
-					Type: C.RuleTypeLogical,
-					LogicalOptions: option.LogicalDNSRule{
-						Mode: C.LogicalTypeAnd,
-						Rules: []option.DNSRule{
-							{
-								Type: C.RuleTypeDefault,
-								DefaultOptions: option.DefaultDNSRule{
-									RuleSet: []string{"geosite-geolocation-!cn"},
-									Invert:  true,
-								},
-							},
-							{
-								Type: C.RuleTypeDefault,
-								DefaultOptions: option.DefaultDNSRule{
-									RuleSet: []string{"geoip-cn"},
-								},
-							},
-						},
-						Server: DNSLocalTag,
-					},
 				})
+				if len(t.CustomRuleSet) == 0 {
+					options.DNS.Rules = append(options.DNS.Rules, option.DNSRule{
+						Type: C.RuleTypeLogical,
+						LogicalOptions: option.LogicalDNSRule{
+							Mode: C.LogicalTypeAnd,
+							Rules: []option.DNSRule{
+								{
+									Type: C.RuleTypeDefault,
+									DefaultOptions: option.DefaultDNSRule{
+										RuleSet: []string{"geosite-geolocation-!cn"},
+										Invert:  true,
+									},
+								},
+								{
+									Type: C.RuleTypeDefault,
+									DefaultOptions: option.DefaultDNSRule{
+										RuleSet: []string{"geoip-cn"},
+									},
+								},
+							},
+							Server: DNSLocalTag,
+						},
+					})
+				}
 			}
 		}
 	} else {
