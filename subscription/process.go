@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/sagernet/serenity/option"
+	C "github.com/sagernet/sing-box/constant"
 	boxOption "github.com/sagernet/sing-box/option"
 	"github.com/sagernet/sing/common"
 	E "github.com/sagernet/sing/common/exceptions"
@@ -102,6 +103,18 @@ func (o *ProcessOptions) Process(outbounds []boxOption.Outbound) []boxOption.Out
 		outbound.Tag = strings.TrimSpace(outbound.Tag)
 		if originTag != outbound.Tag {
 			renameResult[originTag] = outbound.Tag
+		}
+		if o.RewriteMultiplex != nil {
+			switch outbound.Type {
+			case C.TypeShadowsocks:
+				outbound.ShadowsocksOptions.Multiplex = o.RewriteMultiplex
+			case C.TypeTrojan:
+				outbound.TrojanOptions.Multiplex = o.RewriteMultiplex
+			case C.TypeVMess:
+				outbound.VMessOptions.Multiplex = o.RewriteMultiplex
+			case C.TypeVLESS:
+				outbound.VLESSOptions.Multiplex = o.RewriteMultiplex
+			}
 		}
 		newOutbounds = append(newOutbounds, outbound)
 	}

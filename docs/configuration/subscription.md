@@ -12,7 +12,8 @@
       "filter_outbound_type": [],
       "exclude_outbound_type": [],
       "rename": {},
-      "remove_emoji": false
+      "remove_emoji": false,
+      "rewrite_multiplex": {}
     }
   ],
   "deduplication": false,
@@ -76,6 +77,10 @@ Regexp rename rules, matching outbounds will be renamed.
 #### process.remove_emoji
 
 Remove emojis in outbound tags.
+
+#### process.rewrite_multiplex
+
+Rewrite [Multiplex](https://sing-box.sagernet.org/configuration/shared/multiplex) options.
 
 #### deduplication
 

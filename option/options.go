@@ -68,6 +68,7 @@ type OutboundProcessOptions struct {
 	ExcludeOutboundType option.Listable[string]           `json:"exclude_outbound_type,omitempty"`
 	Rename              *badjson.TypedMap[string, string] `json:"rename,omitempty"`
 	RemoveEmoji         bool                              `json:"remove_emoji,omitempty"`
+	RewriteMultiplex    *option.OutboundMultiplexOptions  `json:"rewrite_multiplex,omitempty"`
 }
 
 type Profile struct {
