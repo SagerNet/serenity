@@ -62,13 +62,13 @@ type Subscription struct {
 }
 
 type OutboundProcessOptions struct {
-	Filter              option.Listable[string]           `json:"filter,omitempty"`
-	Exclude             option.Listable[string]           `json:"exclude,omitempty"`
-	FilterOutboundType  option.Listable[string]           `json:"filter_outbound_type,omitempty"`
-	ExcludeOutboundType option.Listable[string]           `json:"exclude_outbound_type,omitempty"`
-	Rename              *badjson.TypedMap[string, string] `json:"rename,omitempty"`
-	RemoveEmoji         bool                              `json:"remove_emoji,omitempty"`
-	RewriteMultiplex    *option.OutboundMultiplexOptions  `json:"rewrite_multiplex,omitempty"`
+	Filter           option.Listable[string]           `json:"filter,omitempty"`
+	Exclude          option.Listable[string]           `json:"exclude,omitempty"`
+	FilterType       option.Listable[string]           `json:"filter_type,omitempty"`
+	ExcludeType      option.Listable[string]           `json:"exclude_type,omitempty"`
+	Rename           *badjson.TypedMap[string, string] `json:"rename,omitempty"`
+	RemoveEmoji      bool                              `json:"remove_emoji,omitempty"`
+	RewriteMultiplex *option.OutboundMultiplexOptions  `json:"rewrite_multiplex,omitempty"`
 }
 
 type Profile struct {

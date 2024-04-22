@@ -74,8 +74,8 @@ func (o *ProcessOptions) Process(outbounds []boxOption.Outbound) []boxOption.Out
 				continue
 			}
 		}
-		if len(o.FilterOutboundType) > 0 {
-			if !common.Contains(o.FilterOutboundType, outbound.Type) {
+		if len(o.FilterType) > 0 {
+			if !common.Contains(o.FilterType, outbound.Type) {
 				continue
 			}
 		}
@@ -86,8 +86,8 @@ func (o *ProcessOptions) Process(outbounds []boxOption.Outbound) []boxOption.Out
 				continue
 			}
 		}
-		if len(o.ExcludeOutboundType) > 0 {
-			if common.Contains(o.ExcludeOutboundType, outbound.Type) {
+		if len(o.ExcludeType) > 0 {
+			if common.Contains(o.ExcludeType, outbound.Type) {
 				continue
 			}
 		}

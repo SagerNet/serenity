@@ -9,8 +9,8 @@
     {
       "filter": [],
       "exclude": [],
-      "filter_outbound_type": [],
-      "exclude_outbound_type": [],
+      "filter_type": [],
+      "exclude_type": [],
       "rename": {},
       "remove_emoji": false,
       "rewrite_multiplex": {}
@@ -62,11 +62,11 @@ Regexp filter rules, non-matching outbounds will be removed.
 
 Regexp exclude rules, matching outbounds will be removed.
 
-#### process.filter_outbound_type
+#### process.filter_type
 
 Outbound type filter rules, non-matching outbounds will be removed.
 
-#### process.exclude_outbound_type
+#### process.exclude_type
 
 Outbound type exclude rules, matching outbounds will be removed.
 
