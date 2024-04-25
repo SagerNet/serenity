@@ -11,6 +11,8 @@
       "exclude": [],
       "filter_type": [],
       "exclude_type": [],
+      "invert": false,
+      "remove": false,
       "rename": {},
       "remove_emoji": false,
       "rewrite_multiplex": {}
@@ -56,19 +58,27 @@ Process rules.
 
 #### process.filter
 
-Regexp filter rules, non-matching outbounds will be removed.
+Regexp filter rules, match outbound tag name.
 
 #### process.exclude
 
-Regexp exclude rules, matching outbounds will be removed.
+Regexp exclude rules, match outbound tag name.
 
 #### process.filter_type
 
-Outbound type filter rules, non-matching outbounds will be removed.
+Filter rules, match outbound type.
 
 #### process.exclude_type
 
-Outbound type exclude rules, matching outbounds will be removed.
+Exclude rules, match outbound type.
+
+#### process.invert
+
+Invert filter results.
+
+#### process.remove
+
+Remove outbounds that match the rules.
 
 #### process.rename
 
