@@ -72,26 +72,26 @@ func (o *ProcessOptions) Process(outbounds []boxOption.Outbound) []boxOption.Out
 			inProcess = true
 		} else {
 			if len(o.filter) > 0 {
-				if !common.Any(o.filter, func(it *regexp.Regexp) bool {
+				if common.Any(o.filter, func(it *regexp.Regexp) bool {
 					return it.MatchString(outbound.Tag)
 				}) {
 					inProcess = true
 				}
 			}
 			if !inProcess && len(o.FilterType) > 0 {
-				if !common.Contains(o.FilterType, outbound.Type) {
+				if common.Contains(o.FilterType, outbound.Type) {
 					inProcess = true
 				}
 			}
 			if !inProcess && len(o.exclude) > 0 {
-				if common.Any(o.exclude, func(it *regexp.Regexp) bool {
+				if !common.Any(o.exclude, func(it *regexp.Regexp) bool {
 					return it.MatchString(outbound.Tag)
 				}) {
 					inProcess = true
 				}
 			}
 			if !inProcess && len(o.ExcludeType) > 0 {
-				if common.Contains(o.ExcludeType, outbound.Type) {
+				if !common.Contains(o.ExcludeType, outbound.Type) {
 					inProcess = true
 				}
 			}
