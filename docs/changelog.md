@@ -2,15 +2,12 @@
 icon: material/alert-decagram
 ---
 
-#### 1.0.0-beta.7
-
-* Fix deduplication
-
-#### 1.0.0-beta.6
+#### 1.0.0-beta.8
 
 * Add `subscription.process.rewrite_multiplex`
-* Rename `subscription.process.[filter/exclude]_outbound_type` to `subscription.process.[filter/exclude]_type` 
+* Rename `subscription.process.[filter/exclude]_outbound_type` to `subscription.process.[filter/exclude]_type`
 * Rewrite `subscription.process`
+* Fixes and improvements
 
 ##### 2023/12/12
 
