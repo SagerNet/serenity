@@ -40,3 +40,11 @@ Custom template for different user agent.
 The key is a regular expression matching the user agent.
 
 The value is the template name.
+
+#### outbound
+
+Included outbounds.
+
+#### subscription
+
+Included subscriptions.
