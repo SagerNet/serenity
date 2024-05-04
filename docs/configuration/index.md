@@ -26,6 +26,8 @@ Log configuration, see [Log](https://sing-box.sagernet.org/configuration/log/).
 
 #### listen
 
+==Required==
+
 Listen address.
 
 #### tls
@@ -50,13 +52,19 @@ List of [Subscription](./subscription), can be referenced in [Profile](./profile
 
 #### templates
 
+==Required==
+
 List of [Template](./template), can be referenced in [Profile](./profile).
 
 #### profiles
 
+==Required==
+
 List of [Profile](./profile), can be referenced in [User](./user).
 
 #### users
+
+==Required==
 
 List of [User](./user).
 
