@@ -55,6 +55,7 @@
   "custom_geoip": {},
   "custom_geosite": {},
   "custom_rule_set": [],
+  "post_custom_rule_set": [],
   
   // Experimental
   
@@ -241,6 +242,12 @@ Custom [GeoSite](https://sing-box.sagernet.org/configuration/route/geosite/) tem
 List of [RuleSet](https://sing-box.sagernet.org/configuration/rule-set/).
 
 Default rule sets will not be generated if not empty.
+
+#### post_custom_rule_set
+
+List of [RuleSet](https://sing-box.sagernet.org/configuration/rule-set/).
+
+Will be applied after default rule sets.
 
 #### disable_cache_file
 

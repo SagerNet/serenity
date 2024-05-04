@@ -38,52 +38,55 @@ func (t *Template) renderGeoResources(metadata M.Metadata, options *option.Optio
 				DownloadDetour: downloadDetour,
 			}
 		}
-	} else if len(t.CustomRuleSet) == 0 {
-		var (
-			downloadURL    string
-			downloadDetour string
-			branchSplit    string
-		)
-		if t.EnableJSDelivr {
-			downloadURL = "https://testingcf.jsdelivr.net/gh/"
-			if t.DirectTag != "" {
-				downloadDetour = t.DirectTag
+	} else {
+		if len(t.CustomRuleSet) == 0 {
+			var (
+				downloadURL    string
+				downloadDetour string
+				branchSplit    string
+			)
+			if t.EnableJSDelivr {
+				downloadURL = "https://testingcf.jsdelivr.net/gh/"
+				if t.DirectTag != "" {
+					downloadDetour = t.DirectTag
+				} else {
+					downloadDetour = DefaultDirectTag
+				}
+				branchSplit = "@"
 			} else {
-				downloadDetour = DefaultDirectTag
+				downloadURL = "https://raw.githubusercontent.com/"
+				branchSplit = "/"
 			}
-			branchSplit = "@"
-		} else {
-			downloadURL = "https://raw.githubusercontent.com/"
-			branchSplit = "/"
+			options.Route.RuleSet = []option.RuleSet{
+				{
+					Type:   C.RuleSetTypeRemote,
+					Tag:    "geoip-cn",
+					Format: C.RuleSetFormatBinary,
+					RemoteOptions: option.RemoteRuleSet{
+						URL:            downloadURL + "SagerNet/sing-geoip" + branchSplit + "rule-set/geoip-cn.srs",
+						DownloadDetour: downloadDetour,
+					},
+				},
+				{
+					Type:   C.RuleSetTypeRemote,
+					Tag:    "geosite-geolocation-cn",
+					Format: C.RuleSetFormatBinary,
+					RemoteOptions: option.RemoteRuleSet{
+						URL:            downloadURL + "SagerNet/sing-geosite" + branchSplit + "rule-set/geosite-geolocation-cn.srs",
+						DownloadDetour: downloadDetour,
+					},
+				},
+				{
+					Type:   C.RuleSetTypeRemote,
+					Tag:    "geosite-geolocation-!cn",
+					Format: C.RuleSetFormatBinary,
+					RemoteOptions: option.RemoteRuleSet{
+						URL:            downloadURL + "SagerNet/sing-geosite" + branchSplit + "rule-set/geosite-geolocation-!cn.srs",
+						DownloadDetour: downloadDetour,
+					},
+				},
+			}
 		}
-		options.Route.RuleSet = []option.RuleSet{
-			{
-				Type:   C.RuleSetTypeRemote,
-				Tag:    "geoip-cn",
-				Format: C.RuleSetFormatBinary,
-				RemoteOptions: option.RemoteRuleSet{
-					URL:            downloadURL + "SagerNet/sing-geoip" + branchSplit + "rule-set/geoip-cn.srs",
-					DownloadDetour: downloadDetour,
-				},
-			},
-			{
-				Type:   C.RuleSetTypeRemote,
-				Tag:    "geosite-geolocation-cn",
-				Format: C.RuleSetFormatBinary,
-				RemoteOptions: option.RemoteRuleSet{
-					URL:            downloadURL + "SagerNet/sing-geosite" + branchSplit + "rule-set/geosite-geolocation-cn.srs",
-					DownloadDetour: downloadDetour,
-				},
-			},
-			{
-				Type:   C.RuleSetTypeRemote,
-				Tag:    "geosite-geolocation-!cn",
-				Format: C.RuleSetFormatBinary,
-				RemoteOptions: option.RemoteRuleSet{
-					URL:            downloadURL + "SagerNet/sing-geosite" + branchSplit + "rule-set/geosite-geolocation-!cn.srs",
-					DownloadDetour: downloadDetour,
-				},
-			},
-		}
+		options.Route.RuleSet = append(options.Route.RuleSet, t.PostCustomRuleSet...)
 	}
 }

@@ -50,6 +50,7 @@ type Template struct {
 	CustomGeoIP                   *option.GeoIPOptions                            `json:"custom_geoip,omitempty"`
 	CustomGeosite                 *option.GeositeOptions                          `json:"custom_geosite,omitempty"`
 	CustomRuleSet                 []option.RuleSet                                `json:"custom_rule_set,omitempty"`
+	PostCustomRuleSet             []option.RuleSet                                `json:"post_custom_rule_set,omitempty"`
 
 	//  Experimental
 	DisableCacheFile          bool `json:"disable_cache_file,omitempty"`
