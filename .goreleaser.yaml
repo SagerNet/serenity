@@ -59,6 +59,8 @@ nfpms:
     deb:
       signature:
         key_file: "{{ .Env.NFPM_KEY_PATH }}"
+      fields:
+        Bugs: https://github.com/SagerNet/serenity/issues
     rpm:
       signature:
         key_file: "{{ .Env.NFPM_KEY_PATH }}"
