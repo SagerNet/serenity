@@ -2,6 +2,10 @@
 icon: material/alert-decagram
 ---
 
+#### 1.0.0-beta.7
+
+* Fix deduplication
+
 #### 1.0.0-beta.6
 
 * Add `subscription.process.rewrite_multiplex`
