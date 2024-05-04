@@ -45,9 +45,9 @@ func Deduplication(ctx context.Context, servers []option.Outbound) []option.Outb
 			}
 			return nil
 		})
-		resolveGroup.Concurrency(5)
-		_ = resolveGroup.Run(ctx)
 	}
+	resolveGroup.Concurrency(5)
+	_ = resolveGroup.Run(ctx)
 	uniqueServerMap := make(map[netip.AddrPort]bool)
 	var newServers []option.Outbound
 	for index, server := range servers {
