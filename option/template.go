@@ -12,6 +12,7 @@ type Template struct {
 
 	// Global
 
+	Log                  *option.LogOptions    `json:"log,omitempty"`
 	DomainStrategy       option.DomainStrategy `json:"domain_strategy,omitempty"`
 	DisableTrafficBypass bool                  `json:"disable_traffic_bypass,omitempty"`
 	DisableRuleSet       bool                  `json:"disable_rule_set,omitempty"`

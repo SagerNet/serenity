@@ -6,6 +6,7 @@
   
   // Global
   
+  "log": {},
   "domain_strategy": "",
   "disable_traffic_bypass": false,
   "disable_rule_set": false,
@@ -80,6 +81,10 @@
 ==Required==
 
 Profile name.
+
+#### log
+
+Log configuration, see [Log](https://sing-box.sagernet.org/configuration/log/).
 
 #### domain_strategy
 
