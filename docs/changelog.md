@@ -2,6 +2,11 @@
 icon: material/alert-decagram
 ---
 
+#### 1.0.0-beta.9
+
+* Add `template.log`
+* Fixes and improvements
+
 #### 1.0.0-beta.8
 
 * Add `subscription.process.rewrite_multiplex`
