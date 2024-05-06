@@ -3,31 +3,35 @@
 ```json
 {
   "name": "",
-  
+
   // Global
-  
+
   "domain_strategy": "",
   "disable_traffic_bypass": false,
   "disable_rule_set": false,
   "remote_resolve": false,
-  
+
+  // Log
+
+  "custom_log": {},
+
   // DNS
-  
+
   "dns_default": "",
   "dns_local": "",
   "enable_fakeip": false,
   "pre_dns_rules": [],
   "custom_dns_rules": [],
-  
+
   // Inbound
-  
+
   "disable_tun": false,
   "disable_system_proxy": false,
   "custom_tun": {},
   "custom_mixed": {},
-  
+
   // Outbound
-  
+
   "extra_groups": [
     {
       "tag": "",
@@ -45,9 +49,9 @@
   "custom_direct": {},
   "custom_selector": {},
   "custom_urltest": {},
-  
+
   // Route
-  
+
   "disable_default_rules": false,
   "pre_rules": [],
   "custom_rules": [],
@@ -56,18 +60,18 @@
   "custom_geosite": {},
   "custom_rule_set": [],
   "post_custom_rule_set": [],
-  
+
   // Experimental
-  
+
   "disable_cache_file": false,
   "disable_clash_mode": false,
   "clash_mode_rule": "",
   "clash_mode_global": "",
   "clash_mode_direct": "",
   "custom_clash_api": {},
-  
+
   // Debug
-  
+
   "pprof_listen": "",
   "memory_limit": ""
 }
@@ -102,6 +106,10 @@ Disable traffic bypass for Chinese DNS queries and connections.
 #### remote_resolve
 
 Don't generate `doamin_strategy` options for inbounds.
+
+#### custom_log
+
+Custom [Log](https://sing-box.sagernet.org/configuration/log/) template.
 
 #### dns_default
 

@@ -3,7 +3,7 @@ package option
 import (
 	"github.com/sagernet/serenity/common/semver"
 	"github.com/sagernet/sing-box/option"
-	"github.com/sagernet/sing-dns"
+	dns "github.com/sagernet/sing-dns"
 	"github.com/sagernet/sing/common/json/badjson"
 )
 
@@ -16,6 +16,9 @@ type Template struct {
 	DisableTrafficBypass bool                  `json:"disable_traffic_bypass,omitempty"`
 	DisableRuleSet       bool                  `json:"disable_rule_set,omitempty"`
 	RemoteResolve        bool                  `json:"remote_resolve,omitempty"`
+
+	// Log
+	CustomLog *option.LogOptions `json:"custom_log,omitempty"`
 
 	// DNS
 	DNSDefault     string           `json:"dns_default,omitempty"`

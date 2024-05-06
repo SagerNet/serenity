@@ -10,7 +10,7 @@ import (
 	"github.com/sagernet/sing/common"
 )
 
-func (t *Template) renderOutbounds(metadata M.Metadata, options *option.Options, outbounds [][]option.Outbound, subscriptions []*subscription.Subscription) error {
+func (t *Template) renderOutbounds(_ M.Metadata, options *option.Options, outbounds [][]option.Outbound, subscriptions []*subscription.Subscription) error {
 	defaultTag := t.DefaultTag
 	if defaultTag == "" {
 		defaultTag = DefaultDefaultTag
