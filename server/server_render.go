@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"net/http"
+	"strings"
 
 	M "github.com/sagernet/serenity/common/metadata"
 	"github.com/sagernet/serenity/option"
@@ -30,6 +31,9 @@ func (s *Server) render(writer http.ResponseWriter, request *http.Request) {
 	if profileName == "" {
 		// compatibility with legacy versions
 		profileName = request.URL.Query().Get("profile")
+	}
+	if strings.HasSuffix(profileName, "/") {
+		profileName = profileName[:len(profileName)-1]
 	}
 	var profile *Profile
 	if len(s.users) == 0 {
