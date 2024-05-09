@@ -3,32 +3,33 @@
 ```json
 {
   "name": "",
-  
+
   // Global
-  
+
   "log": {},
   "domain_strategy": "",
   "disable_traffic_bypass": false,
   "disable_rule_set": false,
   "remote_resolve": false,
-  
+
   // DNS
-  
+
   "dns_default": "",
   "dns_local": "",
   "enable_fakeip": false,
   "pre_dns_rules": [],
   "custom_dns_rules": [],
-  
+
   // Inbound
-  
+
+  "inbounds": [],
   "disable_tun": false,
   "disable_system_proxy": false,
   "custom_tun": {},
   "custom_mixed": {},
-  
+
   // Outbound
-  
+
   "extra_groups": [
     {
       "tag": "",
@@ -46,9 +47,9 @@
   "custom_direct": {},
   "custom_selector": {},
   "custom_urltest": {},
-  
+
   // Route
-  
+
   "disable_default_rules": false,
   "pre_rules": [],
   "custom_rules": [],
@@ -57,18 +58,18 @@
   "custom_geosite": {},
   "custom_rule_set": [],
   "post_custom_rule_set": [],
-  
+
   // Experimental
-  
+
   "disable_cache_file": false,
   "disable_clash_mode": false,
   "clash_mode_rule": "",
   "clash_mode_global": "",
   "clash_mode_direct": "",
   "custom_clash_api": {},
-  
+
   // Debug
-  
+
   "pprof_listen": "",
   "memory_limit": ""
 }
@@ -135,6 +136,10 @@ Will be applied before traffic bypassing rules.
 List of [DNS Rule](https://sing-box.sagernet.org/configuration/dns/rule/).
 
 No default traffic bypassing DNS rules will be generated if not empty.
+
+#### inbounds
+
+List of [Inbound](https://sing-box.sagernet.org/configuration/inbound/).
 
 #### disable_tun
 

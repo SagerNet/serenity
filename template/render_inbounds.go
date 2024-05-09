@@ -12,6 +12,7 @@ import (
 )
 
 func (t *Template) renderInbounds(metadata M.Metadata, options *option.Options) error {
+	options.Inbounds = t.Inbounds
 	var needSniff bool
 	if !t.DisableTrafficBypass {
 		needSniff = true
