@@ -2,6 +2,10 @@
 icon: material/alert-decagram
 ---
 
+#### 1.0.0-beta.10
+
+* Add `template.inbounds`
+
 #### 1.0.0-beta.9
 
 * Add `template.log`
