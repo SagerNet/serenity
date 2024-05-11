@@ -37,6 +37,10 @@ func (t *Template) renderDNS(metadata M.Metadata, options *option.Options) error
 	if dnsLocal == "" {
 		dnsLocal = DefaultDNSLocal
 	}
+	directTag := t.DirectTag
+	if directTag == "" {
+		directTag = DefaultDirectTag
+	}
 	defaultDNSOptions := option.DNSServerOptions{
 		Tag:     DNSDefaultTag,
 		Address: dnsDefault,
@@ -58,7 +62,7 @@ func (t *Template) renderDNS(metadata M.Metadata, options *option.Options) error
 		localDNSOptions = option.DNSServerOptions{
 			Tag:     DNSLocalTag,
 			Address: dnsLocal,
-			Detour:  DefaultDirectTag,
+			Detour:  directTag,
 		}
 		if dnsLocalUrl, err := url.Parse(dnsLocal); err == nil && BM.IsDomainName(dnsLocalUrl.Hostname()) {
 			localDNSOptions.AddressResolver = DNSLocalSetupTag

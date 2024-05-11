@@ -2,13 +2,17 @@ package option
 
 import (
 	"github.com/sagernet/serenity/common/semver"
+	C "github.com/sagernet/serenity/constant"
 	"github.com/sagernet/sing-box/option"
 	"github.com/sagernet/sing-dns"
+	E "github.com/sagernet/sing/common/exceptions"
+	"github.com/sagernet/sing/common/json"
 	"github.com/sagernet/sing/common/json/badjson"
 )
 
 type Template struct {
-	Name string `json:"name,omitempty"`
+	Name   string `json:"name,omitempty"`
+	Extend string `json:"extend,omitempty"`
 
 	// Global
 
@@ -37,6 +41,7 @@ type Template struct {
 	ExtraGroups           []ExtraGroup                    `json:"extra_groups,omitempty"`
 	GenerateGlobalURLTest bool                            `json:"generate_global_urltest,omitempty"`
 	DirectTag             string                          `json:"direct_tag,omitempty"`
+	BlockTag              string                          `json:"block_tag,omitempty"`
 	DefaultTag            string                          `json:"default_tag,omitempty"`
 	URLTestTag            string                          `json:"urltest_tag,omitempty"`
 	CustomDirect          *option.DirectOutboundOptions   `json:"custom_direct,omitempty"`
@@ -51,8 +56,8 @@ type Template struct {
 	EnableJSDelivr                bool                                            `json:"enable_jsdelivr,omitempty"`
 	CustomGeoIP                   *option.GeoIPOptions                            `json:"custom_geoip,omitempty"`
 	CustomGeosite                 *option.GeositeOptions                          `json:"custom_geosite,omitempty"`
-	CustomRuleSet                 []option.RuleSet                                `json:"custom_rule_set,omitempty"`
-	PostCustomRuleSet             []option.RuleSet                                `json:"post_custom_rule_set,omitempty"`
+	CustomRuleSet                 []RuleSet                                       `json:"custom_rule_set,omitempty"`
+	PostRuleSet                   []RuleSet                                       `json:"post_rule_set,omitempty"`
 
 	//  Experimental
 	DisableCacheFile          bool `json:"disable_cache_file,omitempty"`
@@ -68,6 +73,53 @@ type Template struct {
 	// Debug
 	PProfListen string             `json:"pprof_listen,omitempty"`
 	MemoryLimit option.MemoryBytes `json:"memory_limit,omitempty"`
+}
+
+type _RuleSet struct {
+	Type           string               `json:"type,omitempty"`
+	DefaultOptions option.RuleSet       `json:"-"`
+	GitHubOptions  GitHubRuleSetOptions `json:"-"`
+}
+
+type RuleSet _RuleSet
+
+func (r *RuleSet) RawOptions() (any, error) {
+	switch r.Type {
+	case C.RuleSetTypeDefault, "":
+		r.Type = ""
+		return &r.DefaultOptions, nil
+	case C.RuleSetTypeGitHub:
+		return &r.GitHubOptions, nil
+	default:
+		return nil, E.New("unknown rule set type", r.Type)
+	}
+}
+
+func (r *RuleSet) MarshalJSON() ([]byte, error) {
+	rawOptions, err := r.RawOptions()
+	if err != nil {
+		return nil, err
+	}
+	return option.MarshallObjects((*_RuleSet)(r), rawOptions)
+}
+
+func (r *RuleSet) UnmarshalJSON(bytes []byte) error {
+	err := json.Unmarshal(bytes, (*_RuleSet)(r))
+	if err != nil {
+		return err
+	}
+	rawOptions, err := r.RawOptions()
+	if err != nil {
+		return err
+	}
+	return option.UnmarshallExcluded(bytes, (*_RuleSet)(r), rawOptions)
+}
+
+type GitHubRuleSetOptions struct {
+	Owner   string                  `json:"owner,omitempty"`
+	Repo    string                  `json:"repo,omitempty"`
+	Branch  string                  `json:"branch,omitempty"`
+	RuleSet option.Listable[string] `json:"rule_set,omitempty"`
 }
 
 func (t Template) DisableIPv6() bool {

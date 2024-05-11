@@ -7,6 +7,7 @@ import (
 	"github.com/sagernet/serenity/option"
 	C "github.com/sagernet/sing-box/constant"
 	E "github.com/sagernet/sing/common/exceptions"
+	"github.com/sagernet/sing/common/json/badjson"
 	"github.com/sagernet/sing/common/logger"
 )
 
@@ -16,11 +17,48 @@ type Manager struct {
 	templates []*Template
 }
 
+func extendTemplate(rawTemplates []option.Template, root, current option.Template) (option.Template, error) {
+	if current.Extend == "" {
+		return current, nil
+	} else if root.Name == current.Extend {
+		return option.Template{}, E.New("initialize template[", current.Name, "]: circular extend detected: ", current.Extend)
+	}
+	var next option.Template
+	for _, it := range rawTemplates {
+		if it.Name == current.Extend {
+			next = it
+			break
+		}
+	}
+	if next.Name == "" {
+		return option.Template{}, E.New("initialize template[", current.Name, "]: extended template not found: ", current.Extend)
+	}
+	if next.Extend != "" {
+		newNext, err := extendTemplate(rawTemplates, root, next)
+		if err != nil {
+			return option.Template{}, E.Cause(err, next.Extend)
+		}
+		next = newNext
+	}
+	newTemplate, err := badjson.Merge(current, next)
+	if err != nil {
+		return option.Template{}, E.Cause(err, "initialize template[", current.Name, "]: merge extended template: ", current.Extend)
+	}
+	return newTemplate, nil
+}
+
 func NewManager(ctx context.Context, logger logger.Logger, rawTemplates []option.Template) (*Manager, error) {
 	var templates []*Template
 	for templateIndex, template := range rawTemplates {
 		if template.Name == "" {
 			return nil, E.New("initialize template[", templateIndex, "]: missing name")
+		}
+		if template.Extend != "" {
+			newTemplate, err := extendTemplate(rawTemplates, template, template)
+			if err != nil {
+				return nil, err
+			}
+			template = newTemplate
 		}
 		var groups []*ExtraGroup
 		for groupIndex, group := range template.ExtraGroups {

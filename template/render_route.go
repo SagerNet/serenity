@@ -13,7 +13,7 @@ func (t *Template) renderRoute(metadata M.Metadata, options *option.Options) err
 		options.Route = &option.RouteOptions{
 			GeoIP:   t.CustomGeoIP,
 			Geosite: t.CustomGeosite,
-			RuleSet: t.CustomRuleSet,
+			RuleSet: t.renderRuleSet(t.CustomRuleSet),
 		}
 	}
 	if !t.DisableTrafficBypass {
@@ -45,6 +45,10 @@ func (t *Template) renderRoute(metadata M.Metadata, options *option.Options) err
 		},
 	}
 	if !t.DisableTrafficBypass && !t.DisableDefaultRules {
+		blockTag := t.BlockTag
+		if blockTag == "" {
+			blockTag = DefaultBlockTag
+		}
 		options.Route.Rules = append(options.Route.Rules, option.Rule{
 			Type: C.RuleTypeLogical,
 			LogicalOptions: option.LogicalRule{
@@ -64,7 +68,7 @@ func (t *Template) renderRoute(metadata M.Metadata, options *option.Options) err
 						},
 					},
 				},
-				Outbound: BlockTag,
+				Outbound: blockTag,
 			},
 		})
 	}
