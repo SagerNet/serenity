@@ -23,7 +23,7 @@ func (t *Template) renderDNS(metadata M.Metadata, options *option.Options) error
 		domainStrategy = option.DomainStrategy(dns.DomainStrategyPreferIPv4)
 	}
 	options.DNS = &option.DNSOptions{
-		ReverseMapping: !t.DisableTrafficBypass && !metadata.Platform.IsApple(),
+		ReverseMapping: !t.DisableTrafficBypass && metadata.Platform != M.PlatformUnknown && !metadata.Platform.IsApple(),
 		DNSClientOptions: option.DNSClientOptions{
 			Strategy:         domainStrategy,
 			IndependentCache: t.EnableFakeIP,
