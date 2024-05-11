@@ -1,13 +1,11 @@
 package option
 
 import (
-	"github.com/sagernet/serenity/common/semver"
 	C "github.com/sagernet/serenity/constant"
 	"github.com/sagernet/sing-box/option"
 	"github.com/sagernet/sing-dns"
 	E "github.com/sagernet/sing/common/exceptions"
 	"github.com/sagernet/sing/common/json"
-	"github.com/sagernet/sing/common/json/badjson"
 )
 
 type Template struct {
@@ -49,15 +47,14 @@ type Template struct {
 	CustomURLTest         *option.URLTestOutboundOptions  `json:"custom_urltest,omitempty"`
 
 	// Route
-	DisableDefaultRules           bool                                            `json:"disable_default_rules,omitempty"`
-	PreRules                      []option.Rule                                   `json:"pre_rules,omitempty"`
-	CustomRules                   []option.Rule                                   `json:"custom_rules,omitempty"`
-	CustomRulesForVersionLessThan badjson.TypedMap[semver.Version, []option.Rule] `json:"custom_rules_for_version_less_than,omitempty"`
-	EnableJSDelivr                bool                                            `json:"enable_jsdelivr,omitempty"`
-	CustomGeoIP                   *option.GeoIPOptions                            `json:"custom_geoip,omitempty"`
-	CustomGeosite                 *option.GeositeOptions                          `json:"custom_geosite,omitempty"`
-	CustomRuleSet                 []RuleSet                                       `json:"custom_rule_set,omitempty"`
-	PostRuleSet                   []RuleSet                                       `json:"post_rule_set,omitempty"`
+	DisableDefaultRules bool                   `json:"disable_default_rules,omitempty"`
+	PreRules            []option.Rule          `json:"pre_rules,omitempty"`
+	CustomRules         []option.Rule          `json:"custom_rules,omitempty"`
+	EnableJSDelivr      bool                   `json:"enable_jsdelivr,omitempty"`
+	CustomGeoIP         *option.GeoIPOptions   `json:"custom_geoip,omitempty"`
+	CustomGeosite       *option.GeositeOptions `json:"custom_geosite,omitempty"`
+	CustomRuleSet       []RuleSet              `json:"custom_rule_set,omitempty"`
+	PostRuleSet         []RuleSet              `json:"post_rule_set,omitempty"`
 
 	//  Experimental
 	DisableCacheFile          bool `json:"disable_cache_file,omitempty"`
