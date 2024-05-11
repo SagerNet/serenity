@@ -120,14 +120,15 @@ func (t *Template) renderRuleSet(ruleSets []option.RuleSet) []boxOption.RuleSet 
 			for _, code := range ruleSet.GitHubOptions.RuleSet {
 				result = append(result, boxOption.RuleSet{
 					Type:   C.RuleSetTypeRemote,
-					Tag:    code,
+					Tag:    ruleSet.GitHubOptions.Prefix + code,
 					Format: C.RuleSetFormatBinary,
 					RemoteOptions: boxOption.RemoteRuleSet{
 						URL: downloadURL +
 							ruleSet.GitHubOptions.Owner + "/" +
-							ruleSet.GitHubOptions.Repo + "/" +
+							ruleSet.GitHubOptions.Repo +
 							branchSplit +
 							ruleSet.GitHubOptions.Branch + "/" +
+							ruleSet.GitHubOptions.Path +
 							code + ".srs",
 						DownloadDetour: downloadDetour,
 					},
