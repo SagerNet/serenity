@@ -24,7 +24,7 @@ func Deduplication(ctx context.Context, servers []option.Outbound) []option.Outb
 			Context:      ctx,
 			Dialer:       N.SystemDialer,
 			Address:      "tls://1.1.1.1",
-			ClientSubnet: netip.MustParseAddr("114.114.114.114"),
+			ClientSubnet: netip.MustParsePrefix("114.114.114.114/24"),
 		})),
 	}
 
