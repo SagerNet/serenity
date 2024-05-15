@@ -117,6 +117,7 @@ func (t *Template) renderRuleSet(ruleSets []option.RuleSet) []boxOption.RuleSet 
 				downloadURL = "https://raw.githubusercontent.com/"
 				branchSplit = "/"
 			}
+
 			for _, code := range ruleSet.GitHubOptions.RuleSet {
 				result = append(result, boxOption.RuleSet{
 					Type:   C.RuleSetTypeRemote,
@@ -124,10 +125,8 @@ func (t *Template) renderRuleSet(ruleSets []option.RuleSet) []boxOption.RuleSet 
 					Format: C.RuleSetFormatBinary,
 					RemoteOptions: boxOption.RemoteRuleSet{
 						URL: downloadURL +
-							ruleSet.GitHubOptions.Owner + "/" +
-							ruleSet.GitHubOptions.Repo +
+							ruleSet.GitHubOptions.Repository +
 							branchSplit +
-							ruleSet.GitHubOptions.Branch + "/" +
 							ruleSet.GitHubOptions.Path +
 							code + ".srs",
 						DownloadDetour: downloadDetour,

@@ -50,6 +50,8 @@ nav:
       - Template: configuration/template.md
       - Profile: configuration/profile.md
       - User: configuration/user.md
+      - Shared:
+          - RuleSet: configuration/shared/rule-set.md
 markdown_extensions:
   - pymdownx.inlinehilite
   - pymdownx.snippets

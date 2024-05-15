@@ -113,12 +113,10 @@ func (r *RuleSet) UnmarshalJSON(bytes []byte) error {
 }
 
 type GitHubRuleSetOptions struct {
-	Owner   string                  `json:"owner,omitempty"`
-	Repo    string                  `json:"repo,omitempty"`
-	Branch  string                  `json:"branch,omitempty"`
-	Path    string                  `json:"path,omitempty"`
-	Prefix  string                  `json:"prefix,omitempty"`
-	RuleSet option.Listable[string] `json:"rule_set,omitempty"`
+	Repository string                  `json:"repository,omitempty"`
+	Path       string                  `json:"path,omitempty"`
+	Prefix     string                  `json:"prefix,omitempty"`
+	RuleSet    option.Listable[string] `json:"rule_set,omitempty"`
 }
 
 func (t Template) DisableIPv6() bool {

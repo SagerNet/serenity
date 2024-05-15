@@ -3,6 +3,7 @@
 ```json
 {
   "name": "",
+  "extend": "",
 
   // Global
 
@@ -82,6 +83,10 @@
 ==Required==
 
 Profile name.
+
+#### extend
+
+Extend from another profile.
 
 #### log
 
@@ -249,13 +254,13 @@ Custom [GeoSite](https://sing-box.sagernet.org/configuration/route/geosite/) tem
 
 #### custom_rule_set
 
-List of [RuleSet](https://sing-box.sagernet.org/configuration/rule-set/).
+List of [RuleSet](/configuration/shared/rule-set/).
 
 Default rule sets will not be generated if not empty.
 
 #### post_rule_set
 
-List of [RuleSet](https://sing-box.sagernet.org/configuration/rule-set/).
+List of [RuleSet](/configuration/shared/rule-set/).
 
 Will be applied after default rule sets.
 
