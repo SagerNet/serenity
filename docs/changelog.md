@@ -2,6 +2,16 @@
 icon: material/alert-decagram
 ---
 
+#### 1.0.0-beta.11
+
+* Add `template.extend`
+* Add independent rule-set configuration **1**
+
+**1**:
+
+With the new `type=github`, you can batch generate rule-sets based on GitHub files.
+See [Rule-Set](/configuration/shared/rule-set/).
+
 #### 1.0.0-beta.10
 
 * Add `template.inbounds`
