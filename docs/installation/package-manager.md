@@ -38,7 +38,7 @@ icon: material/package
 === ":material-debian: Debian / DEB"
 
     ```bash
-    bash <(curl -fsSL https://serenity.app/serenity/deb-install.sh)
+    bash <(curl -fsSL https://sing-box.app/serenity/deb-install.sh)
     ```
 
 === ":material-redhat: Redhat / RPM"
