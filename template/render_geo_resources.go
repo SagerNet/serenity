@@ -96,10 +96,7 @@ func (t *Template) renderGeoResources(metadata M.Metadata, options *boxOption.Op
 func (t *Template) renderRuleSet(ruleSets []option.RuleSet) []boxOption.RuleSet {
 	var result []boxOption.RuleSet
 	for _, ruleSet := range ruleSets {
-		switch ruleSet.Type {
-		case constant.RuleSetTypeDefault, "":
-			result = append(result, ruleSet.DefaultOptions)
-		case constant.RuleSetTypeGitHub:
+		if ruleSet.Type == constant.RuleSetTypeGitHub {
 			var (
 				downloadURL    string
 				downloadDetour string
@@ -133,6 +130,8 @@ func (t *Template) renderRuleSet(ruleSets []option.RuleSet) []boxOption.RuleSet 
 					},
 				})
 			}
+		} else {
+			result = append(result, ruleSet.DefaultOptions)
 		}
 	}
 	return result

@@ -4,7 +4,6 @@ import (
 	C "github.com/sagernet/serenity/constant"
 	"github.com/sagernet/sing-box/option"
 	"github.com/sagernet/sing-dns"
-	E "github.com/sagernet/sing/common/exceptions"
 	"github.com/sagernet/sing/common/json"
 )
 
@@ -80,24 +79,12 @@ type _RuleSet struct {
 
 type RuleSet _RuleSet
 
-func (r *RuleSet) RawOptions() (any, error) {
-	switch r.Type {
-	case C.RuleSetTypeDefault, "":
-		r.Type = ""
-		return &r.DefaultOptions, nil
-	case C.RuleSetTypeGitHub:
-		return &r.GitHubOptions, nil
-	default:
-		return nil, E.New("unknown rule set type", r.Type)
-	}
-}
-
 func (r *RuleSet) MarshalJSON() ([]byte, error) {
-	rawOptions, err := r.RawOptions()
-	if err != nil {
-		return nil, err
+	if r.Type == C.RuleSetTypeGitHub {
+		return option.MarshallObjects((*_RuleSet)(r), r.GitHubOptions)
+	} else {
+		return json.Marshal(r.DefaultOptions)
 	}
-	return option.MarshallObjects((*_RuleSet)(r), rawOptions)
 }
 
 func (r *RuleSet) UnmarshalJSON(bytes []byte) error {
@@ -105,11 +92,11 @@ func (r *RuleSet) UnmarshalJSON(bytes []byte) error {
 	if err != nil {
 		return err
 	}
-	rawOptions, err := r.RawOptions()
-	if err != nil {
-		return err
+	if r.Type == C.RuleSetTypeGitHub {
+		return option.UnmarshallExcluded(bytes, (*_RuleSet)(r), &r.GitHubOptions)
+	} else {
+		return json.Unmarshal(bytes, &r.DefaultOptions)
 	}
-	return option.UnmarshallExcluded(bytes, (*_RuleSet)(r), rawOptions)
 }
 
 type GitHubRuleSetOptions struct {

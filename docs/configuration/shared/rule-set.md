@@ -4,13 +4,13 @@ RuleSet generate configuration.
 
 ### Structure
 
-=== "Default"
+=== "Original"
 
     ```json
     {
-      "type": "", // optional
+      "type": "remote", // or local
       
-      ... // Default Fields
+      ... // Original Fields
     }
     ```
 
@@ -21,7 +21,7 @@ RuleSet generate configuration.
       "type": "github",
       "repository": "",
       "path": "",
-      "rule-set": []
+      "rule_set": []
     }
     ```
 
@@ -33,7 +33,7 @@ RuleSet generate configuration.
        "repository": "SagerNet/sing-geosite",
        "path": "rule-set",
        "prefix": "geosite-",
-       "rule-set": [
+       "rule_set": [
          "apple",
          "microsoft",
          "openai"
@@ -49,7 +49,7 @@ RuleSet generate configuration.
       "repository": "MetaCubeX/meta-rules-dat",
       "path": "sing/geo/geosite",
       "prefix": "geosite-",
-      "rule-set": [
+      "rule_set": [
         "apple",
         "microsoft",
         "openai"
@@ -57,7 +57,7 @@ RuleSet generate configuration.
     }
     ```
 
-### Default Fields
+### Original Fields
 
 See [RuleSet](https://sing-box.sagernet.org/configuration/rule-set/).
 
@@ -75,6 +75,6 @@ Branch and directory path, `rule-set` or `sing/geo/<geoip/geosite>`.
 
 File prefix, `geoip-` or `geosite-`.
 
-#### rule-set
+#### rule_set
 
 RuleSet name list.
