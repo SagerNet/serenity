@@ -4,6 +4,7 @@ import (
 	"net/netip"
 
 	M "github.com/sagernet/serenity/common/metadata"
+	"github.com/sagernet/serenity/common/semver"
 	C "github.com/sagernet/sing-box/constant"
 	"github.com/sagernet/sing-box/option"
 	"github.com/sagernet/sing-dns"
@@ -25,6 +26,9 @@ func (t *Template) renderInbounds(metadata M.Metadata, options *option.Options) 
 			domainStrategy = option.DomainStrategy(dns.DomainStrategyPreferIPv4)
 		}
 	}
+	autoRedirect := t.AutoRedirect &&
+		!metadata.Platform.IsApple() &&
+		(metadata.Version == nil || metadata.Version.GreaterThanOrEqual(semver.ParseVersion("1.10.0-alpha.2")))
 	disableTun := t.DisableTUN && !metadata.Platform.TunOnly()
 	if !disableTun {
 		options.Route.AutoDetectInterface = true
@@ -43,6 +47,9 @@ func (t *Template) renderInbounds(metadata M.Metadata, options *option.Options) 
 					SniffEnabled: needSniff,
 				},
 			},
+		}
+		if autoRedirect {
+			tunInbound.TunOptions.AutoRedirect = true
 		}
 		if t.EnableFakeIP {
 			tunInbound.TunOptions.InboundOptions.DomainStrategy = domainStrategy

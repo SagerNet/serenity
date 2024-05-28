@@ -29,6 +29,7 @@ type Template struct {
 
 	// Inbound
 	Inbounds           []option.Inbound                              `json:"inbounds,omitempty"`
+	AutoRedirect       bool                                          `json:"auto_redirect,omitempty"`
 	DisableTUN         bool                                          `json:"disable_tun,omitempty"`
 	DisableSystemProxy bool                                          `json:"disable_system_proxy,omitempty"`
 	CustomTUN          *TypedMessage[option.TunInboundOptions]       `json:"custom_tun,omitempty"`
