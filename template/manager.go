@@ -7,6 +7,7 @@ import (
 	"github.com/sagernet/serenity/option"
 	C "github.com/sagernet/sing-box/constant"
 	E "github.com/sagernet/sing/common/exceptions"
+	"github.com/sagernet/sing/common/json"
 	"github.com/sagernet/sing/common/json/badjson"
 	"github.com/sagernet/sing/common/logger"
 )
@@ -40,10 +41,15 @@ func extendTemplate(rawTemplates []option.Template, root, current option.Templat
 		}
 		next = newNext
 	}
-	newTemplate, err := badjson.Merge(next, current)
+	newRawTemplate, err := badjson.MergeJSON(next.RawMessage, current.RawMessage)
 	if err != nil {
 		return option.Template{}, E.Cause(err, "initialize template[", current.Name, "]: merge extended template: ", current.Extend)
 	}
+	newTemplate, err := json.UnmarshalExtended[option.Template](newRawTemplate)
+	if err != nil {
+		return option.Template{}, E.Cause(err, "initialize template[", current.Name, "]: unmarshal extended template: ", current.Extend)
+	}
+	newTemplate.RawMessage = newRawTemplate
 	return newTemplate, nil
 }
 

@@ -7,9 +7,10 @@ import (
 	"github.com/sagernet/sing/common/json"
 )
 
-type Template struct {
-	Name   string `json:"name,omitempty"`
-	Extend string `json:"extend,omitempty"`
+type _Template struct {
+	RawMessage json.RawMessage `json:"-"`
+	Name       string          `json:"name,omitempty"`
+	Extend     string          `json:"extend,omitempty"`
 
 	// Global
 
@@ -70,6 +71,21 @@ type Template struct {
 	// Debug
 	PProfListen string             `json:"pprof_listen,omitempty"`
 	MemoryLimit option.MemoryBytes `json:"memory_limit,omitempty"`
+}
+
+type Template _Template
+
+func (t *Template) MarshalJSON() ([]byte, error) {
+	return json.Marshal((*_Template)(t))
+}
+
+func (t *Template) UnmarshalJSON(bytes []byte) error {
+	err := json.Unmarshal(bytes, (*_Template)(t))
+	if err != nil {
+		return err
+	}
+	t.RawMessage = bytes
+	return nil
 }
 
 type _RuleSet struct {
