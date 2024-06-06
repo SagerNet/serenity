@@ -44,34 +44,6 @@ func (t *Template) renderRoute(metadata M.Metadata, options *option.Options) err
 			},
 		},
 	}
-	if !t.DisableTrafficBypass && !t.DisableDefaultRules {
-		blockTag := t.BlockTag
-		if blockTag == "" {
-			blockTag = DefaultBlockTag
-		}
-		options.Route.Rules = append(options.Route.Rules, option.Rule{
-			Type: C.RuleTypeLogical,
-			LogicalOptions: option.LogicalRule{
-				Mode: C.LogicalTypeOr,
-				Rules: []option.Rule{
-					{
-						Type: C.RuleTypeDefault,
-						DefaultOptions: option.DefaultRule{
-							Network: []string{N.NetworkUDP},
-							Port:    []uint16{443},
-						},
-					},
-					{
-						Type: C.RuleTypeDefault,
-						DefaultOptions: option.DefaultRule{
-							Protocol: []string{C.ProtocolSTUN},
-						},
-					},
-				},
-				Outbound: blockTag,
-			},
-		})
-	}
 	directTag := t.DirectTag
 	defaultTag := t.DefaultTag
 	if directTag == "" {
@@ -144,6 +116,28 @@ func (t *Template) renderRoute(metadata M.Metadata, options *option.Options) err
 		}
 	} else {
 		options.Route.Rules = append(options.Route.Rules, t.CustomRules...)
+	}
+	if !t.DisableTrafficBypass && !t.DisableDefaultRules {
+		blockTag := t.BlockTag
+		if blockTag == "" {
+			blockTag = DefaultBlockTag
+		}
+		options.Route.Rules = append(options.Route.Rules, option.Rule{
+			Type: C.RuleTypeLogical,
+			LogicalOptions: option.LogicalRule{
+				Mode: C.LogicalTypeOr,
+				Rules: []option.Rule{
+					{
+						Type: C.RuleTypeDefault,
+						DefaultOptions: option.DefaultRule{
+							Network: []string{N.NetworkUDP},
+							Port:    []uint16{443},
+						},
+					},
+				},
+				Outbound: blockTag,
+			},
+		})
 	}
 	return nil
 }
