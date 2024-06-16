@@ -36,7 +36,6 @@ nfpms:
   - id: package
     package_name: serenity
     file_name_template: '{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ with .Arm }}v{{ . }}{{ end }}{{ with .Mips }}_{{ . }}{{ end }}{{ if not (eq .Amd64 "v1") }}{{ .Amd64 }}{{ end }}'
-    vendor: sagernet
     homepage: https://serenity.sagernet.org/
     maintainer: nekohasekai <contact-git@sekai.icu>
     description: The configuration generator for sing-box.
