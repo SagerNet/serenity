@@ -50,6 +50,9 @@ func (t *Template) renderInbounds(metadata M.Metadata, options *option.Options) 
 		}
 		if autoRedirect {
 			tunInbound.TunOptions.AutoRedirect = true
+			if !t.DisableTrafficBypass {
+				tunInbound.TunOptions.RouteExcludeAddressSet = []string{"geoip-cn"}
+			}
 		}
 		if t.EnableFakeIP {
 			tunInbound.TunOptions.InboundOptions.DomainStrategy = domainStrategy

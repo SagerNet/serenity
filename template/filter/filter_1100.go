@@ -12,13 +12,15 @@ func init() {
 }
 
 func filter1100(metadata metadata.Metadata, options *option.Options) {
-	if metadata.Version == nil || metadata.Version.GreaterThanOrEqual(semver.ParseVersion("1.10.0-alpha.2")) {
+	if metadata.Version == nil || metadata.Version.GreaterThanOrEqual(semver.ParseVersion("1.10.0-alpha.13")) {
 		return
 	}
 	newInbounds := make([]option.Inbound, 0, len(options.Inbounds))
 	for _, inbound := range options.Inbounds {
-		if inbound.Type == C.TypeTun && inbound.TunOptions.AutoRedirect {
+		if inbound.Type == C.TypeTun {
 			inbound.TunOptions.AutoRedirect = false
+			inbound.TunOptions.RouteAddressSet = nil
+			inbound.TunOptions.RouteExcludeAddressSet = nil
 		}
 		newInbounds = append(newInbounds, inbound)
 	}
