@@ -2,6 +2,10 @@
 icon: material/alert-decagram
 ---
 
+#### 1.0.0-beta.13
+
+* Add `template.auto_redirect`
+
 #### 1.0.0-beta.12
 
 * Fixes and improvements

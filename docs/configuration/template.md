@@ -4,7 +4,6 @@
 {
   "name": "",
   "extend": "",
-
   // Global
 
   "log": {},
@@ -12,7 +11,6 @@
   "disable_traffic_bypass": false,
   "disable_rule_set": false,
   "remote_resolve": false,
-
   // DNS
 
   "dns_default": "",
@@ -20,15 +18,14 @@
   "enable_fakeip": false,
   "pre_dns_rules": [],
   "custom_dns_rules": [],
-
   // Inbound
 
   "inbounds": [],
+  "auto_redirect": false,
   "disable_tun": false,
   "disable_system_proxy": false,
   "custom_tun": {},
   "custom_mixed": {},
-
   // Outbound
 
   "extra_groups": [
@@ -48,7 +45,6 @@
   "custom_direct": {},
   "custom_selector": {},
   "custom_urltest": {},
-
   // Route
 
   "disable_default_rules": false,
@@ -59,7 +55,6 @@
   "custom_geosite": {},
   "custom_rule_set": [],
   "post_rule_set": [],
-
   // Experimental
 
   "disable_cache_file": false,
@@ -68,7 +63,6 @@
   "clash_mode_global": "",
   "clash_mode_direct": "",
   "custom_clash_api": {},
-
   // Debug
 
   "pprof_listen": "",
@@ -145,6 +139,10 @@ No default traffic bypassing DNS rules will be generated if not empty.
 #### inbounds
 
 List of [Inbound](https://sing-box.sagernet.org/configuration/inbound/).
+
+#### auto_redirect
+
+Generate [auto-redirect](https://sing-box.sagernet.org/configuration/inbound/tun/#auto_redirect) options for android and unknown platforms.
 
 #### disable_tun
 
