@@ -33,6 +33,7 @@ func filter1100(metadata metadata.Metadata, options *option.Options) {
 				inbound.TunOptions.Inet6Address = append(inbound.TunOptions.Inet6Address, common.Filter(inbound.TunOptions.Address, func(it netip.Prefix) bool {
 					return it.Addr().Is6()
 				})...)
+				inbound.TunOptions.Address = nil
 			}
 			//nolint:staticcheck
 			//goland:noinspection GoDeprecation
@@ -43,6 +44,7 @@ func filter1100(metadata metadata.Metadata, options *option.Options) {
 				inbound.TunOptions.Inet6RouteAddress = append(inbound.TunOptions.Inet6RouteAddress, common.Filter(inbound.TunOptions.RouteAddress, func(it netip.Prefix) bool {
 					return it.Addr().Is6()
 				})...)
+				inbound.TunOptions.RouteAddress = nil
 			}
 			//nolint:staticcheck
 			//goland:noinspection GoDeprecation
@@ -53,6 +55,7 @@ func filter1100(metadata metadata.Metadata, options *option.Options) {
 				inbound.TunOptions.Inet6RouteExcludeAddress = append(inbound.TunOptions.Inet6RouteExcludeAddress, common.Filter(inbound.TunOptions.RouteExcludeAddress, func(it netip.Prefix) bool {
 					return it.Addr().Is6()
 				})...)
+				inbound.TunOptions.RouteExcludeAddress = nil
 			}
 		}
 		newInbounds = append(newInbounds, inbound)

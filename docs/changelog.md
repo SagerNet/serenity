@@ -2,6 +2,11 @@
 icon: material/alert-decagram
 ---
 
+#### 1.0.0-beta.14
+
+* Rename `template.dns_default` to `template.dns`
+* Add `template.domain_strategy_local`
+
 #### 1.0.0-beta.13
 
 * Add `template.auto_redirect`
