@@ -16,11 +16,24 @@ import (
 )
 
 func (t *Template) renderDNS(metadata M.Metadata, options *option.Options) error {
-	var domainStrategy option.DomainStrategy
+	var (
+		domainStrategy      option.DomainStrategy
+		domainStrategyLocal option.DomainStrategy
+	)
 	if t.DomainStrategy != option.DomainStrategy(dns.DomainStrategyAsIS) {
 		domainStrategy = t.DomainStrategy
-	} else {
+	} else if t.EnableFakeIP {
 		domainStrategy = option.DomainStrategy(dns.DomainStrategyPreferIPv4)
+	} else {
+		domainStrategy = option.DomainStrategy(dns.DomainStrategyUseIPv4)
+	}
+	if t.DomainStrategyLocal != option.DomainStrategy(dns.DomainStrategyAsIS) {
+		domainStrategyLocal = t.DomainStrategyLocal
+	} else {
+		domainStrategyLocal = option.DomainStrategy(dns.DomainStrategyPreferIPv4)
+	}
+	if domainStrategyLocal == domainStrategy {
+		domainStrategyLocal = 0
 	}
 	options.DNS = &option.DNSOptions{
 		ReverseMapping: !t.DisableTrafficBypass && metadata.Platform != M.PlatformUnknown && !metadata.Platform.IsApple(),
@@ -29,7 +42,7 @@ func (t *Template) renderDNS(metadata M.Metadata, options *option.Options) error
 			IndependentCache: t.EnableFakeIP,
 		},
 	}
-	dnsDefault := t.DNSDefault
+	dnsDefault := t.DNS
 	if dnsDefault == "" {
 		dnsDefault = DefaultDNS
 	}
@@ -55,14 +68,16 @@ func (t *Template) renderDNS(metadata M.Metadata, options *option.Options) error
 	)
 	if t.DisableTrafficBypass {
 		localDNSOptions = option.DNSServerOptions{
-			Tag:     DNSLocalTag,
-			Address: "local",
+			Tag:      DNSLocalTag,
+			Address:  "local",
+			Strategy: domainStrategyLocal,
 		}
 	} else {
 		localDNSOptions = option.DNSServerOptions{
-			Tag:     DNSLocalTag,
-			Address: dnsLocal,
-			Detour:  directTag,
+			Tag:      DNSLocalTag,
+			Address:  dnsLocal,
+			Detour:   directTag,
+			Strategy: domainStrategyLocal,
 		}
 		if dnsLocalUrl, err := url.Parse(dnsLocal); err == nil && BM.IsDomainName(dnsLocalUrl.Hostname()) {
 			localDNSOptions.AddressResolver = DNSLocalSetupTag
@@ -72,8 +87,9 @@ func (t *Template) renderDNS(metadata M.Metadata, options *option.Options) error
 	options.DNS.Servers = append(options.DNS.Servers, localDNSOptions)
 	if localDNSIsDomain {
 		options.DNS.Servers = append(options.DNS.Servers, option.DNSServerOptions{
-			Tag:     DNSLocalSetupTag,
-			Address: "local",
+			Tag:      DNSLocalSetupTag,
+			Address:  "local",
+			Strategy: domainStrategyLocal,
 		})
 	}
 	if t.EnableFakeIP {

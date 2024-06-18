@@ -16,12 +16,13 @@ type _Template struct {
 
 	Log                  *option.LogOptions    `json:"log,omitempty"`
 	DomainStrategy       option.DomainStrategy `json:"domain_strategy,omitempty"`
+	DomainStrategyLocal  option.DomainStrategy `json:"domain_strategy_local,omitempty"`
 	DisableTrafficBypass bool                  `json:"disable_traffic_bypass,omitempty"`
 	DisableRuleSet       bool                  `json:"disable_rule_set,omitempty"`
 	RemoteResolve        bool                  `json:"remote_resolve,omitempty"`
 
 	// DNS
-	DNSDefault     string           `json:"dns_default,omitempty"`
+	DNS            string           `json:"dns,omitempty"`
 	DNSLocal       string           `json:"dns_local,omitempty"`
 	EnableFakeIP   bool             `json:"enable_fakeip,omitempty"`
 	DisableDNSLeak bool             `json:"disable_dns_leak,omitempty"`
@@ -124,7 +125,7 @@ type GitHubRuleSetOptions struct {
 }
 
 func (t Template) DisableIPv6() bool {
-	return t.DomainStrategy == option.DomainStrategy(dns.DomainStrategyUseIPv4)
+	return t.DomainStrategy == option.DomainStrategy(dns.DomainStrategyUseIPv4) && t.DomainStrategyLocal == option.DomainStrategy(dns.DomainStrategyUseIPv4)
 }
 
 type ExtraGroup struct {

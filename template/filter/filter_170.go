@@ -70,6 +70,8 @@ func filter170(metadata metadata.Metadata, options *option.Options) {
 	}
 }
 
+//nolint:staticcheck
+//goland:noinspection GoDeprecation
 func filter170Tun(options option.TunInboundOptions) option.TunInboundOptions {
 	options.Inet4RouteExcludeAddress = nil
 	options.Inet6RouteExcludeAddress = nil

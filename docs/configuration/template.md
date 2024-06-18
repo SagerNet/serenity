@@ -8,12 +8,13 @@
 
   "log": {},
   "domain_strategy": "",
+  "domain_strategy_local": "",
   "disable_traffic_bypass": false,
   "disable_rule_set": false,
   "remote_resolve": false,
   // DNS
 
-  "dns_default": "",
+  "dns": "",
   "dns_local": "",
   "enable_fakeip": false,
   "pre_dns_rules": [],
@@ -47,7 +48,6 @@
   "custom_urltest": {},
   // Route
 
-  "disable_default_rules": false,
   "pre_rules": [],
   "custom_rules": [],
   "enable_jsdelivr": false,
@@ -96,6 +96,15 @@ If `*_only` enabled, TUN and DNS will be configured to disable the other network
 
 Note that if want `prefer_*` to take effect on transparent proxy requests, set `enable_fakeip`.
 
+`ipv4_only` is used by default when `enable_fakeip` disabled,
+`prefer_ipv4` is used by default when `enable_fakeip` enabled.
+
+#### domain_strategy_local
+
+Local sing-box domain strategy.
+
+`prefer_ipv4` is used by default.
+
 #### disable_rule_set
 
 Use `geoip` and `geosite` for traffic bypassing instead of rule sets.
@@ -108,7 +117,7 @@ Disable traffic bypass for Chinese DNS queries and connections.
 
 Don't generate `doamin_strategy` options for inbounds.
 
-#### dns_default
+#### dns
 
 Default DNS server.
 
@@ -221,10 +230,6 @@ Custom [Selector](https://sing-box.sagernet.org/configuration/outbound/selector/
 #### custom_urltest
 
 Custom [URLTest](https://sing-box.sagernet.org/configuration/outbound/urltest/) outbound template.
-
-#### disable_default_rules
-
-Don't generate some useful rules.
 
 #### pre_rules
 

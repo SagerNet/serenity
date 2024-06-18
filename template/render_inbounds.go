@@ -32,17 +32,15 @@ func (t *Template) renderInbounds(metadata M.Metadata, options *option.Options) 
 	disableTun := t.DisableTUN && !metadata.Platform.TunOnly()
 	if !disableTun {
 		options.Route.AutoDetectInterface = true
-
-		var inet6Address []netip.Prefix
+		address := []netip.Prefix{netip.MustParsePrefix("172.19.0.1/30")}
 		if !t.DisableIPv6() {
-			inet6Address = []netip.Prefix{netip.MustParsePrefix("fdfe:dcba:9876::1/126")}
+			address = append(address, netip.MustParsePrefix("fdfe:dcba:9876::1/126"))
 		}
 		tunInbound := option.Inbound{
 			Type: C.TypeTun,
 			TunOptions: option.TunInboundOptions{
-				Inet4Address: []netip.Prefix{netip.MustParsePrefix("172.19.0.1/30")},
-				Inet6Address: inet6Address,
-				AutoRoute:    true,
+				AutoRoute: true,
+				Address:   address,
 				InboundOptions: option.InboundOptions{
 					SniffEnabled: needSniff,
 				},
@@ -50,7 +48,7 @@ func (t *Template) renderInbounds(metadata M.Metadata, options *option.Options) 
 		}
 		if autoRedirect {
 			tunInbound.TunOptions.AutoRedirect = true
-			if !t.DisableTrafficBypass {
+			if !t.DisableTrafficBypass && metadata.Platform == "" {
 				tunInbound.TunOptions.RouteExcludeAddressSet = []string{"geoip-cn"}
 			}
 		}
