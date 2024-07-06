@@ -62,6 +62,9 @@ func (t *Template) Render(metadata M.Metadata, profileName string, outbounds [][
 	if err != nil {
 		return nil, E.Cause(err, "render experimental")
 	}
-	filter.Filter(metadata, &options)
+	err = filter.Filter(metadata, &options)
+	if err != nil {
+		return nil, E.Cause(err, "filter options")
+	}
 	return &options, nil
 }

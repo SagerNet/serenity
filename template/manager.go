@@ -41,7 +41,7 @@ func extendTemplate(rawTemplates []option.Template, root, current option.Templat
 		}
 		next = newNext
 	}
-	newRawTemplate, err := badjson.MergeJSON(next.RawMessage, current.RawMessage)
+	newRawTemplate, err := badjson.MergeJSON(next.RawMessage, current.RawMessage, true)
 	if err != nil {
 		return option.Template{}, E.Cause(err, "initialize template[", current.Name, "]: merge extended template: ", current.Extend)
 	}

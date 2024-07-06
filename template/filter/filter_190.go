@@ -12,16 +12,16 @@ func init() {
 	filters = append(filters, filter190)
 }
 
-func filter190(metadata metadata.Metadata, options *option.Options) {
+func filter190(metadata metadata.Metadata, options *option.Options) error {
 	if metadata.Version == nil || metadata.Version.GreaterThanOrEqual(semver.ParseVersion("1.9.0-alpha.1")) {
-		return
+		return nil
 	}
 	if options.DNS == nil || len(options.DNS.Rules) == 0 {
-		return
+		return nil
 	}
 	options.DNS.Rules = common.Filter(options.DNS.Rules, filter190DNSRule)
 	if metadata.Version == nil || metadata.Version.GreaterThanOrEqual(semver.ParseVersion("1.9.0-alpha.10")) {
-		return
+		return nil
 	}
 	for _, inbound := range options.Inbounds {
 		switch inbound.Type {
@@ -36,12 +36,11 @@ func filter190(metadata metadata.Metadata, options *option.Options) {
 			}
 		}
 	}
+	return nil
 }
 
 func filter190DNSRule(it option.DNSRule) bool {
-	return !hasDNSRule([]option.DNSRule{it}, isAddressFilterRule)
-}
-
-func isAddressFilterRule(it option.DefaultDNSRule) bool {
-	return len(it.GeoIP) > 0 || len(it.IPCIDR) > 0 || it.IPIsPrivate
+	return !hasDNSRule([]option.DNSRule{it}, func(it option.DefaultDNSRule) bool {
+		return len(it.GeoIP) > 0 || len(it.IPCIDR) > 0 || it.IPIsPrivate
+	})
 }

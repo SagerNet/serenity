@@ -77,7 +77,7 @@ func (t *Template) renderInbounds(metadata M.Metadata, options *option.Options) 
 			}
 		}
 		if t.CustomTUN != nil {
-			newTUNOptions, err := badjson.MergeFromDestination(tunInbound.TunOptions, t.CustomTUN.Message)
+			newTUNOptions, err := badjson.MergeFromDestination(tunInbound.TunOptions, t.CustomTUN.Message, true)
 			if err != nil {
 				return E.Cause(err, "merge custom tun options")
 			}
@@ -101,7 +101,7 @@ func (t *Template) renderInbounds(metadata M.Metadata, options *option.Options) 
 			},
 		}
 		if t.CustomMixed != nil {
-			newMixedOptions, err := badjson.MergeFromDestination(mixedInbound.MixedOptions, t.CustomMixed.Message)
+			newMixedOptions, err := badjson.MergeFromDestination(mixedInbound.MixedOptions, t.CustomMixed.Message, true)
 			if err != nil {
 				return E.Cause(err, "merge custom mixed options")
 			}

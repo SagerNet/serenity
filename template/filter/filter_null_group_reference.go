@@ -11,7 +11,7 @@ func init() {
 	filters = append(filters, filterNullGroupReference)
 }
 
-func filterNullGroupReference(metadata M.Metadata, options *option.Options) {
+func filterNullGroupReference(metadata M.Metadata, options *option.Options) error {
 	outboundTags := common.Map(options.Outbounds, func(it option.Outbound) string {
 		return it.Tag
 	})
@@ -30,4 +30,5 @@ func filterNullGroupReference(metadata M.Metadata, options *option.Options) {
 		}
 		options.Outbounds[i] = outbound
 	}
+	return nil
 }

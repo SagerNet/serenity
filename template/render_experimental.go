@@ -37,7 +37,7 @@ func (t *Template) renderExperimental(metadata M.Metadata, options *option.Optio
 	}
 
 	if t.CustomClashAPI != nil {
-		newClashOptions, err := badjson.MergeFromDestination(options.Experimental.ClashAPI, t.CustomClashAPI.Message)
+		newClashOptions, err := badjson.MergeFromDestination(options.Experimental.ClashAPI, t.CustomClashAPI.Message, true)
 		if err != nil {
 			return err
 		}
