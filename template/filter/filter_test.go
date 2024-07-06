@@ -12,6 +12,7 @@ import (
 )
 
 func TestFilter1100(t *testing.T) {
+	t.Parallel()
 	options := &option.Options{
 		DNS: &option.DNSOptions{
 			Rules: []option.DNSRule{

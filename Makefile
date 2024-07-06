@@ -35,6 +35,9 @@ lint:
 lint_install:
 	go install -v github.com/golangci/golangci-lint/cmd/golangci-lint@latest
 
+test:
+	go test ./...
+
 release:
 	goreleaser release --clean --skip publish
 	mkdir dist/release

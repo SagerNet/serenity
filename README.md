@@ -1,5 +1,8 @@
 # serenity
 
+![test](https://github.com/sagernet/sing/actions/workflows/test.yml/badge.svg)
+![lint](https://github.com/sagernet/sing/actions/workflows/lint.yml/badge.svg)
+
 The configuration generator for sing-box.
 
 ## Documentation
