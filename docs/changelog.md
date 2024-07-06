@@ -2,6 +2,14 @@
 icon: material/alert-decagram
 ---
 
+#### 1.0.0-beta.15
+
+* Add support for inline rule-sets **1**
+
+**1**:
+
+Will be merged into route and DNS rules in older versions.
+
 #### 1.0.0-beta.14
 
 * Rename `template.dns_default` to `template.dns`
