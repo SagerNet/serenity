@@ -1,13 +1,17 @@
 package template
 
 import (
+	"bytes"
 	"regexp"
+	"text/template"
 
 	M "github.com/sagernet/serenity/common/metadata"
 	"github.com/sagernet/serenity/subscription"
 	C "github.com/sagernet/sing-box/constant"
 	"github.com/sagernet/sing-box/option"
 	"github.com/sagernet/sing/common"
+	E "github.com/sagernet/sing/common/exceptions"
+	F "github.com/sagernet/sing/common/format"
 )
 
 func (t *Template) renderOutbounds(metadata M.Metadata, options *option.Options, outbounds [][]option.Outbound, subscriptions []*subscription.Subscription) error {
@@ -48,21 +52,13 @@ func (t *Template) renderOutbounds(metadata M.Metadata, options *option.Options,
 	if urlTestTag == "" {
 		urlTestTag = DefaultURLTestTag
 	}
-	if t.GenerateGlobalURLTest {
-		options.Outbounds = append(options.Outbounds, option.Outbound{
-			Tag:            urlTestTag,
-			Type:           C.TypeURLTest,
-			URLTestOptions: common.PtrValueOrDefault(t.CustomURLTest),
-		})
+	outboundToString := func(it option.Outbound) string {
+		return it.Tag
 	}
-	globalJoin := func(groupOutbounds ...string) {
-		options.Outbounds = groupJoin(options.Outbounds, defaultTag, groupOutbounds...)
-		if t.GenerateGlobalURLTest {
-			options.Outbounds = groupJoin(options.Outbounds, urlTestTag, groupOutbounds...)
-		}
-	}
-
-	var globalOutbounds []option.Outbound
+	var (
+		globalOutbounds    []option.Outbound
+		globalOutboundTags []string
+	)
 	if len(outbounds) > 0 {
 		for _, outbound := range outbounds {
 			options.Outbounds = append(options.Outbounds, outbound...)
@@ -70,13 +66,14 @@ func (t *Template) renderOutbounds(metadata M.Metadata, options *option.Options,
 		globalOutbounds = common.Map(outbounds, func(it []option.Outbound) option.Outbound {
 			return it[0]
 		})
-		globalJoin(common.Map(globalOutbounds, func(it option.Outbound) string {
-			return it.Tag
-		})...)
+		globalOutboundTags = common.Map(globalOutbounds, outboundToString)
 	}
 
-	var allGroups []option.Outbound
-	var allGroupOutbounds []option.Outbound
+	var (
+		allGroups         []option.Outbound
+		allGroupOutbounds []option.Outbound
+		groupTags         []string
+	)
 
 	for _, it := range subscriptions {
 		if len(it.Servers) == 0 {
@@ -93,7 +90,7 @@ func (t *Template) renderOutbounds(metadata M.Metadata, options *option.Options,
 			}
 			selectorOutbound.SelectorOptions.Outbounds = append(selectorOutbound.SelectorOptions.Outbounds, joinOutbounds...)
 			allGroups = append(allGroups, selectorOutbound)
-			globalJoin(it.Name)
+			groupTags = append(groupTags, selectorOutbound.Tag)
 		}
 		if it.GenerateURLTest {
 			var urltestTag string
@@ -111,10 +108,10 @@ func (t *Template) renderOutbounds(metadata M.Metadata, options *option.Options,
 			}
 			urltestOutbound.URLTestOptions.Outbounds = append(urltestOutbound.URLTestOptions.Outbounds, joinOutbounds...)
 			allGroups = append(allGroups, urltestOutbound)
-			globalJoin(urltestTag)
+			groupTags = append(groupTags, urltestOutbound.Tag)
 		}
 		if !it.GenerateSelector && !it.GenerateURLTest {
-			globalJoin(joinOutbounds...)
+			globalOutboundTags = append(globalOutboundTags, joinOutbounds...)
 		}
 		allGroupOutbounds = append(allGroupOutbounds, it.Servers...)
 	}
@@ -122,50 +119,139 @@ func (t *Template) renderOutbounds(metadata M.Metadata, options *option.Options,
 	globalOutbounds = append(globalOutbounds, allGroups...)
 	globalOutbounds = append(globalOutbounds, allGroupOutbounds...)
 
-	for _, group := range t.groups {
-		var extraTags []string
-		for _, groupOutbound := range globalOutbounds {
-			if len(group.filter) > 0 {
-				if !common.Any(group.filter, func(it *regexp.Regexp) bool {
-					return it.MatchString(groupOutbound.Tag)
+	allExtraGroups := make(map[string][]option.Outbound)
+	for _, extraGroup := range t.groups {
+		myFilter := func(outboundTag string) bool {
+			if len(extraGroup.filter) > 0 {
+				if !common.Any(extraGroup.filter, func(it *regexp.Regexp) bool {
+					return it.MatchString(outboundTag)
 				}) {
-					continue
+					return false
 				}
 			}
-			if len(group.exclude) > 0 {
-				if common.Any(group.exclude, func(it *regexp.Regexp) bool {
-					return it.MatchString(groupOutbound.Tag)
+			if len(extraGroup.exclude) > 0 {
+				if common.Any(extraGroup.exclude, func(it *regexp.Regexp) bool {
+					return it.MatchString(outboundTag)
 				}) {
-					continue
+					return false
 				}
 			}
-			extraTags = append(extraTags, groupOutbound.Tag)
+			return true
 		}
-		if len(extraTags) == 0 {
-			continue
+		if !extraGroup.PerSubscription {
+			var extraTags []string
+			if extraGroup.ExcludeOutbounds {
+				extraTags = common.Filter(common.FlatMap(subscriptions, func(it *subscription.Subscription) []string {
+					return common.Map(it.Servers, outboundToString)
+				}), myFilter)
+			} else {
+				extraTags = common.Filter(common.Map(globalOutbounds, outboundToString), myFilter)
+			}
+			if len(extraTags) == 0 {
+				continue
+			}
+			groupOutbound := option.Outbound{
+				Tag:             extraGroup.Tag,
+				Type:            extraGroup.Type,
+				SelectorOptions: common.PtrValueOrDefault(extraGroup.CustomSelector),
+				URLTestOptions:  common.PtrValueOrDefault(extraGroup.CustomURLTest),
+			}
+			switch extraGroup.Type {
+			case C.TypeSelector:
+				groupOutbound.SelectorOptions.Outbounds = append(groupOutbound.SelectorOptions.Outbounds, extraTags...)
+			case C.TypeURLTest:
+				groupOutbound.URLTestOptions.Outbounds = append(groupOutbound.URLTestOptions.Outbounds, extraTags...)
+			}
+			allExtraGroups[""] = append(allExtraGroups[""], groupOutbound)
+		} else {
+			tmpl := template.New("tag")
+			if extraGroup.TagPerSubscription != "" {
+				_, err := tmpl.Parse(extraGroup.TagPerSubscription)
+				if err != nil {
+					return E.Cause(err, "parse `tag_per_subscription`: ", extraGroup.TagPerSubscription)
+				}
+			} else {
+				common.Must1(tmpl.Parse("{{ .tag }} ({{ .subscription_name }})"))
+			}
+			var outboundTags []string
+			if !extraGroup.ExcludeOutbounds {
+				outboundTags = common.Filter(common.FlatMap(outbounds, func(it []option.Outbound) []string {
+					return common.Map(it, outboundToString)
+				}), myFilter)
+			}
+			if len(outboundTags) > 0 {
+				groupOutbound := option.Outbound{
+					Tag:             extraGroup.Tag,
+					Type:            extraGroup.Type,
+					SelectorOptions: common.PtrValueOrDefault(extraGroup.CustomSelector),
+					URLTestOptions:  common.PtrValueOrDefault(extraGroup.CustomURLTest),
+				}
+				switch extraGroup.Type {
+				case C.TypeSelector:
+					groupOutbound.SelectorOptions.Outbounds = append(groupOutbound.SelectorOptions.Outbounds, outboundTags...)
+				case C.TypeURLTest:
+					groupOutbound.URLTestOptions.Outbounds = append(groupOutbound.URLTestOptions.Outbounds, outboundTags...)
+				}
+				allExtraGroups[""] = append(allExtraGroups[""], groupOutbound)
+			}
+			for _, it := range subscriptions {
+				subscriptionTags := common.Filter(common.Map(it.Servers, outboundToString), myFilter)
+				if len(subscriptionTags) == 0 {
+					continue
+				}
+				var tagPerSubscription string
+				if len(outboundTags) == 0 && len(subscriptions) == 1 {
+					tagPerSubscription = extraGroup.Tag
+				} else {
+					var buffer bytes.Buffer
+					err := tmpl.Execute(&buffer, map[string]interface{}{
+						"tag":               extraGroup.Tag,
+						"subscription_name": it.Name,
+					})
+					if err != nil {
+						return E.Cause(err, "generate tag for extra group: tag=", extraGroup.Tag, ", subscription=", it.Name)
+					}
+					tagPerSubscription = buffer.String()
+				}
+				groupOutboundPerSubscription := option.Outbound{
+					Tag:             tagPerSubscription,
+					Type:            extraGroup.Type,
+					SelectorOptions: common.PtrValueOrDefault(extraGroup.CustomSelector),
+					URLTestOptions:  common.PtrValueOrDefault(extraGroup.CustomURLTest),
+				}
+				switch extraGroup.Type {
+				case C.TypeSelector:
+					groupOutboundPerSubscription.SelectorOptions.Outbounds = append(groupOutboundPerSubscription.SelectorOptions.Outbounds, subscriptionTags...)
+				case C.TypeURLTest:
+					groupOutboundPerSubscription.URLTestOptions.Outbounds = append(groupOutboundPerSubscription.URLTestOptions.Outbounds, subscriptionTags...)
+				}
+				allExtraGroups[it.Name] = append(allExtraGroups[it.Name], groupOutboundPerSubscription)
+			}
 		}
-		groupOutbound := option.Outbound{
-			Tag:             group.Tag,
-			Type:            group.Type,
-			SelectorOptions: common.PtrValueOrDefault(group.CustomSelector),
-			URLTestOptions:  common.PtrValueOrDefault(group.CustomURLTest),
-		}
-		switch group.Type {
-		case C.TypeSelector:
-			groupOutbound.SelectorOptions.Outbounds = append(groupOutbound.SelectorOptions.Outbounds, extraTags...)
-		case C.TypeURLTest:
-			groupOutbound.URLTestOptions.Outbounds = append(groupOutbound.URLTestOptions.Outbounds, extraTags...)
-		}
-		options.Outbounds = append(options.Outbounds, groupOutbound)
 	}
 
 	options.Outbounds = append(options.Outbounds, allGroups...)
-	options.Outbounds = append(options.Outbounds, allGroupOutbounds...)
 
+	defaultExtraGroupOutbounds := allExtraGroups[""]
+	if len(defaultExtraGroupOutbounds) > 0 {
+		options.Outbounds = append(options.Outbounds, defaultExtraGroupOutbounds...)
+		options.Outbounds = groupJoin(options.Outbounds, defaultTag, false, common.Map(defaultExtraGroupOutbounds, outboundToString)...)
+	}
+	for _, it := range subscriptions {
+		extraGroupOutboundsForSubscription := allExtraGroups[it.Name]
+		if len(extraGroupOutboundsForSubscription) > 0 {
+			options.Outbounds = append(options.Outbounds, extraGroupOutboundsForSubscription...)
+			options.Outbounds = groupJoin(options.Outbounds, it.Name, true, common.Map(extraGroupOutboundsForSubscription, outboundToString)...)
+		}
+	}
+	options.Outbounds = groupJoin(options.Outbounds, defaultTag, false, groupTags...)
+	options.Outbounds = groupJoin(options.Outbounds, defaultTag, false, globalOutboundTags...)
+
+	options.Outbounds = append(options.Outbounds, allGroupOutbounds...)
 	return nil
 }
 
-func groupJoin(outbounds []option.Outbound, groupTag string, groupOutbounds ...string) []option.Outbound {
+func groupJoin(outbounds []option.Outbound, groupTag string, appendFront bool, groupOutbounds ...string) []option.Outbound {
 	groupIndex := common.Index(outbounds, func(it option.Outbound) bool {
 		return it.Tag == groupTag
 	})
@@ -173,12 +259,21 @@ func groupJoin(outbounds []option.Outbound, groupTag string, groupOutbounds ...s
 		return outbounds
 	}
 	groupOutbound := outbounds[groupIndex]
+	var outboundPtr *[]string
 	switch groupOutbound.Type {
 	case C.TypeSelector:
-		groupOutbound.SelectorOptions.Outbounds = common.Dup(append(groupOutbound.SelectorOptions.Outbounds, groupOutbounds...))
+		outboundPtr = &groupOutbound.SelectorOptions.Outbounds
 	case C.TypeURLTest:
-		groupOutbound.URLTestOptions.Outbounds = common.Dup(append(groupOutbound.URLTestOptions.Outbounds, groupOutbounds...))
+		outboundPtr = &groupOutbound.URLTestOptions.Outbounds
+	default:
+		panic(F.ToString("unexpected group type: ", groupOutbound.Type))
 	}
+	if appendFront {
+		*outboundPtr = append(groupOutbounds, *outboundPtr...)
+	} else {
+		*outboundPtr = append(*outboundPtr, groupOutbounds...)
+	}
+	*outboundPtr = common.Dup(*outboundPtr)
 	outbounds[groupIndex] = groupOutbound
 	return outbounds
 }

@@ -38,15 +38,14 @@ type _Template struct {
 	CustomMixed        *TypedMessage[option.HTTPMixedInboundOptions] `json:"custom_mixed,omitempty"`
 
 	// Outbound
-	ExtraGroups           []ExtraGroup                    `json:"extra_groups,omitempty"`
-	GenerateGlobalURLTest bool                            `json:"generate_global_urltest,omitempty"`
-	DirectTag             string                          `json:"direct_tag,omitempty"`
-	BlockTag              string                          `json:"block_tag,omitempty"`
-	DefaultTag            string                          `json:"default_tag,omitempty"`
-	URLTestTag            string                          `json:"urltest_tag,omitempty"`
-	CustomDirect          *option.DirectOutboundOptions   `json:"custom_direct,omitempty"`
-	CustomSelector        *option.SelectorOutboundOptions `json:"custom_selector,omitempty"`
-	CustomURLTest         *option.URLTestOutboundOptions  `json:"custom_urltest,omitempty"`
+	ExtraGroups    []ExtraGroup                    `json:"extra_groups,omitempty"`
+	DirectTag      string                          `json:"direct_tag,omitempty"`
+	BlockTag       string                          `json:"block_tag,omitempty"`
+	DefaultTag     string                          `json:"default_tag,omitempty"`
+	URLTestTag     string                          `json:"urltest_tag,omitempty"`
+	CustomDirect   *option.DirectOutboundOptions   `json:"custom_direct,omitempty"`
+	CustomSelector *option.SelectorOutboundOptions `json:"custom_selector,omitempty"`
+	CustomURLTest  *option.URLTestOutboundOptions  `json:"custom_urltest,omitempty"`
 
 	// Route
 	DisableDefaultRules bool                   `json:"disable_default_rules,omitempty"`
@@ -129,10 +128,13 @@ func (t Template) DisableIPv6() bool {
 }
 
 type ExtraGroup struct {
-	Tag            string                          `json:"tag,omitempty"`
-	Type           string                          `json:"type,omitempty"`
-	Filter         option.Listable[string]         `json:"filter,omitempty"`
-	Exclude        option.Listable[string]         `json:"exclude,omitempty"`
-	CustomSelector *option.SelectorOutboundOptions `json:"custom_selector,omitempty"`
-	CustomURLTest  *option.URLTestOutboundOptions  `json:"custom_urltest,omitempty"`
+	Tag                string                          `json:"tag,omitempty"`
+	ExcludeOutbounds   bool                            `json:"exclude_outbounds,omitempty"`
+	PerSubscription    bool                            `json:"per_subscription,omitempty"`
+	TagPerSubscription string                          `json:"tag_per_subscription,omitempty"`
+	Type               string                          `json:"type,omitempty"`
+	Filter             option.Listable[string]         `json:"filter,omitempty"`
+	Exclude            option.Listable[string]         `json:"exclude,omitempty"`
+	CustomSelector     *option.SelectorOutboundOptions `json:"custom_selector,omitempty"`
+	CustomURLTest      *option.URLTestOutboundOptions  `json:"custom_urltest,omitempty"`
 }

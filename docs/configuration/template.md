@@ -33,6 +33,9 @@
     {
       "tag": "",
       "type": "",
+      "exclude_outbounds": false,
+      "per_subscription": false,
+      "tag_per_subscription": "",
       "filter": "",
       "exclude": "",
       "custom_selector": {},
@@ -186,6 +189,20 @@ Tag of the group outbound.
 ==Required==
 
 Type of the group outbound.
+
+#### extra_groups.exclude_outbounds
+
+Only include subscriptions but not custom outbounds.
+
+#### extra_groups.per_subscription
+
+Generate a internal group for every subscription instead of a global group.
+
+#### extra_groups.tag_per_subscription
+
+Tag for every new subscription internal group.
+
+`{{ .tag }} ({{ .subscription_name }})` is used by default.
 
 #### extra_groups.filter
 
