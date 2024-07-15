@@ -6,8 +6,10 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/sagernet/serenity/common/metadata"
 	M "github.com/sagernet/serenity/common/metadata"
 	"github.com/sagernet/serenity/option"
+	boxOption "github.com/sagernet/sing-box/option"
 	"github.com/sagernet/sing/common"
 	E "github.com/sagernet/sing/common/exceptions"
 
@@ -96,6 +98,23 @@ func (s *Server) render(writer http.ResponseWriter, request *http.Request) {
 	writer.WriteHeader(http.StatusOK)
 	writer.Write(buffer.Bytes())
 	s.accessLog(request, http.StatusOK, buffer.Len())
+}
+
+func (s *Server) RenderHeadless(profileName string, metadata metadata.Metadata) (*boxOption.Options, error) {
+	var profile *Profile
+	if profileName == "" {
+		s.profile.DefaultProfile()
+	} else {
+		profile = s.profile.ProfileByName(profileName)
+	}
+	if profile == nil {
+		return nil, E.New("profile not found")
+	}
+	options, err := profile.Render(metadata)
+	if err != nil {
+		return nil, E.Cause(err, "render options")
+	}
+	return options, nil
 }
 
 func (s *Server) accessLog(request *http.Request, responseCode int, responseLen int) {
