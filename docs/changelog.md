@@ -2,6 +2,12 @@
 icon: material/alert-decagram
 ---
 
+#### 1.0.0-beta.16
+
+* Add `export <profile>` command to export configuration without running the server 
+* Add `template.extra_groups.exclude_outbounds`
+* Add `template.extra_groups.<per_subscription/tag_per_subscription>`
+
 #### 1.0.0-beta.15
 
 * Add support for inline rule-sets **1**
