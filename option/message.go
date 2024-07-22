@@ -1,6 +1,8 @@
 package option
 
-import "github.com/sagernet/sing/common/json"
+import (
+	"github.com/sagernet/sing/common/json"
+)
 
 type TypedMessage[T any] struct {
 	Message json.RawMessage
@@ -11,7 +13,7 @@ func (m *TypedMessage[T]) MarshalJSON() ([]byte, error) {
 	return json.Marshal(m.Value)
 }
 
-func (m *TypedMessage[T]) UnmarshalJSON(bytes []byte) error {
-	m.Message = bytes
-	return json.Unmarshal(bytes, &m.Value)
+func (m *TypedMessage[T]) UnmarshalJSON(content []byte) error {
+	m.Message = content
+	return json.UnmarshalDisallowUnknownFields(content, &m.Value)
 }

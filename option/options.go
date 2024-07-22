@@ -1,7 +1,6 @@
 package option
 
 import (
-	"bytes"
 	"time"
 
 	"github.com/sagernet/sing-box/option"
@@ -26,9 +25,7 @@ type _Options struct {
 type Options _Options
 
 func (o *Options) UnmarshalJSON(content []byte) error {
-	decoder := json.NewDecoder(bytes.NewReader(content))
-	decoder.DisallowUnknownFields()
-	err := decoder.Decode((*_Options)(o))
+	err := json.UnmarshalDisallowUnknownFields(content, (*_Options)(o))
 	if err != nil {
 		return err
 	}

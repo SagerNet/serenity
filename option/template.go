@@ -80,12 +80,12 @@ func (t *Template) MarshalJSON() ([]byte, error) {
 	return json.Marshal((*_Template)(t))
 }
 
-func (t *Template) UnmarshalJSON(bytes []byte) error {
-	err := json.Unmarshal(bytes, (*_Template)(t))
+func (t *Template) UnmarshalJSON(content []byte) error {
+	err := json.UnmarshalDisallowUnknownFields(content, (*_Template)(t))
 	if err != nil {
 		return err
 	}
-	t.RawMessage = bytes
+	t.RawMessage = content
 	return nil
 }
 
@@ -105,15 +105,15 @@ func (r *RuleSet) MarshalJSON() ([]byte, error) {
 	}
 }
 
-func (r *RuleSet) UnmarshalJSON(bytes []byte) error {
-	err := json.Unmarshal(bytes, (*_RuleSet)(r))
+func (r *RuleSet) UnmarshalJSON(content []byte) error {
+	err := json.Unmarshal(content, (*_RuleSet)(r))
 	if err != nil {
 		return err
 	}
 	if r.Type == C.RuleSetTypeGitHub {
-		return option.UnmarshallExcluded(bytes, (*_RuleSet)(r), &r.GitHubOptions)
+		return option.UnmarshallExcluded(content, (*_RuleSet)(r), &r.GitHubOptions)
 	} else {
-		return json.Unmarshal(bytes, &r.DefaultOptions)
+		return option.UnmarshallExcluded(content, (*_RuleSet)(r), &r.DefaultOptions)
 	}
 }
 
