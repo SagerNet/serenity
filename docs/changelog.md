@@ -2,6 +2,10 @@
 icon: material/alert-decagram
 ---
 
+#### 1.0.0-beta.17
+
+* Replace `template.extra_groups.<per_subscription/exclude_outbounds>` with `target`
+
 #### 1.0.0-beta.16
 
 * Add `export <profile>` command to export configuration without running the server 
