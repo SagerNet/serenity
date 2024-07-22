@@ -4,6 +4,7 @@
 {
   "name": "",
   "extend": "",
+  
   // Global
 
   "log": {},
@@ -12,6 +13,7 @@
   "disable_traffic_bypass": false,
   "disable_rule_set": false,
   "remote_resolve": false,
+  
   // DNS
 
   "dns": "",
@@ -19,6 +21,7 @@
   "enable_fakeip": false,
   "pre_dns_rules": [],
   "custom_dns_rules": [],
+  
   // Inbound
 
   "inbounds": [],
@@ -27,14 +30,14 @@
   "disable_system_proxy": false,
   "custom_tun": {},
   "custom_mixed": {},
+  
   // Outbound
 
   "extra_groups": [
     {
       "tag": "",
       "type": "",
-      "exclude_outbounds": false,
-      "per_subscription": false,
+      "target": "",
       "tag_per_subscription": "",
       "filter": "",
       "exclude": "",
@@ -42,13 +45,13 @@
       "custom_urltest": {}
     }
   ],
-  "generate_global_urltest": false,
   "direct_tag": "",
   "default_tag": "",
   "urltest_tag": "",
   "custom_direct": {},
   "custom_selector": {},
   "custom_urltest": {},
+  
   // Route
 
   "pre_rules": [],
@@ -58,6 +61,7 @@
   "custom_geosite": {},
   "custom_rule_set": [],
   "post_rule_set": [],
+  
   // Experimental
 
   "disable_cache_file": false,
@@ -66,6 +70,7 @@
   "clash_mode_global": "",
   "clash_mode_direct": "",
   "custom_clash_api": {},
+  
   // Debug
 
   "pprof_listen": "",
@@ -190,17 +195,17 @@ Tag of the group outbound.
 
 Type of the group outbound.
 
-#### extra_groups.exclude_outbounds
+#### extra_groups.target
 
-Only include subscriptions but not custom outbounds.
-
-#### extra_groups.per_subscription
-
-Generate a internal group for every subscription instead of a global group.
+| Value          | Description                                                |
+|----------------|------------------------------------------------------------|
+| `default`      | No additional behaviors.                                   |
+| `global`       | Generate a group and add it to default selector.           |
+| `subscription` | Generate a internal group for every subscription selector. |
 
 #### extra_groups.tag_per_subscription
 
-Tag for every new subscription internal group.
+Tag for every new subscription internal group when `target` is `subscription`.
 
 `{{ .tag }} ({{ .subscription_name }})` is used by default.
 
@@ -219,10 +224,6 @@ Custom [Selector](https://sing-box.sagernet.org/configuration/outbound/selector/
 #### extra_groups.custom_urltest
 
 Custom [URLTest](https://sing-box.sagernet.org/configuration/outbound/urltest/) template.
-
-#### generate_global_urltest
-
-Generate a global `URLTest` outbound with all global outbounds.
 
 #### direct_tag
 

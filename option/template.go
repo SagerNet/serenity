@@ -4,6 +4,7 @@ import (
 	C "github.com/sagernet/serenity/constant"
 	"github.com/sagernet/sing-box/option"
 	"github.com/sagernet/sing-dns"
+	E "github.com/sagernet/sing/common/exceptions"
 	"github.com/sagernet/sing/common/json"
 )
 
@@ -129,12 +130,55 @@ func (t Template) DisableIPv6() bool {
 
 type ExtraGroup struct {
 	Tag                string                          `json:"tag,omitempty"`
-	ExcludeOutbounds   bool                            `json:"exclude_outbounds,omitempty"`
-	PerSubscription    bool                            `json:"per_subscription,omitempty"`
+	Target             ExtraGroupTarget                `json:"target,omitempty"`
 	TagPerSubscription string                          `json:"tag_per_subscription,omitempty"`
 	Type               string                          `json:"type,omitempty"`
 	Filter             option.Listable[string]         `json:"filter,omitempty"`
 	Exclude            option.Listable[string]         `json:"exclude,omitempty"`
 	CustomSelector     *option.SelectorOutboundOptions `json:"custom_selector,omitempty"`
 	CustomURLTest      *option.URLTestOutboundOptions  `json:"custom_urltest,omitempty"`
+}
+
+type ExtraGroupTarget uint8
+
+const (
+	ExtraGroupTargetDefault ExtraGroupTarget = iota
+	ExtraGroupTargetGlobal
+	ExtraGroupTargetSubscription
+)
+
+func (t ExtraGroupTarget) String() string {
+	switch t {
+	case ExtraGroupTargetDefault:
+		return "default"
+	case ExtraGroupTargetGlobal:
+		return "global"
+	case ExtraGroupTargetSubscription:
+		return "subscription"
+	default:
+		return "unknown"
+	}
+}
+
+func (t ExtraGroupTarget) MarshalJSON() ([]byte, error) {
+	return json.Marshal(t.String())
+}
+
+func (t *ExtraGroupTarget) UnmarshalJSON(bytes []byte) error {
+	var stringValue string
+	err := json.Unmarshal(bytes, &stringValue)
+	if err != nil {
+		return err
+	}
+	switch stringValue {
+	case "default":
+		*t = ExtraGroupTargetDefault
+	case "global":
+		*t = ExtraGroupTargetGlobal
+	case "subscription":
+		*t = ExtraGroupTargetSubscription
+	default:
+		return E.New("unknown extra group target: ", stringValue)
+	}
+	return nil
 }
