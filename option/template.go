@@ -113,7 +113,7 @@ func (r *RuleSet) UnmarshalJSON(content []byte) error {
 	if r.Type == C.RuleSetTypeGitHub {
 		return option.UnmarshallExcluded(content, (*_RuleSet)(r), &r.GitHubOptions)
 	} else {
-		return option.UnmarshallExcluded(content, (*_RuleSet)(r), &r.DefaultOptions)
+		return json.UnmarshalDisallowUnknownFields(content, &r.DefaultOptions)
 	}
 }
 
