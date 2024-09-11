@@ -162,7 +162,7 @@ func (t *Template) renderDNS(metadata M.Metadata, options *option.Options) error
 					},
 				})
 			}
-			if !t.DisableDNSLeak && (metadata.Version != nil && metadata.Version.GreaterThanOrEqual(semver.ParseVersion("1.9.0-alpha.1"))) {
+			if !t.DisableDNSLeak && (metadata.Version == nil || metadata.Version.LessThan(semver.ParseVersion("1.9.0-alpha.1"))) {
 				options.DNS.Rules = append(options.DNS.Rules, option.DNSRule{
 					Type: C.RuleTypeDefault,
 					DefaultOptions: option.DefaultDNSRule{

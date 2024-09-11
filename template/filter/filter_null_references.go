@@ -30,5 +30,15 @@ func filterNullGroupReference(metadata M.Metadata, options *option.Options) erro
 		}
 		options.Outbounds[i] = outbound
 	}
+	options.Route.Rules = common.Filter(options.Route.Rules, func(it option.Rule) bool {
+		switch it.Type {
+		case C.RuleTypeDefault:
+			return common.Contains(outboundTags, it.DefaultOptions.Outbound)
+		case C.RuleTypeLogical:
+			return common.Contains(outboundTags, it.LogicalOptions.Outbound)
+		default:
+			panic("no")
+		}
+	})
 	return nil
 }
