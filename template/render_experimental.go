@@ -30,7 +30,7 @@ func (t *Template) renderExperimental(metadata M.Metadata, options *option.Optio
 				CacheID:     profileName,
 				StoreFakeIP: t.EnableFakeIP,
 			}
-			if !t.DisableDNSLeak && (metadata.Version != nil && metadata.Version.GreaterThanOrEqual(semver.ParseVersion("1.9.0-alpha.8"))) {
+			if !t.DisableDNSLeak && (metadata.Version == nil || metadata.Version.GreaterThanOrEqual(semver.ParseVersion("1.9.0-alpha.1"))) {
 				options.Experimental.CacheFile.StoreRDRC = true
 			}
 		}
@@ -51,7 +51,7 @@ func (t *Template) renderExperimental(metadata M.Metadata, options *option.Optio
 	}
 
 	if !t.DisableClashMode {
-		if !t.DisableDNSLeak && (metadata.Version != nil && metadata.Version.GreaterThanOrEqual(semver.ParseVersion("1.9.0-alpha.1"))) {
+		if !t.DisableDNSLeak && (metadata.Version == nil || metadata.Version.GreaterThanOrEqual(semver.ParseVersion("1.9.0-alpha.1"))) {
 			clashModeLeak := t.ClashModeLeak
 			if clashModeLeak == "" {
 				clashModeLeak = "Leak"
