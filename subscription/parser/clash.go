@@ -206,11 +206,11 @@ func (o shadowsocksPluginOptionsBuilder) Build() string {
 }
 
 func clashPluginOptions(plugin string, opts map[string]any) string {
-	options := shadowsocksPluginOptionsBuilder(opts)
+	options := make(shadowsocksPluginOptionsBuilder)
 	switch plugin {
 	case "obfs":
-		options["mode"] = opts["mode"]
-		options["host"] = opts["host"]
+		options["obfs"] = opts["mode"]
+		options["obfs-host"] = opts["host"]
 	case "v2ray-plugin":
 		options["mode"] = opts["mode"]
 		options["tls"] = opts["tls"]
