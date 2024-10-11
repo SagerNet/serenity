@@ -11,7 +11,7 @@ ENV GOARCH=$TARGETARCH
 RUN set -ex \
     && apk add git build-base \
     && export COMMIT=$(git rev-parse --short HEAD) \
-    && export VERSION=$(go run ./cmd/internal/read_tag) \
+    && export VERSION=$(go run github.com/sagernet/sing-box/cmd/internal/read_tag@latest) \
     && go build -v -trimpath \
         -o /go/bin/serenity \
         -ldflags "-X \"github.com/sagernet/serenity/cmd/serenity.Version=$VERSION\" -s -w -buildid=" \
