@@ -36,6 +36,7 @@ func (t *Template) renderDNS(metadata M.Metadata, options *option.Options) error
 		domainStrategyLocal = 0
 	}
 	options.DNS = &option.DNSOptions{
+		Servers:        t.Servers,
 		ReverseMapping: !t.DisableTrafficBypass && metadata.Platform != M.PlatformUnknown && !metadata.Platform.IsApple(),
 		DNSClientOptions: option.DNSClientOptions{
 			Strategy:         domainStrategy,

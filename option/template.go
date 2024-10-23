@@ -23,12 +23,13 @@ type _Template struct {
 	RemoteResolve        bool                  `json:"remote_resolve,omitempty"`
 
 	// DNS
-	DNS            string           `json:"dns,omitempty"`
-	DNSLocal       string           `json:"dns_local,omitempty"`
-	EnableFakeIP   bool             `json:"enable_fakeip,omitempty"`
-	DisableDNSLeak bool             `json:"disable_dns_leak,omitempty"`
-	PreDNSRules    []option.DNSRule `json:"pre_dns_rules,omitempty"`
-	CustomDNSRules []option.DNSRule `json:"custom_dns_rules,omitempty"`
+	Servers        []option.DNSServerOptions `json:"servers,omitempty"`
+	DNS            string                    `json:"dns,omitempty"`
+	DNSLocal       string                    `json:"dns_local,omitempty"`
+	EnableFakeIP   bool                      `json:"enable_fakeip,omitempty"`
+	DisableDNSLeak bool                      `json:"disable_dns_leak,omitempty"`
+	PreDNSRules    []option.DNSRule          `json:"pre_dns_rules,omitempty"`
+	CustomDNSRules []option.DNSRule          `json:"custom_dns_rules,omitempty"`
 
 	// Inbound
 	Inbounds           []option.Inbound                              `json:"inbounds,omitempty"`
