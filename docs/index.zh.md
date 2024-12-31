@@ -1,10 +1,10 @@
 ---
-description: 欢迎来到该 sing-box 项目的文档页。
+description: 欢迎来到该 serenity 项目的文档页。
 ---
 
 # :material-home: 开始
 
-欢迎来到该 sing-box 项目的文档页。
+欢迎来到该 serenity 项目的文档页。
 
 sing-box 配置生成器。
 
