@@ -19,6 +19,7 @@
 
   "dns": "",
   "dns_local": "",
+  "dns_servers": [],
   "enable_fakeip": false,
   "pre_dns_rules": [],
   "custom_dns_rules": [],
@@ -142,6 +143,12 @@ Default DNS server.
 DNS server used for China DNS requests.
 
 `114.114.114.114` is used by default.
+
+#### dns_servers
+
+List of [DNS Server](https://sing-box.sagernet.org/configuration/dns/server/).
+
+Will be append to DNS servers.
 
 #### enable_fakeip
 

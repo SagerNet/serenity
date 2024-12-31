@@ -28,7 +28,7 @@ type _Template struct {
 	RemoteResolve        bool                  `json:"remote_resolve,omitempty"`
 
 	// DNS
-	Servers        []option.DNSServerOptions `json:"servers,omitempty"`
+	DNSServers     []option.DNSServerOptions `json:"dns_servers,omitempty"`
 	DNS            string                    `json:"dns,omitempty"`
 	DNSLocal       string                    `json:"dns_local,omitempty"`
 	EnableFakeIP   bool                      `json:"enable_fakeip,omitempty"`
