@@ -29,6 +29,7 @@ func (t *Template) renderInbounds(metadata M.Metadata, options *option.Options) 
 	autoRedirect := t.AutoRedirect &&
 		!metadata.Platform.IsApple() &&
 		(metadata.Version == nil || metadata.Version.GreaterThanOrEqual(semver.ParseVersion("1.10.0-alpha.2")))
+	tunExclude := metadata.Platform != M.PlatformAndroid && (metadata.Version == nil || metadata.Version.GreaterThanOrEqual(semver.ParseVersion("1.11.0-beta.14")))
 	disableTun := t.DisableTUN && !metadata.Platform.TunOnly()
 	if !disableTun {
 		options.Route.AutoDetectInterface = true
@@ -37,18 +38,16 @@ func (t *Template) renderInbounds(metadata M.Metadata, options *option.Options) 
 			address = append(address, netip.MustParsePrefix("fdfe:dcba:9876::1/126"))
 		}
 		tunOptions := &option.TunInboundOptions{
-			AutoRoute: true,
-			Address:   address,
+			AutoRoute:    true,
+			Address:      address,
+			AutoRedirect: autoRedirect,
 		}
 		tunInbound := option.Inbound{
 			Type:    C.TypeTun,
 			Options: tunOptions,
 		}
-		if autoRedirect {
-			tunOptions.AutoRedirect = true
-			if !t.DisableTrafficBypass && metadata.Platform == "" {
-				tunOptions.RouteExcludeAddressSet = []string{"geoip-cn"}
-			}
+		if tunExclude && !t.DisableTrafficBypass {
+			tunOptions.RouteExcludeAddressSet = []string{"geoip-cn"}
 		}
 		if metadata.Platform == M.PlatformUnknown {
 			tunOptions.StrictRoute = true
