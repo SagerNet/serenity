@@ -39,6 +39,6 @@ func decodeBase64URLSafe(content string) (string, error) {
 	content = strings.ReplaceAll(content, "/", "_")
 	content = strings.ReplaceAll(content, "+", "-")
 	content = strings.ReplaceAll(content, "=", "")
-	result, err := base64.StdEncoding.DecodeString(content)
+	result, err := base64.RawURLEncoding.DecodeString(content)
 	return string(result), err
 }
