@@ -2,8 +2,10 @@
 icon: material/alert-decagram
 ---
 
-#### 1.1.0-alpha.4
+#### 1.1.0-beta.3
 
+* Rename `template.servers` to `template.dns_servers`
+* Set `tun.route_exclude_address_set` for traffic bypassing
 * Fixes and improvements
 
 #### 1.1.0-alpha.3
