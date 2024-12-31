@@ -45,7 +45,7 @@ func extendTemplate(ctx context.Context, rawTemplates []option.Template, root, c
 	if err != nil {
 		return option.Template{}, E.Cause(err, "initialize template[", current.Name, "]: merge extended template: ", current.Extend)
 	}
-	newTemplate, err := json.UnmarshalExtended[option.Template](newRawTemplate)
+	newTemplate, err := json.UnmarshalExtendedContext[option.Template](ctx, newRawTemplate)
 	if err != nil {
 		return option.Template{}, E.Cause(err, "initialize template[", current.Name, "]: unmarshal extended template: ", current.Extend)
 	}
