@@ -98,10 +98,10 @@ func (t *Template) renderDNS(metadata M.Metadata, options *option.Options) error
 			options.DNS.FakeIP = &option.DNSFakeIPOptions{}
 		}
 		options.DNS.FakeIP.Enabled = true
-		if !options.DNS.FakeIP.Inet4Range.IsValid() {
+		if options.DNS.FakeIP.Inet4Range == nil || !options.DNS.FakeIP.Inet4Range.IsValid() {
 			options.DNS.FakeIP.Inet4Range = common.Ptr(netip.MustParsePrefix("198.18.0.0/15"))
 		}
-		if !t.DisableIPv6() && !options.DNS.FakeIP.Inet6Range.IsValid() {
+		if !t.DisableIPv6() && options.DNS.FakeIP.Inet6Range == nil || !options.DNS.FakeIP.Inet6Range.IsValid() {
 			options.DNS.FakeIP.Inet6Range = common.Ptr(netip.MustParsePrefix("fc00::/18"))
 		}
 		options.DNS.Servers = append(options.DNS.Servers, option.DNSServerOptions{
