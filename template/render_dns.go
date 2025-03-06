@@ -8,7 +8,7 @@ import (
 	"github.com/sagernet/serenity/common/semver"
 	C "github.com/sagernet/sing-box/constant"
 	"github.com/sagernet/sing-box/option"
-	"github.com/sagernet/sing-dns"
+	dns "github.com/sagernet/sing-dns"
 	"github.com/sagernet/sing/common"
 	"github.com/sagernet/sing/common/json/badoption"
 	BM "github.com/sagernet/sing/common/metadata"
@@ -116,7 +116,7 @@ func (t *Template) renderDNS(metadata M.Metadata, options *option.Options) error
 		if options.DNS.FakeIP.Inet4Range == nil || !options.DNS.FakeIP.Inet4Range.Build(netip.Prefix{}).IsValid() {
 			options.DNS.FakeIP.Inet4Range = (*badoption.Prefix)(common.Ptr(netip.MustParsePrefix("198.18.0.0/15")))
 		}
-		if !t.DisableIPv6() && options.DNS.FakeIP.Inet6Range == nil || !options.DNS.FakeIP.Inet6Range.Build(netip.Prefix{}).IsValid() {
+		if !t.DisableIPv6() && (options.DNS.FakeIP.Inet6Range == nil || !options.DNS.FakeIP.Inet6Range.Build(netip.Prefix{}).IsValid()) {
 			options.DNS.FakeIP.Inet6Range = (*badoption.Prefix)(common.Ptr(netip.MustParsePrefix("fc00::/18")))
 		}
 		options.DNS.Servers = append(options.DNS.Servers, option.DNSServerOptions{
