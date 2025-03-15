@@ -28,14 +28,14 @@ type _Template struct {
 	RemoteResolve        bool                  `json:"remote_resolve,omitempty"`
 
 	// DNS
-	DNSServers     []option.DNSServerOptions `json:"dns_servers,omitempty"`
-	DNS            string                    `json:"dns,omitempty"`
-	DNSLocal       string                    `json:"dns_local,omitempty"`
-	EnableFakeIP   bool                      `json:"enable_fakeip,omitempty"`
-	DisableDNSLeak bool                      `json:"disable_dns_leak,omitempty"`
-	PreDNSRules    []option.DNSRule          `json:"pre_dns_rules,omitempty"`
-	CustomDNSRules []option.DNSRule          `json:"custom_dns_rules,omitempty"`
-	CustomFakeIP   *option.DNSFakeIPOptions  `json:"custom_fakeip,omitempty"`
+	DNSServers     []option.DNSServerOptions      `json:"dns_servers,omitempty"`
+	DNS            string                         `json:"dns,omitempty"`
+	DNSLocal       string                         `json:"dns_local,omitempty"`
+	EnableFakeIP   bool                           `json:"enable_fakeip,omitempty"`
+	DisableDNSLeak bool                           `json:"disable_dns_leak,omitempty"`
+	PreDNSRules    []option.DNSRule               `json:"pre_dns_rules,omitempty"`
+	CustomDNSRules []option.DNSRule               `json:"custom_dns_rules,omitempty"`
+	CustomFakeIP   *option.FakeIPDNSServerOptions `json:"custom_fakeip,omitempty"`
 
 	// Inbound
 	Inbounds           []option.Inbound                              `json:"inbounds,omitempty"`

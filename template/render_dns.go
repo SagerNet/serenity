@@ -10,6 +10,7 @@ import (
 	"github.com/sagernet/sing-box/option"
 	"github.com/sagernet/sing-dns"
 	"github.com/sagernet/sing/common"
+	"github.com/sagernet/sing/common/json/badoption"
 	BM "github.com/sagernet/sing/common/metadata"
 
 	mDNS "github.com/miekg/dns"
@@ -36,10 +37,12 @@ func (t *Template) renderDNS(metadata M.Metadata, options *option.Options) error
 		domainStrategyLocal = 0
 	}
 	options.DNS = &option.DNSOptions{
-		ReverseMapping: !t.DisableTrafficBypass && metadata.Platform != M.PlatformUnknown && !metadata.Platform.IsApple(),
-		DNSClientOptions: option.DNSClientOptions{
-			Strategy:         domainStrategy,
-			IndependentCache: t.EnableFakeIP,
+		RawDNSOptions: option.RawDNSOptions{
+			ReverseMapping: !t.DisableTrafficBypass && metadata.Platform != M.PlatformUnknown && !metadata.Platform.IsApple(),
+			DNSClientOptions: option.DNSClientOptions{
+				Strategy:         domainStrategy,
+				IndependentCache: t.EnableFakeIP,
+			},
 		},
 	}
 	dnsDefault := t.DNS
@@ -55,11 +58,13 @@ func (t *Template) renderDNS(metadata M.Metadata, options *option.Options) error
 		directTag = DefaultDirectTag
 	}
 	defaultDNSOptions := option.DNSServerOptions{
-		Tag:     DNSDefaultTag,
-		Address: dnsDefault,
+		Tag: DNSDefaultTag,
+		Options: &option.LegacyDNSServerOptions{
+			Address: dnsDefault,
+		},
 	}
 	if dnsDefaultUrl, err := url.Parse(dnsDefault); err == nil && BM.IsDomainName(dnsDefaultUrl.Hostname()) {
-		defaultDNSOptions.AddressResolver = DNSLocalTag
+		defaultDNSOptions.Options.(*option.LegacyDNSServerOptions).AddressResolver = DNSLocalTag
 	}
 	options.DNS.Servers = append(options.DNS.Servers, defaultDNSOptions)
 	var (
@@ -68,45 +73,57 @@ func (t *Template) renderDNS(metadata M.Metadata, options *option.Options) error
 	)
 	if t.DisableTrafficBypass {
 		localDNSOptions = option.DNSServerOptions{
-			Tag:      DNSLocalTag,
-			Address:  "local",
-			Strategy: domainStrategyLocal,
+			Tag: DNSLocalTag,
+			Options: &option.LegacyDNSServerOptions{
+				Address:  "local",
+				Strategy: domainStrategyLocal,
+			},
 		}
 	} else {
 		localDNSOptions = option.DNSServerOptions{
-			Tag:      DNSLocalTag,
-			Address:  dnsLocal,
-			Detour:   directTag,
-			Strategy: domainStrategyLocal,
+			Tag: DNSLocalTag,
+			Options: &option.LegacyDNSServerOptions{
+				Address:  dnsLocal,
+				Detour:   directTag,
+				Strategy: domainStrategyLocal,
+			},
 		}
 		if dnsLocalUrl, err := url.Parse(dnsLocal); err == nil && BM.IsDomainName(dnsLocalUrl.Hostname()) {
-			localDNSOptions.AddressResolver = DNSLocalSetupTag
+			defaultDNSOptions.Options.(*option.LegacyDNSServerOptions).AddressResolver = DNSLocalSetupTag
 			localDNSIsDomain = true
 		}
 	}
 	options.DNS.Servers = append(options.DNS.Servers, localDNSOptions)
 	if localDNSIsDomain {
 		options.DNS.Servers = append(options.DNS.Servers, option.DNSServerOptions{
-			Tag:      DNSLocalSetupTag,
-			Address:  "local",
-			Strategy: domainStrategyLocal,
+			Tag: DNSLocalSetupTag,
+			Options: &option.LegacyDNSServerOptions{
+				Address:  "local",
+				Strategy: domainStrategyLocal,
+			},
 		})
 	}
 	if t.EnableFakeIP {
-		options.DNS.FakeIP = t.CustomFakeIP
-		if options.DNS.FakeIP == nil {
-			options.DNS.FakeIP = &option.DNSFakeIPOptions{}
+		if t.CustomFakeIP != nil {
+			options.DNS.FakeIP = &option.LegacyDNSFakeIPOptions{
+				Inet4Range: t.CustomFakeIP.Inet4Range,
+				Inet6Range: t.CustomFakeIP.Inet6Range,
+			}
+		} else if options.DNS.FakeIP == nil {
+			options.DNS.FakeIP = &option.LegacyDNSFakeIPOptions{}
 		}
 		options.DNS.FakeIP.Enabled = true
-		if options.DNS.FakeIP.Inet4Range == nil || !options.DNS.FakeIP.Inet4Range.IsValid() {
-			options.DNS.FakeIP.Inet4Range = common.Ptr(netip.MustParsePrefix("198.18.0.0/15"))
+		if options.DNS.FakeIP.Inet4Range == nil || !options.DNS.FakeIP.Inet4Range.Build(netip.Prefix{}).IsValid() {
+			options.DNS.FakeIP.Inet4Range = (*badoption.Prefix)(common.Ptr(netip.MustParsePrefix("198.18.0.0/15")))
 		}
-		if !t.DisableIPv6() && options.DNS.FakeIP.Inet6Range == nil || !options.DNS.FakeIP.Inet6Range.IsValid() {
-			options.DNS.FakeIP.Inet6Range = common.Ptr(netip.MustParsePrefix("fc00::/18"))
+		if !t.DisableIPv6() && options.DNS.FakeIP.Inet6Range == nil || !options.DNS.FakeIP.Inet6Range.Build(netip.Prefix{}).IsValid() {
+			options.DNS.FakeIP.Inet6Range = (*badoption.Prefix)(common.Ptr(netip.MustParsePrefix("fc00::/18")))
 		}
 		options.DNS.Servers = append(options.DNS.Servers, option.DNSServerOptions{
-			Tag:     DNSFakeIPTag,
-			Address: "fakeip",
+			Tag: DNSFakeIPTag,
+			Options: &option.LegacyDNSServerOptions{
+				Address: "fakeip",
+			},
 		})
 	}
 	options.DNS.Servers = append(options.DNS.Servers, t.DNSServers...)

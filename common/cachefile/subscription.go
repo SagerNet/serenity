@@ -2,6 +2,7 @@ package cachefile
 
 import (
 	"bytes"
+	"context"
 	"encoding/binary"
 	"time"
 
@@ -16,10 +17,10 @@ type Subscription struct {
 	LastEtag    string
 }
 
-func (c *Subscription) MarshalBinary() ([]byte, error) {
+func (c *Subscription) MarshalBinary(ctx context.Context) ([]byte, error) {
 	var buffer bytes.Buffer
 	buffer.WriteByte(1)
-	content, err := json.Marshal(c.Content)
+	content, err := json.MarshalContext(ctx, c.Content)
 	if err != nil {
 		return nil, err
 	}
@@ -42,7 +43,7 @@ func (c *Subscription) MarshalBinary() ([]byte, error) {
 	return buffer.Bytes(), nil
 }
 
-func (c *Subscription) UnmarshalBinary(data []byte) error {
+func (c *Subscription) UnmarshalBinary(ctx context.Context, data []byte) error {
 	reader := bytes.NewReader(data)
 	version, err := reader.ReadByte()
 	if err != nil {
@@ -58,7 +59,7 @@ func (c *Subscription) UnmarshalBinary(data []byte) error {
 	if err != nil {
 		return err
 	}
-	err = json.Unmarshal(content, &c.Content)
+	err = json.UnmarshalContext(ctx, content, &c.Content)
 	if err != nil {
 		return err
 	}

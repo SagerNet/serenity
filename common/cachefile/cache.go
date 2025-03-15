@@ -1,6 +1,7 @@
 package cachefile
 
 import (
+	"context"
 	"errors"
 	"os"
 	"time"
@@ -80,7 +81,7 @@ func (c *CacheFile) Close() error {
 	return c.DB.Close()
 }
 
-func (c *CacheFile) LoadSubscription(name string) *Subscription {
+func (c *CacheFile) LoadSubscription(ctx context.Context, name string) *Subscription {
 	var subscription Subscription
 	err := c.DB.View(func(tx *bbolt.Tx) error {
 		bucket := tx.Bucket(bucketSubscription)
@@ -91,7 +92,7 @@ func (c *CacheFile) LoadSubscription(name string) *Subscription {
 		if data == nil {
 			return nil
 		}
-		return subscription.UnmarshalBinary(data)
+		return subscription.UnmarshalBinary(ctx, data)
 	})
 	if err != nil {
 		return nil
@@ -99,8 +100,8 @@ func (c *CacheFile) LoadSubscription(name string) *Subscription {
 	return &subscription
 }
 
-func (c *CacheFile) StoreSubscription(name string, subscription *Subscription) error {
-	data, err := subscription.MarshalBinary()
+func (c *CacheFile) StoreSubscription(ctx context.Context, name string, subscription *Subscription) error {
+	data, err := subscription.MarshalBinary(ctx)
 	if err != nil {
 		return err
 	}
