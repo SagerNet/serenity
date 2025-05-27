@@ -5,7 +5,6 @@ import (
 	"os"
 	"time"
 
-	"github.com/sagernet/sing-box"
 	"github.com/sagernet/sing-box/include"
 	_ "github.com/sagernet/sing-box/include"
 	"github.com/sagernet/sing-box/log"
@@ -57,6 +56,5 @@ func preRun(cmd *cobra.Command, args []string) {
 	if len(configPaths) == 0 && len(configDirectories) == 0 {
 		configPaths = append(configPaths, "config.json")
 	}
-	globalCtx = box.Context(context.Background(), include.InboundRegistry(), include.OutboundRegistry(), include.EndpointRegistry(), include.DNSTransportRegistry())
-	globalCtx = option.ContextWithDontUpgrade(globalCtx)
+	globalCtx = option.ContextWithDontUpgrade(include.Context(context.Background()))
 }

@@ -69,7 +69,7 @@ func (t *Template) renderExperimental(ctx context.Context, metadata M.Metadata, 
 		}
 		options.Experimental.Debug.Listen = t.PProfListen
 	}
-	if t.MemoryLimit > 0 && !metadata.Platform.IsNetworkExtensionMemoryLimited() {
+	if t.MemoryLimit.Value() > 0 && !metadata.Platform.IsNetworkExtensionMemoryLimited() {
 		if options.Experimental.Debug == nil {
 			options.Experimental.Debug = &option.DebugOptions{}
 		}

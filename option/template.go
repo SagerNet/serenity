@@ -6,6 +6,7 @@ import (
 	C "github.com/sagernet/serenity/constant"
 	"github.com/sagernet/sing-box/option"
 	"github.com/sagernet/sing-dns"
+	"github.com/sagernet/sing/common/byteformats"
 	E "github.com/sagernet/sing/common/exceptions"
 	"github.com/sagernet/sing/common/json"
 	"github.com/sagernet/sing/common/json/badjson"
@@ -75,8 +76,8 @@ type _Template struct {
 	CustomClashAPI  *TypedMessage[option.ClashAPIOptions] `json:"custom_clash_api,omitempty"`
 
 	// Debug
-	PProfListen string             `json:"pprof_listen,omitempty"`
-	MemoryLimit option.MemoryBytes `json:"memory_limit,omitempty"`
+	PProfListen string                   `json:"pprof_listen,omitempty"`
+	MemoryLimit *byteformats.MemoryBytes `json:"memory_limit,omitempty"`
 }
 
 type Template _Template

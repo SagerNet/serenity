@@ -30,8 +30,7 @@ func (t *Template) renderRoute(metadata M.Metadata, options *option.Options) err
 								Type: C.RuleTypeDefault,
 								DefaultOptions: option.DefaultRule{
 									RawDefaultRule: option.RawDefaultRule{
-										Network: []string{N.NetworkUDP},
-										Port:    []uint16{53},
+										Port: []uint16{53},
 									},
 								},
 							},
@@ -74,8 +73,7 @@ func (t *Template) renderRoute(metadata M.Metadata, options *option.Options) err
 								Type: C.RuleTypeDefault,
 								DefaultOptions: option.DefaultRule{
 									RawDefaultRule: option.RawDefaultRule{
-										Network: []string{N.NetworkUDP},
-										Port:    []uint16{53},
+										Port: []uint16{53},
 									},
 								},
 							},
