@@ -43,7 +43,7 @@ type ExtraGroup struct {
 func (t *Template) Render(ctx context.Context, metadata M.Metadata, profileName string, outbounds [][]boxOption.Outbound, subscriptions []*subscription.Subscription) (*boxOption.Options, error) {
 	var options boxOption.Options
 	options.Log = t.Log
-	err := t.renderDNS(metadata, &options)
+	err := t.renderDNS(ctx, metadata, &options)
 	if err != nil {
 		return nil, E.Cause(err, "render dns")
 	}
