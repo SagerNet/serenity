@@ -103,6 +103,7 @@ func New(ctx context.Context, options option.Options) (*Server, error) {
 		common.Map(options.Outbounds, func(it badoption.Listable[boxOption.Outbound]) []boxOption.Outbound {
 			return it
 		}),
+		options.Endpoints,
 		options.Profiles,
 	)
 	if err != nil {

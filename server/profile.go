@@ -21,6 +21,7 @@ type ProfileManager struct {
 	logger         logger.Logger
 	subscription   *subscription.Manager
 	outbounds      [][]boxOption.Outbound
+	endpoints      []boxOption.Endpoint
 	profiles       []*Profile
 	defaultProfile *Profile
 }
@@ -45,6 +46,7 @@ func NewProfileManager(
 	subscriptionManager *subscription.Manager,
 	templateManager *template.Manager,
 	outbounds [][]boxOption.Outbound,
+	endpoints []boxOption.Endpoint,
 	rawProfiles []option.Profile,
 ) (*ProfileManager, error) {
 	manager := &ProfileManager{
@@ -52,6 +54,7 @@ func NewProfileManager(
 		logger:       logger,
 		subscription: subscriptionManager,
 		outbounds:    outbounds,
+		endpoints:    endpoints,
 	}
 	for profileIndex, profile := range rawProfiles {
 		if profile.Name == "" {
@@ -139,6 +142,9 @@ func (p *Profile) Render(metadata metadata.Metadata) (*boxOption.Options, error)
 	outbounds := common.Filter(p.manager.outbounds, func(it []boxOption.Outbound) bool {
 		return common.Contains(p.Outbound, it[0].Tag)
 	})
+	endpoints := common.Filter(p.manager.endpoints, func(it boxOption.Endpoint) bool {
+		return common.Contains(p.Endpoint, it.Tag)
+	})
 	var subscriptions []*subscription.Subscription
 	for _, subscriptionName := range p.Subscription {
 		subscription := common.Find(p.manager.subscription.Subscriptions(), func(it *subscription.Subscription) bool {
@@ -156,6 +162,9 @@ func (p *Profile) Render(metadata metadata.Metadata) (*boxOption.Options, error)
 	options, err := selectedTemplate.Render(ctx, metadata, p.Name, outbounds, subscriptions)
 	if err != nil {
 		return nil, err
+	}
+	if metadata.Version != nil || metadata.Version.GreaterThanOrEqual(semver.ParseVersion("1.12.0-alpha.1")) {
+		options.Endpoints = endpoints
 	}
 	options, err = badjson.Omitempty(ctx, options)
 	if err != nil {

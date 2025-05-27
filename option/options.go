@@ -18,6 +18,7 @@ type _Options struct {
 	CacheFile  string                    `json:"cache_file,omitempty"`
 
 	Outbounds     []badoption.Listable[option.Outbound] `json:"outbounds,omitempty"`
+	Endpoints     badoption.Listable[option.Endpoint]   `json:"endpoints,omitempty"`
 	Subscriptions []Subscription                        `json:"subscriptions,omitempty"`
 	Templates     []Template                            `json:"templates,omitempty"`
 	Profiles      []Profile                             `json:"profiles,omitempty"`
@@ -78,5 +79,6 @@ type Profile struct {
 	TemplateForPlatform  *badjson.TypedMap[string, string] `json:"template_for_platform,omitempty"`
 	TemplateForUserAgent *badjson.TypedMap[string, string] `json:"template_for_user_agent,omitempty"`
 	Outbound             badoption.Listable[string]        `json:"outbound,omitempty"`
+	Endpoint             badoption.Listable[string]        `json:"endpoint,omitempty"`
 	Subscription         badoption.Listable[string]        `json:"subscription,omitempty"`
 }
