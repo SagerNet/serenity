@@ -15,17 +15,19 @@ func TestFilter1100(t *testing.T) {
 	t.Parallel()
 	options := &option.Options{
 		DNS: &option.DNSOptions{
-			Rules: []option.DNSRule{
-				{
-					Type: C.RuleTypeDefault,
-					DefaultOptions: option.DefaultDNSRule{
-						RawDefaultDNSRule: option.RawDefaultDNSRule{
-							RuleSet: []string{"test"},
-						},
-						DNSRuleAction: option.DNSRuleAction{
-							Action: C.RuleActionTypeRoute,
-							RouteOptions: option.DNSRouteActionOptions{
-								Server: "test",
+			RawDNSOptions: option.RawDNSOptions{
+				Rules: []option.DNSRule{
+					{
+						Type: C.RuleTypeDefault,
+						DefaultOptions: option.DefaultDNSRule{
+							RawDefaultDNSRule: option.RawDefaultDNSRule{
+								RuleSet: []string{"test"},
+							},
+							DNSRuleAction: option.DNSRuleAction{
+								Action: C.RuleActionTypeRoute,
+								RouteOptions: option.DNSRouteActionOptions{
+									Server: "test",
+								},
 							},
 						},
 					},
@@ -71,17 +73,19 @@ func TestFilter1100(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, options, &option.Options{
 		DNS: &option.DNSOptions{
-			Rules: []option.DNSRule{
-				{
-					Type: C.RuleTypeDefault,
-					DefaultOptions: option.DefaultDNSRule{
-						RawDefaultDNSRule: option.RawDefaultDNSRule{
-							Domain: []string{"example.com"},
-						},
-						DNSRuleAction: option.DNSRuleAction{
-							Action: C.RuleActionTypeRoute,
-							RouteOptions: option.DNSRouteActionOptions{
-								Server: "test",
+			RawDNSOptions: option.RawDNSOptions{
+				Rules: []option.DNSRule{
+					{
+						Type: C.RuleTypeDefault,
+						DefaultOptions: option.DefaultDNSRule{
+							RawDefaultDNSRule: option.RawDefaultDNSRule{
+								Domain: []string{"example.com"},
+							},
+							DNSRuleAction: option.DNSRuleAction{
+								Action: C.RuleActionTypeRoute,
+								RouteOptions: option.DNSRouteActionOptions{
+									Server: "test",
+								},
 							},
 						},
 					},
