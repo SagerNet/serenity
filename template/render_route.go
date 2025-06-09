@@ -11,6 +11,7 @@ import (
 func (t *Template) renderRoute(metadata M.Metadata, options *option.Options) error {
 	if options.Route == nil {
 		options.Route = &option.RouteOptions{
+			Rules:   t.StartRules,
 			RuleSet: t.renderRuleSet(t.CustomRuleSet),
 		}
 	}
@@ -19,51 +20,48 @@ func (t *Template) renderRoute(metadata M.Metadata, options *option.Options) err
 	}
 	disableRuleAction := t.DisableRuleAction || (metadata.Version != nil && metadata.Version.LessThan(semver.ParseVersion("1.11.0-alpha.7")))
 	if disableRuleAction {
-		options.Route.Rules = []option.Rule{
-			{
-				Type: C.RuleTypeLogical,
-				LogicalOptions: option.LogicalRule{
-					RawLogicalRule: option.RawLogicalRule{
-						Mode: C.LogicalTypeOr,
-						Rules: []option.Rule{
-							{
-								Type: C.RuleTypeDefault,
-								DefaultOptions: option.DefaultRule{
-									RawDefaultRule: option.RawDefaultRule{
-										Port: []uint16{53},
-									},
-								},
-							},
-							{
-								Type: C.RuleTypeDefault,
-								DefaultOptions: option.DefaultRule{
-									RawDefaultRule: option.RawDefaultRule{
-										Protocol: []string{C.ProtocolDNS},
-									},
+		options.Route.Rules = append(options.Route.Rules, option.Rule{
+			Type: C.RuleTypeLogical,
+			LogicalOptions: option.LogicalRule{
+				RawLogicalRule: option.RawLogicalRule{
+					Mode: C.LogicalTypeOr,
+					Rules: []option.Rule{
+						{
+							Type: C.RuleTypeDefault,
+							DefaultOptions: option.DefaultRule{
+								RawDefaultRule: option.RawDefaultRule{
+									Port: []uint16{53},
 								},
 							},
 						},
-					},
-					RuleAction: option.RuleAction{
-						Action: C.RuleActionTypeRoute,
-						RouteOptions: option.RouteActionOptions{
-							Outbound: DNSTag,
+						{
+							Type: C.RuleTypeDefault,
+							DefaultOptions: option.DefaultRule{
+								RawDefaultRule: option.RawDefaultRule{
+									Protocol: []string{C.ProtocolDNS},
+								},
+							},
 						},
 					},
 				},
+				RuleAction: option.RuleAction{
+					Action: C.RuleActionTypeRoute,
+					RouteOptions: option.RouteActionOptions{
+						Outbound: DNSTag,
+					},
+				},
 			},
-		}
+		})
 	} else {
-		options.Route.Rules = []option.Rule{
-			{
-				Type: C.RuleTypeDefault,
-				DefaultOptions: option.DefaultRule{
-					RuleAction: option.RuleAction{
-						Action: C.RuleActionTypeSniff,
-					},
+		options.Route.Rules = append(options.Route.Rules, option.Rule{
+			Type: C.RuleTypeDefault,
+			DefaultOptions: option.DefaultRule{
+				RuleAction: option.RuleAction{
+					Action: C.RuleActionTypeSniff,
 				},
 			},
-			{
+		},
+			option.Rule{
 				Type: C.RuleTypeLogical,
 				LogicalOptions: option.LogicalRule{
 					RawLogicalRule: option.RawLogicalRule{
@@ -91,8 +89,7 @@ func (t *Template) renderRoute(metadata M.Metadata, options *option.Options) err
 						Action: C.RuleActionTypeHijackDNS,
 					},
 				},
-			},
-		}
+			})
 	}
 	directTag := t.DirectTag
 	defaultTag := t.DefaultTag

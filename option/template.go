@@ -58,6 +58,7 @@ type _Template struct {
 
 	// Route
 	DisableDefaultRules bool          `json:"disable_default_rules,omitempty"`
+	StartRules          []option.Rule `json:"start_rules,omitempty"`
 	PreRules            []option.Rule `json:"pre_rules,omitempty"`
 	CustomRules         []option.Rule `json:"custom_rules,omitempty"`
 	EnableJSDelivr      bool          `json:"enable_jsdelivr,omitempty"`
