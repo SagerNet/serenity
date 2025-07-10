@@ -11,11 +11,11 @@ import (
 	"github.com/sagernet/sing/common/json/badoption"
 	N "github.com/sagernet/sing/common/network"
 
-	"github.com/Dreamacro/clash/adapter"
-	clash_outbound "github.com/Dreamacro/clash/adapter/outbound"
-	"github.com/Dreamacro/clash/common/structure"
-	"github.com/Dreamacro/clash/config"
-	"github.com/Dreamacro/clash/constant"
+	"github.com/metacubex/mihomo/adapter"
+	clash_outbound "github.com/metacubex/mihomo/adapter/outbound"
+	"github.com/metacubex/mihomo/common/structure"
+	"github.com/metacubex/mihomo/config"
+	"github.com/metacubex/mihomo/constant"
 )
 
 func ParseClashSubscription(_ context.Context, content string) ([]option.Outbound, error) {
