@@ -83,7 +83,8 @@ func (t *Template) renderDNS(ctx context.Context, metadata M.Metadata, options *
 	)
 	if t.DisableTrafficBypass {
 		localDNSOptions = option.DNSServerOptions{
-			Tag: DNSLocalTag,
+			Tag:  DNSLocalTag,
+			Type: C.DNSTypeLegacy,
 			Options: &option.LegacyDNSServerOptions{
 				Address:  "local",
 				Strategy: domainStrategyLocal,
@@ -91,16 +92,24 @@ func (t *Template) renderDNS(ctx context.Context, metadata M.Metadata, options *
 		}
 	} else {
 		localDNSOptions = option.DNSServerOptions{
-			Tag: DNSLocalTag,
+			Tag:  DNSLocalTag,
+			Type: C.DNSTypeLegacy,
 			Options: &option.LegacyDNSServerOptions{
 				Address:  dnsLocal,
 				Detour:   directTag,
 				Strategy: domainStrategyLocal,
 			},
 		}
-		if dnsLocalUrl, err := url.Parse(dnsLocal); err == nil && BM.IsDomainName(dnsLocalUrl.Hostname()) {
-			defaultDNSOptions.Options.(*option.LegacyDNSServerOptions).AddressResolver = DNSLocalSetupTag
+		if BM.IsDomainName(dnsLocal) {
 			localDNSIsDomain = true
+		} else if dnsLocalUrl, err := url.Parse(dnsLocal); err == nil {
+			switch dnsLocalUrl.Scheme {
+			case "tcp", "udp", "tls", "https", "quic", "h3":
+				localDNSIsDomain = true
+			}
+		}
+		if localDNSIsDomain {
+			defaultDNSOptions.Options.(*option.LegacyDNSServerOptions).AddressResolver = DNSLocalSetupTag
 		}
 	}
 	if newDNSServers {
@@ -111,12 +120,14 @@ func (t *Template) renderDNS(ctx context.Context, metadata M.Metadata, options *
 	if localDNSIsDomain {
 		if newDNSServers {
 			options.DNS.Servers = append(options.DNS.Servers, option.DNSServerOptions{
+				Type:    C.DNSTypeLocal,
 				Tag:     DNSLocalSetupTag,
 				Options: &option.LocalDNSServerOptions{},
 			})
 		} else {
 			options.DNS.Servers = append(options.DNS.Servers, option.DNSServerOptions{
-				Tag: DNSLocalSetupTag,
+				Type: C.DNSTypeLegacy,
+				Tag:  DNSLocalSetupTag,
 				Options: &option.LegacyDNSServerOptions{
 					Address:  "local",
 					Strategy: domainStrategyLocal,
