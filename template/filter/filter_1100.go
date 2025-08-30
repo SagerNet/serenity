@@ -1,6 +1,7 @@
 package filter
 
 import (
+	"context"
 	"net/netip"
 
 	"github.com/sagernet/serenity/common/metadata"
@@ -77,41 +78,42 @@ func filter1100(metadata metadata.Metadata, options *option.Options) error {
 		newInbounds := make([]option.Inbound, 0, len(options.Inbounds))
 		for _, inbound := range options.Inbounds {
 			if inbound.Type == C.TypeTun {
-				inbound.TunOptions.AutoRedirect = false
-				inbound.TunOptions.RouteAddressSet = nil
-				inbound.TunOptions.RouteExcludeAddressSet = nil
+				tunOptions := inbound.Options.(*option.TunInboundOptions)
+				tunOptions.AutoRedirect = false
+				tunOptions.RouteAddressSet = nil
+				tunOptions.RouteExcludeAddressSet = nil
 				//nolint:staticcheck
 				//goland:noinspection GoDeprecation
-				if len(inbound.TunOptions.Address) > 0 {
-					inbound.TunOptions.Inet4Address = append(inbound.TunOptions.Inet4Address, common.Filter(inbound.TunOptions.Address, func(it netip.Prefix) bool {
+				if len(tunOptions.Address) > 0 {
+					tunOptions.Inet4Address = append(tunOptions.Inet4Address, common.Filter(tunOptions.Address, func(it netip.Prefix) bool {
 						return it.Addr().Is4()
 					})...)
-					inbound.TunOptions.Inet6Address = append(inbound.TunOptions.Inet6Address, common.Filter(inbound.TunOptions.Address, func(it netip.Prefix) bool {
+					tunOptions.Inet6Address = append(tunOptions.Inet6Address, common.Filter(tunOptions.Address, func(it netip.Prefix) bool {
 						return it.Addr().Is6()
 					})...)
-					inbound.TunOptions.Address = nil
+					tunOptions.Address = nil
 				}
 				//nolint:staticcheck
 				//goland:noinspection GoDeprecation
-				if len(inbound.TunOptions.RouteAddress) > 0 {
-					inbound.TunOptions.Inet4RouteAddress = append(inbound.TunOptions.Inet4RouteAddress, common.Filter(inbound.TunOptions.RouteAddress, func(it netip.Prefix) bool {
+				if len(tunOptions.RouteAddress) > 0 {
+					tunOptions.Inet4RouteAddress = append(tunOptions.Inet4RouteAddress, common.Filter(tunOptions.RouteAddress, func(it netip.Prefix) bool {
 						return it.Addr().Is4()
 					})...)
-					inbound.TunOptions.Inet6RouteAddress = append(inbound.TunOptions.Inet6RouteAddress, common.Filter(inbound.TunOptions.RouteAddress, func(it netip.Prefix) bool {
+					tunOptions.Inet6RouteAddress = append(tunOptions.Inet6RouteAddress, common.Filter(tunOptions.RouteAddress, func(it netip.Prefix) bool {
 						return it.Addr().Is6()
 					})...)
-					inbound.TunOptions.RouteAddress = nil
+					tunOptions.RouteAddress = nil
 				}
 				//nolint:staticcheck
 				//goland:noinspection GoDeprecation
-				if len(inbound.TunOptions.RouteExcludeAddress) > 0 {
-					inbound.TunOptions.Inet4RouteExcludeAddress = append(inbound.TunOptions.Inet4RouteExcludeAddress, common.Filter(inbound.TunOptions.RouteExcludeAddress, func(it netip.Prefix) bool {
+				if len(tunOptions.RouteExcludeAddress) > 0 {
+					tunOptions.Inet4RouteExcludeAddress = append(tunOptions.Inet4RouteExcludeAddress, common.Filter(tunOptions.RouteExcludeAddress, func(it netip.Prefix) bool {
 						return it.Addr().Is4()
 					})...)
-					inbound.TunOptions.Inet6RouteExcludeAddress = append(inbound.TunOptions.Inet6RouteExcludeAddress, common.Filter(inbound.TunOptions.RouteExcludeAddress, func(it netip.Prefix) bool {
+					tunOptions.Inet6RouteExcludeAddress = append(tunOptions.Inet6RouteExcludeAddress, common.Filter(tunOptions.RouteExcludeAddress, func(it netip.Prefix) bool {
 						return it.Addr().Is6()
 					})...)
-					inbound.TunOptions.RouteExcludeAddress = nil
+					tunOptions.RouteExcludeAddress = nil
 				}
 			}
 			newInbounds = append(newInbounds, inbound)
@@ -152,7 +154,7 @@ func expandInlineRule(ruleSet option.RuleSet, rule option.Rule) ([]option.Rule, 
 		if err != nil {
 			return nil, E.Cause(err, "marshal inline rule ", ruleSet.Tag, "[", i, "]")
 		}
-		newRule, err = badjson.MergeFromSource(rawRule, rule, false)
+		newRule, err = badjson.MergeFromSource(context.Background(), rawRule, rule, false)
 		if err != nil {
 			return nil, E.Cause(err, "merge inline rule ", ruleSet.Tag, "[", i, "]")
 		}
@@ -192,7 +194,7 @@ func expandInlineDNSRule(ruleSet option.RuleSet, rule option.DNSRule) ([]option.
 		if err != nil {
 			return nil, E.Cause(err, "marshal inline rule ", ruleSet.Tag, "[", i, "]")
 		}
-		newRule, err = badjson.MergeFromSource(rawRule, rule, false)
+		newRule, err = badjson.MergeFromSource(context.Background(), rawRule, rule, false)
 		if err != nil {
 			return nil, E.Cause(err, "merge inline rule ", ruleSet.Tag, "[", i, "]")
 		}

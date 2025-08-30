@@ -1,6 +1,7 @@
 package template
 
 import (
+	"context"
 	"regexp"
 
 	M "github.com/sagernet/serenity/common/metadata"
@@ -39,10 +40,10 @@ type ExtraGroup struct {
 	exclude []*regexp.Regexp
 }
 
-func (t *Template) Render(metadata M.Metadata, profileName string, outbounds [][]boxOption.Outbound, subscriptions []*subscription.Subscription) (*boxOption.Options, error) {
+func (t *Template) Render(ctx context.Context, metadata M.Metadata, profileName string, outbounds [][]boxOption.Outbound, subscriptions []*subscription.Subscription) (*boxOption.Options, error) {
 	var options boxOption.Options
 	options.Log = t.Log
-	err := t.renderDNS(metadata, &options)
+	err := t.renderDNS(ctx, metadata, &options)
 	if err != nil {
 		return nil, E.Cause(err, "render dns")
 	}
@@ -58,7 +59,7 @@ func (t *Template) Render(metadata M.Metadata, profileName string, outbounds [][
 	if err != nil {
 		return nil, E.Cause(err, "render outbounds")
 	}
-	err = t.renderExperimental(metadata, &options, profileName)
+	err = t.renderExperimental(ctx, metadata, &options, profileName)
 	if err != nil {
 		return nil, E.Cause(err, "render experimental")
 	}

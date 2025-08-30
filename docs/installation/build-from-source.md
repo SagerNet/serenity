@@ -6,7 +6,7 @@ icon: material/file-code
 
 ## :material-graph: Requirements
 
-* Go 1.21.x
+* Go 1.23.x
 
 You can download and install Go from: https://go.dev/doc/install, latest version is recommended.
 

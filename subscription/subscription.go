@@ -77,7 +77,7 @@ func NewSubscriptionManager(ctx context.Context, logger logger.Logger, cacheFile
 
 func (m *Manager) Start() error {
 	for _, subscription := range m.subscriptions {
-		savedSubscription := m.cacheFile.LoadSubscription(subscription.Name)
+		savedSubscription := m.cacheFile.LoadSubscription(m.ctx, subscription.Name)
 		if savedSubscription != nil {
 			subscription.rawServers = savedSubscription.Content
 			subscription.LastUpdated = savedSubscription.LastUpdated
@@ -169,7 +169,7 @@ func (m *Manager) update(subscription *Subscription) error {
 	case http.StatusOK:
 	case http.StatusNotModified:
 		subscription.LastUpdated = time.Now()
-		err = m.cacheFile.StoreSubscription(subscription.Name, &cachefile.Subscription{
+		err = m.cacheFile.StoreSubscription(m.ctx, subscription.Name, &cachefile.Subscription{
 			Content:     subscription.rawServers,
 			LastUpdated: subscription.LastUpdated,
 			LastEtag:    subscription.LastEtag,
@@ -187,7 +187,7 @@ func (m *Manager) update(subscription *Subscription) error {
 		response.Body.Close()
 		return err
 	}
-	rawServers, err := parser.ParseSubscription(string(content))
+	rawServers, err := parser.ParseSubscription(m.ctx, string(content))
 	if err != nil {
 		response.Body.Close()
 		return err
@@ -200,7 +200,7 @@ func (m *Manager) update(subscription *Subscription) error {
 		subscription.LastEtag = eTagHeader
 	}
 	subscription.LastUpdated = time.Now()
-	err = m.cacheFile.StoreSubscription(subscription.Name, &cachefile.Subscription{
+	err = m.cacheFile.StoreSubscription(m.ctx, subscription.Name, &cachefile.Subscription{
 		Content:     subscription.rawServers,
 		LastUpdated: subscription.LastUpdated,
 		LastEtag:    subscription.LastEtag,

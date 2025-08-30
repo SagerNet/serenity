@@ -1,6 +1,8 @@
 package parser
 
 import (
+	"context"
+
 	C "github.com/sagernet/sing-box/constant"
 	"github.com/sagernet/sing-box/option"
 	E "github.com/sagernet/sing/common/exceptions"
@@ -23,7 +25,7 @@ type ShadowsocksServerDocument struct {
 	PluginOpts string `json:"plugin_opts"`
 }
 
-func ParseSIP008Subscription(content string) ([]option.Outbound, error) {
+func ParseSIP008Subscription(_ context.Context, content string) ([]option.Outbound, error) {
 	var document ShadowsocksDocument
 	err := json.Unmarshal([]byte(content), &document)
 	if err != nil {
@@ -35,7 +37,7 @@ func ParseSIP008Subscription(content string) ([]option.Outbound, error) {
 		servers = append(servers, option.Outbound{
 			Type: C.TypeShadowsocks,
 			Tag:  server.Remarks,
-			ShadowsocksOptions: option.ShadowsocksOutboundOptions{
+			Options: &option.ShadowsocksOutboundOptions{
 				ServerOptions: option.ServerOptions{
 					Server:     server.Server,
 					ServerPort: uint16(server.ServerPort),

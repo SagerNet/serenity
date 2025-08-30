@@ -15,27 +15,32 @@ func filterNullGroupReference(metadata M.Metadata, options *option.Options) erro
 	outboundTags := common.Map(options.Outbounds, func(it option.Outbound) string {
 		return it.Tag
 	})
-	for i, outbound := range options.Outbounds {
-		switch outbound.Type {
-		case C.TypeSelector:
-			outbound.SelectorOptions.Outbounds = common.Filter(outbound.SelectorOptions.Outbounds, func(outbound string) bool {
+	for _, outbound := range options.Outbounds {
+		switch outboundOptions := outbound.Options.(type) {
+		case *option.SelectorOutboundOptions:
+			outboundOptions.Outbounds = common.Filter(outboundOptions.Outbounds, func(outbound string) bool {
 				return common.Contains(outboundTags, outbound)
 			})
-		case C.TypeURLTest:
-			outbound.URLTestOptions.Outbounds = common.Filter(outbound.URLTestOptions.Outbounds, func(outbound string) bool {
+		case *option.URLTestOutboundOptions:
+			outboundOptions.Outbounds = common.Filter(outboundOptions.Outbounds, func(outbound string) bool {
 				return common.Contains(outboundTags, outbound)
 			})
 		default:
 			continue
 		}
-		options.Outbounds[i] = outbound
 	}
 	options.Route.Rules = common.Filter(options.Route.Rules, func(it option.Rule) bool {
 		switch it.Type {
 		case C.RuleTypeDefault:
-			return common.Contains(outboundTags, it.DefaultOptions.Outbound)
+			if it.DefaultOptions.Action != C.RuleActionTypeRoute {
+				return true
+			}
+			return common.Contains(outboundTags, it.DefaultOptions.RouteOptions.Outbound)
 		case C.RuleTypeLogical:
-			return common.Contains(outboundTags, it.LogicalOptions.Outbound)
+			if it.LogicalOptions.Action != C.RuleActionTypeRoute {
+				return true
+			}
+			return common.Contains(outboundTags, it.LogicalOptions.RouteOptions.Outbound)
 		default:
 			panic("no")
 		}

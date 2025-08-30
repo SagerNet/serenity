@@ -30,7 +30,7 @@ func check() error {
 	if err != nil {
 		return err
 	}
-	ctx, cancel := context.WithCancel(context.Background())
+	ctx, cancel := context.WithCancel(globalCtx)
 	instance, err := server.New(ctx, options)
 	if err == nil {
 		instance.Close()

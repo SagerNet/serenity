@@ -79,8 +79,11 @@ func Detect(userAgent string) Metadata {
 	var versionName string
 	if strings.Contains(userAgent, "sing-box ") {
 		versionName = strings.Split(userAgent, "sing-box ")[1]
-		versionName = strings.Split(versionName, " ")[0]
-		versionName = strings.Split(versionName, ")")[0]
+		if strings.Contains(versionName, ";") {
+			versionName = strings.Split(versionName, ";")[0]
+		} else {
+			versionName = strings.Split(versionName, ")")[0]
+		}
 	}
 	if semver.IsValid(versionName) {
 		version := semver.ParseVersion(versionName)

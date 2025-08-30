@@ -5,7 +5,6 @@ import (
 	"strings"
 
 	"github.com/sagernet/serenity/option"
-	C "github.com/sagernet/sing-box/constant"
 	boxOption "github.com/sagernet/sing-box/option"
 	"github.com/sagernet/sing/common"
 	E "github.com/sagernet/sing/common/exceptions"
@@ -120,26 +119,22 @@ func (o *ProcessOptions) Process(outbounds []boxOption.Outbound) []boxOption.Out
 			renameResult[originTag] = outbound.Tag
 		}
 		if o.RewriteMultiplex != nil {
-			switch outbound.Type {
-			case C.TypeShadowsocks:
-				outbound.ShadowsocksOptions.Multiplex = o.RewriteMultiplex
-			case C.TypeTrojan:
-				outbound.TrojanOptions.Multiplex = o.RewriteMultiplex
-			case C.TypeVMess:
-				outbound.VMessOptions.Multiplex = o.RewriteMultiplex
-			case C.TypeVLESS:
-				outbound.VLESSOptions.Multiplex = o.RewriteMultiplex
+			switch outboundOptions := outbound.Options.(type) {
+			case *boxOption.ShadowsocksOutboundOptions:
+				outboundOptions.Multiplex = o.RewriteMultiplex
+			case *boxOption.TrojanOutboundOptions:
+				outboundOptions.Multiplex = o.RewriteMultiplex
+			case *boxOption.VMessOutboundOptions:
+				outboundOptions.Multiplex = o.RewriteMultiplex
+			case *boxOption.VLESSOutboundOptions:
+				outboundOptions.Multiplex = o.RewriteMultiplex
 			}
 		}
 		newOutbounds = append(newOutbounds, outbound)
 	}
 	if len(renameResult) > 0 {
 		for i, outbound := range newOutbounds {
-			rawOptions, err := outbound.RawOptions()
-			if err != nil {
-				continue
-			}
-			if dialerOptionsWrapper, containsDialerOptions := rawOptions.(boxOption.DialerOptionsWrapper); containsDialerOptions {
+			if dialerOptionsWrapper, containsDialerOptions := outbound.Options.(boxOption.DialerOptionsWrapper); containsDialerOptions {
 				dialerOptions := dialerOptionsWrapper.TakeDialerOptions()
 				if dialerOptions.Detour == "" {
 					continue

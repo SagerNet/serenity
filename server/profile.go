@@ -5,6 +5,7 @@ import (
 	"regexp"
 
 	"github.com/sagernet/serenity/common/metadata"
+	"github.com/sagernet/serenity/common/semver"
 	"github.com/sagernet/serenity/option"
 	"github.com/sagernet/serenity/subscription"
 	"github.com/sagernet/serenity/template"
@@ -20,6 +21,7 @@ type ProfileManager struct {
 	logger         logger.Logger
 	subscription   *subscription.Manager
 	outbounds      [][]boxOption.Outbound
+	endpoints      []boxOption.Endpoint
 	profiles       []*Profile
 	defaultProfile *Profile
 }
@@ -44,6 +46,7 @@ func NewProfileManager(
 	subscriptionManager *subscription.Manager,
 	templateManager *template.Manager,
 	outbounds [][]boxOption.Outbound,
+	endpoints []boxOption.Endpoint,
 	rawProfiles []option.Profile,
 ) (*ProfileManager, error) {
 	manager := &ProfileManager{
@@ -51,6 +54,7 @@ func NewProfileManager(
 		logger:       logger,
 		subscription: subscriptionManager,
 		outbounds:    outbounds,
+		endpoints:    endpoints,
 	}
 	for profileIndex, profile := range rawProfiles {
 		if profile.Name == "" {
@@ -138,14 +142,31 @@ func (p *Profile) Render(metadata metadata.Metadata) (*boxOption.Options, error)
 	outbounds := common.Filter(p.manager.outbounds, func(it []boxOption.Outbound) bool {
 		return common.Contains(p.Outbound, it[0].Tag)
 	})
-	subscriptions := common.Filter(p.manager.subscription.Subscriptions(), func(it *subscription.Subscription) bool {
-		return common.Contains(p.Subscription, it.Name)
+	endpoints := common.Filter(p.manager.endpoints, func(it boxOption.Endpoint) bool {
+		return common.Contains(p.Endpoint, it.Tag)
 	})
-	options, err := selectedTemplate.Render(metadata, p.Name, outbounds, subscriptions)
+	var subscriptions []*subscription.Subscription
+	for _, subscriptionName := range p.Subscription {
+		subscription := common.Find(p.manager.subscription.Subscriptions(), func(it *subscription.Subscription) bool {
+			return it.Name == subscriptionName
+		})
+		if subscription == nil {
+			return nil, E.New("render profile[", p.Name, "]: subscription not found: ", subscriptionName)
+		}
+		subscriptions = append(subscriptions, subscription)
+	}
+	ctx := p.manager.ctx
+	if metadata.Version == nil || metadata.Version.LessThan(semver.ParseVersion("1.12.0-alpha.1")) {
+		ctx = boxOption.ContextWithDontUpgrade(ctx)
+	}
+	options, err := selectedTemplate.Render(ctx, metadata, p.Name, outbounds, subscriptions)
 	if err != nil {
 		return nil, err
 	}
-	options, err = badjson.Omitempty(options)
+	if metadata.Version != nil && metadata.Version.GreaterThanOrEqual(semver.ParseVersion("1.12.0-alpha.1")) {
+		options.Endpoints = endpoints
+	}
+	options, err = badjson.Omitempty(ctx, options)
 	if err != nil {
 		return nil, E.Cause(err, "omitempty")
 	}

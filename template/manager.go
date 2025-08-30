@@ -18,7 +18,7 @@ type Manager struct {
 	templates []*Template
 }
 
-func extendTemplate(rawTemplates []option.Template, root, current option.Template) (option.Template, error) {
+func extendTemplate(ctx context.Context, rawTemplates []option.Template, root, current option.Template) (option.Template, error) {
 	if current.Extend == "" {
 		return current, nil
 	} else if root.Name == current.Extend {
@@ -35,17 +35,17 @@ func extendTemplate(rawTemplates []option.Template, root, current option.Templat
 		return option.Template{}, E.New("initialize template[", current.Name, "]: extended template not found: ", current.Extend)
 	}
 	if next.Extend != "" {
-		newNext, err := extendTemplate(rawTemplates, root, next)
+		newNext, err := extendTemplate(ctx, rawTemplates, root, next)
 		if err != nil {
 			return option.Template{}, E.Cause(err, next.Extend)
 		}
 		next = newNext
 	}
-	newRawTemplate, err := badjson.MergeJSON(next.RawMessage, current.RawMessage, false)
+	newRawTemplate, err := badjson.MergeJSON(ctx, next.RawMessage, current.RawMessage, false)
 	if err != nil {
 		return option.Template{}, E.Cause(err, "initialize template[", current.Name, "]: merge extended template: ", current.Extend)
 	}
-	newTemplate, err := json.UnmarshalExtended[option.Template](newRawTemplate)
+	newTemplate, err := json.UnmarshalExtendedContext[option.Template](ctx, newRawTemplate)
 	if err != nil {
 		return option.Template{}, E.Cause(err, "initialize template[", current.Name, "]: unmarshal extended template: ", current.Extend)
 	}
@@ -60,7 +60,7 @@ func NewManager(ctx context.Context, logger logger.Logger, rawTemplates []option
 			return nil, E.New("initialize template[", templateIndex, "]: missing name")
 		}
 		if template.Extend != "" {
-			newTemplate, err := extendTemplate(rawTemplates, template, template)
+			newTemplate, err := extendTemplate(ctx, rawTemplates, template, template)
 			if err != nil {
 				return nil, err
 			}

@@ -1,6 +1,7 @@
 package parser
 
 import (
+	"context"
 	"encoding/base64"
 	"strings"
 
@@ -8,7 +9,7 @@ import (
 	E "github.com/sagernet/sing/common/exceptions"
 )
 
-func ParseRawSubscription(content string) ([]option.Outbound, error) {
+func ParseRawSubscription(_ context.Context, content string) ([]option.Outbound, error) {
 	if base64Content, err := decodeBase64URLSafe(content); err == nil {
 		servers, _ := parseRawSubscription(base64Content)
 		if len(servers) > 0 {
@@ -38,6 +39,6 @@ func decodeBase64URLSafe(content string) (string, error) {
 	content = strings.ReplaceAll(content, "/", "_")
 	content = strings.ReplaceAll(content, "+", "-")
 	content = strings.ReplaceAll(content, "=", "")
-	result, err := base64.StdEncoding.DecodeString(content)
+	result, err := base64.RawURLEncoding.DecodeString(content)
 	return string(result), err
 }

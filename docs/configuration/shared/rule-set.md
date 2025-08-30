@@ -31,7 +31,7 @@ RuleSet generate configuration.
      {
        "type": "github",
        "repository": "SagerNet/sing-geosite",
-       "path": "rule-set",
+       "path": "rule-set/geosite-",
        "prefix": "geosite-",
        "rule_set": [
          "apple",
@@ -47,7 +47,7 @@ RuleSet generate configuration.
     {
       "type": "github",
       "repository": "MetaCubeX/meta-rules-dat",
-      "path": "sing/geo/geosite",
+      "path": "sing/geo/geosite/",
       "prefix": "geosite-",
       "rule_set": [
         "apple",

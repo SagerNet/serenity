@@ -1,6 +1,8 @@
 package parser
 
 import (
+	"context"
+
 	C "github.com/sagernet/sing-box/constant"
 	"github.com/sagernet/sing-box/option"
 	"github.com/sagernet/sing/common"
@@ -8,8 +10,8 @@ import (
 	"github.com/sagernet/sing/common/json"
 )
 
-func ParseBoxSubscription(content string) ([]option.Outbound, error) {
-	options, err := json.UnmarshalExtended[option.Options]([]byte(content))
+func ParseBoxSubscription(ctx context.Context, content string) ([]option.Outbound, error) {
+	options, err := json.UnmarshalExtendedContext[option.Options](ctx, []byte(content))
 	if err != nil {
 		return nil, err
 	}

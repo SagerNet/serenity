@@ -1,6 +1,7 @@
 package template
 
 import (
+	"context"
 	"net/netip"
 
 	M "github.com/sagernet/serenity/common/metadata"
@@ -8,16 +9,14 @@ import (
 	C "github.com/sagernet/sing-box/constant"
 	"github.com/sagernet/sing-box/option"
 	"github.com/sagernet/sing-dns"
+	"github.com/sagernet/sing/common"
 	E "github.com/sagernet/sing/common/exceptions"
 	"github.com/sagernet/sing/common/json/badjson"
+	"github.com/sagernet/sing/common/json/badoption"
 )
 
 func (t *Template) renderInbounds(metadata M.Metadata, options *option.Options) error {
 	options.Inbounds = t.Inbounds
-	var needSniff bool
-	if !t.DisableTrafficBypass {
-		needSniff = true
-	}
 	var domainStrategy option.DomainStrategy
 	if !t.RemoteResolve {
 		if t.DomainStrategy != option.DomainStrategy(dns.DomainStrategyAsIS) {
@@ -26,6 +25,7 @@ func (t *Template) renderInbounds(metadata M.Metadata, options *option.Options) 
 			domainStrategy = option.DomainStrategy(dns.DomainStrategyPreferIPv4)
 		}
 	}
+	disableRuleAction := t.DisableRuleAction || (metadata.Version != nil && metadata.Version.LessThan(semver.ParseVersion("1.11.0-alpha.7")))
 	autoRedirect := t.AutoRedirect &&
 		!metadata.Platform.IsApple() &&
 		(metadata.Version == nil || metadata.Version.GreaterThanOrEqual(semver.ParseVersion("1.10.0-alpha.2")))
@@ -36,27 +36,31 @@ func (t *Template) renderInbounds(metadata M.Metadata, options *option.Options) 
 		if !t.DisableIPv6() {
 			address = append(address, netip.MustParsePrefix("fdfe:dcba:9876::1/126"))
 		}
+		tunOptions := &option.TunInboundOptions{
+			AutoRoute: true,
+			Address:   address,
+		}
 		tunInbound := option.Inbound{
-			Type: C.TypeTun,
-			TunOptions: option.TunInboundOptions{
-				AutoRoute: true,
-				Address:   address,
-				InboundOptions: option.InboundOptions{
-					SniffEnabled: needSniff,
-				},
-			},
+			Type:    C.TypeTun,
+			Options: tunOptions,
 		}
 		if autoRedirect {
-			tunInbound.TunOptions.AutoRedirect = true
+			tunOptions.AutoRedirect = true
 			if !t.DisableTrafficBypass && metadata.Platform == "" {
-				tunInbound.TunOptions.RouteExcludeAddressSet = []string{"geoip-cn"}
+				tunOptions.RouteExcludeAddressSet = []string{"geoip-cn"}
 			}
 		}
-		if t.EnableFakeIP {
-			tunInbound.TunOptions.InboundOptions.DomainStrategy = domainStrategy
-		}
 		if metadata.Platform == M.PlatformUnknown {
-			tunInbound.TunOptions.StrictRoute = true
+			tunOptions.StrictRoute = true
+		}
+		if disableRuleAction {
+			//nolint:staticcheck
+			tunOptions.InboundOptions = option.InboundOptions{
+				SniffEnabled: !t.DisableSniff,
+			}
+			if t.EnableFakeIP {
+				tunOptions.DomainStrategy = domainStrategy
+			}
 		}
 		if !t.DisableSystemProxy && metadata.Platform != M.PlatformUnknown {
 			var httpPort uint16
@@ -66,7 +70,7 @@ func (t *Template) renderInbounds(metadata M.Metadata, options *option.Options) 
 			if httpPort == 0 {
 				httpPort = DefaultMixedPort
 			}
-			tunInbound.TunOptions.Platform = &option.TunPlatformOptions{
+			tunOptions.Platform = &option.TunPlatformOptions{
 				HTTPProxy: &option.HTTPProxyOptions{
 					Enabled: true,
 					ServerOptions: option.ServerOptions{
@@ -77,35 +81,39 @@ func (t *Template) renderInbounds(metadata M.Metadata, options *option.Options) 
 			}
 		}
 		if t.CustomTUN != nil {
-			newTUNOptions, err := badjson.MergeFromDestination(tunInbound.TunOptions, t.CustomTUN.Message, true)
+			newTUNOptions, err := badjson.MergeFromDestination(context.Background(), tunOptions, t.CustomTUN.Message, true)
 			if err != nil {
 				return E.Cause(err, "merge custom tun options")
 			}
-			tunInbound.TunOptions = newTUNOptions
+			tunInbound.Options = newTUNOptions
 		}
 		options.Inbounds = append(options.Inbounds, tunInbound)
 	}
 	if disableTun || !t.DisableSystemProxy {
-		mixedInbound := option.Inbound{
-			Type: C.TypeMixed,
-			MixedOptions: option.HTTPMixedInboundOptions{
-				ListenOptions: option.ListenOptions{
-					Listen:     option.NewListenAddress(netip.AddrFrom4([4]byte{127, 0, 0, 1})),
-					ListenPort: DefaultMixedPort,
-					InboundOptions: option.InboundOptions{
-						SniffEnabled:   needSniff,
-						DomainStrategy: domainStrategy,
-					},
-				},
-				SetSystemProxy: metadata.Platform == M.PlatformUnknown && disableTun && !t.DisableSystemProxy,
+		mixedOptions := &option.HTTPMixedInboundOptions{
+			ListenOptions: option.ListenOptions{
+				Listen:     common.Ptr(badoption.Addr(netip.AddrFrom4([4]byte{127, 0, 0, 1}))),
+				ListenPort: DefaultMixedPort,
 			},
+			SetSystemProxy: metadata.Platform == M.PlatformUnknown && disableTun && !t.DisableSystemProxy,
+		}
+		if disableRuleAction {
+			//nolint:staticcheck
+			mixedOptions.InboundOptions = option.InboundOptions{
+				SniffEnabled:   !t.DisableSniff,
+				DomainStrategy: domainStrategy,
+			}
+		}
+		mixedInbound := option.Inbound{
+			Type:    C.TypeMixed,
+			Options: mixedOptions,
 		}
 		if t.CustomMixed != nil {
-			newMixedOptions, err := badjson.MergeFromDestination(mixedInbound.MixedOptions, t.CustomMixed.Message, true)
+			newMixedOptions, err := badjson.MergeFromDestination(context.Background(), mixedOptions, t.CustomMixed.Message, true)
 			if err != nil {
 				return E.Cause(err, "merge custom mixed options")
 			}
-			mixedInbound.MixedOptions = newMixedOptions
+			mixedInbound.Options = newMixedOptions
 		}
 		options.Inbounds = append(options.Inbounds, mixedInbound)
 	}

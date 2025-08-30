@@ -2,7 +2,6 @@ package server
 
 import (
 	"bytes"
-	"encoding/json"
 	"net/http"
 	"strings"
 
@@ -12,6 +11,7 @@ import (
 	boxOption "github.com/sagernet/sing-box/option"
 	"github.com/sagernet/sing/common"
 	E "github.com/sagernet/sing/common/exceptions"
+	"github.com/sagernet/sing/common/json"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/cors"
@@ -74,8 +74,7 @@ func (s *Server) render(writer http.ResponseWriter, request *http.Request) {
 		s.accessLog(request, http.StatusNotFound, 0)
 		return
 	}
-	metadata := M.Detect(request.Header.Get("User-Agent"))
-	options, err := profile.Render(metadata)
+	options, err := profile.Render(M.Detect(request.Header.Get("User-Agent")))
 	if err != nil {
 		s.logger.Error(E.Cause(err, "render options"))
 		render.Status(request, http.StatusInternalServerError)
@@ -84,7 +83,7 @@ func (s *Server) render(writer http.ResponseWriter, request *http.Request) {
 		return
 	}
 	var buffer bytes.Buffer
-	encoder := json.NewEncoder(&buffer)
+	encoder := json.NewEncoderContext(s.ctx, &buffer)
 	encoder.SetIndent("", "  ")
 	err = encoder.Encode(&options)
 	if err != nil {

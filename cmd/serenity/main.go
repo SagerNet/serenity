@@ -5,6 +5,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/sagernet/sing-box/include"
 	_ "github.com/sagernet/sing-box/include"
 	"github.com/sagernet/sing-box/log"
 
@@ -16,6 +17,7 @@ var (
 	configDirectories []string
 	workingDir        string
 	disableColor      bool
+	globalCtx         context.Context
 )
 
 var mainCommand = &cobra.Command{
@@ -53,4 +55,5 @@ func preRun(cmd *cobra.Command, args []string) {
 	if len(configPaths) == 0 && len(configDirectories) == 0 {
 		configPaths = append(configPaths, "config.json")
 	}
+	globalCtx = include.Context(context.Background())
 }

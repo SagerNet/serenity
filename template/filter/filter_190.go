@@ -3,7 +3,6 @@ package filter
 import (
 	"github.com/sagernet/serenity/common/metadata"
 	"github.com/sagernet/serenity/common/semver"
-	C "github.com/sagernet/sing-box/constant"
 	"github.com/sagernet/sing-box/option"
 	"github.com/sagernet/sing/common"
 )
@@ -24,12 +23,12 @@ func filter190(metadata metadata.Metadata, options *option.Options) error {
 		return nil
 	}
 	for _, inbound := range options.Inbounds {
-		switch inbound.Type {
-		case C.TypeTun:
-			if inbound.TunOptions.Platform == nil || inbound.TunOptions.Platform.HTTPProxy == nil {
+		switch inboundOptions := inbound.Options.(type) {
+		case *option.TunInboundOptions:
+			if inboundOptions.Platform == nil || inboundOptions.Platform.HTTPProxy == nil {
 				continue
 			}
-			httpProxy := inbound.TunOptions.Platform.HTTPProxy
+			httpProxy := inboundOptions.Platform.HTTPProxy
 			if len(httpProxy.BypassDomain) > 0 || len(httpProxy.MatchDomain) > 0 {
 				httpProxy.BypassDomain = nil
 				httpProxy.MatchDomain = nil

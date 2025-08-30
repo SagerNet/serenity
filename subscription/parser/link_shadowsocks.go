@@ -21,7 +21,7 @@ func ParseShadowsocksLink(link string) (option.Outbound, error) {
 	}
 
 	var options option.ShadowsocksOutboundOptions
-	options.ServerOptions.Server = linkURL.Host
+	options.ServerOptions.Server = linkURL.Hostname()
 	options.ServerOptions.ServerPort = portFromString(linkURL.Port())
 	if password, _ := linkURL.User.Password(); password != "" {
 		options.Method = linkURL.User.Username()
@@ -43,7 +43,7 @@ func ParseShadowsocksLink(link string) (option.Outbound, error) {
 	var outbound option.Outbound
 	outbound.Type = C.TypeShadowsocks
 	outbound.Tag = linkURL.Fragment
-	outbound.ShadowsocksOptions = options
+	outbound.Options = &options
 	return outbound, nil
 }
 

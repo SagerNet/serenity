@@ -11,16 +11,19 @@
   "domain_strategy": "",
   "domain_strategy_local": "",
   "disable_traffic_bypass": false,
-  "disable_rule_set": false,
+  "disable_sniff": false,
+  "disable_rule_action": false,
   "remote_resolve": false,
   
   // DNS
 
   "dns": "",
   "dns_local": "",
+  "dns_servers": [],
   "enable_fakeip": false,
   "pre_dns_rules": [],
   "custom_dns_rules": [],
+  "custom_fakeip": {},
   
   // Inbound
 
@@ -113,9 +116,13 @@ Local sing-box domain strategy.
 
 `prefer_ipv4` is used by default.
 
-#### disable_rule_set
+#### disable_sniff
 
-Use `geoip` and `geosite` for traffic bypassing instead of rule sets.
+Don`t generate protocol sniffing options.
+
+#### disable_rule_action
+
+Don`t generate rule action options.
 
 #### disable_traffic_bypass
 
@@ -137,6 +144,12 @@ DNS server used for China DNS requests.
 
 `114.114.114.114` is used by default.
 
+#### dns_servers
+
+List of [DNS Server](https://sing-box.sagernet.org/configuration/dns/server/).
+
+Will be append to DNS servers.
+
 #### enable_fakeip
 
 Enable FakeIP.
@@ -152,6 +165,10 @@ Will be applied before traffic bypassing rules.
 List of [DNS Rule](https://sing-box.sagernet.org/configuration/dns/rule/).
 
 No default traffic bypassing DNS rules will be generated if not empty.
+
+#### custom_fakeip
+
+Custom [FakeIP](https://sing-box.sagernet.org/configuration/dns/fakeip/) template.
 
 #### inbounds
 

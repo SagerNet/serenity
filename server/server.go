@@ -18,6 +18,7 @@ import (
 	"github.com/sagernet/sing/common"
 	E "github.com/sagernet/sing/common/exceptions"
 	F "github.com/sagernet/sing/common/format"
+	"github.com/sagernet/sing/common/json/badoption"
 	"github.com/sagernet/sing/service"
 
 	"github.com/go-chi/chi/v5"
@@ -99,9 +100,10 @@ func New(ctx context.Context, options option.Options) (*Server, error) {
 		logFactory.NewLogger("profile"),
 		subscriptionManager,
 		templateManager,
-		common.Map(options.Outbounds, func(it boxOption.Listable[boxOption.Outbound]) []boxOption.Outbound {
+		common.Map(options.Outbounds, func(it badoption.Listable[boxOption.Outbound]) []boxOption.Outbound {
 			return it
 		}),
+		options.Endpoints,
 		options.Profiles,
 	)
 	if err != nil {
