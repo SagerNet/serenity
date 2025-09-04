@@ -146,7 +146,8 @@ func (t *Template) renderDNS(ctx context.Context, metadata M.Metadata, options *
 				inet6Range = (*badoption.Prefix)(common.Ptr(netip.MustParsePrefix("fc00::/18")))
 			}
 			options.DNS.Servers = append(options.DNS.Servers, option.DNSServerOptions{
-				Tag: DNSFakeIPTag,
+				Tag:  DNSFakeIPTag,
+				Type: C.DNSTypeFakeIP,
 				Options: &option.FakeIPDNSServerOptions{
 					Inet4Range: inet4Range,
 					Inet6Range: inet6Range,
