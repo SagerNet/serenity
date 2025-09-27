@@ -208,7 +208,7 @@ func (t *Template) renderOutbounds(metadata M.Metadata, options *boxOption.Optio
 		}
 		sort.Strings(extraTags)
 		if len(extraTags) == 0 || extraGroup.filter != nil || extraGroup.exclude != nil {
-			extraTags = append(extraTags, common.Filter(common.FlatMap(subscriptions, func(it *subscription.Subscription) []string {
+			extraTags = append(common.Filter(common.FlatMap(subscriptions, func(it *subscription.Subscription) []string {
 				return common.Map(it.Servers, outboundToString)
 			}), func(outboundTag string) bool {
 				if len(extraGroup.filter) > 0 {
@@ -226,7 +226,7 @@ func (t *Template) renderOutbounds(metadata M.Metadata, options *boxOption.Optio
 					}
 				}
 				return true
-			})...)
+			}), extraTags...)
 		}
 		groupOutbound := boxOption.Outbound{
 			Tag:  extraGroup.Tag,
