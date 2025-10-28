@@ -92,6 +92,8 @@ func (t *Template) renderRuleSet(ruleSets []option.RuleSet) []boxOption.RuleSet 
 							ruleSet.GitHubOptions.Repository +
 							branchSplit +
 							ruleSet.GitHubOptions.Path +
+							"/" +
+							ruleSet.GitHubOptions.Prefix +
 							code + ".srs",
 						DownloadDetour: downloadDetour,
 					},
