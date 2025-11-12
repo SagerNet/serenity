@@ -15,6 +15,10 @@ func filterNullGroupReference(metadata M.Metadata, options *option.Options) erro
 	outboundTags := common.Map(options.Outbounds, func(it option.Outbound) string {
 		return it.Tag
 	})
+	endpointTags := common.Map(options.Endpoints, func(it option.Endpoint) string {
+		return it.Tag
+	})
+	routingTargets := append(outboundTags, endpointTags...)
 	for _, outbound := range options.Outbounds {
 		switch outboundOptions := outbound.Options.(type) {
 		case *option.SelectorOutboundOptions:
@@ -35,12 +39,12 @@ func filterNullGroupReference(metadata M.Metadata, options *option.Options) erro
 			if it.DefaultOptions.Action != C.RuleActionTypeRoute {
 				return true
 			}
-			return common.Contains(outboundTags, it.DefaultOptions.RouteOptions.Outbound)
+			return common.Contains(routingTargets, it.DefaultOptions.RouteOptions.Outbound)
 		case C.RuleTypeLogical:
 			if it.LogicalOptions.Action != C.RuleActionTypeRoute {
 				return true
 			}
-			return common.Contains(outboundTags, it.LogicalOptions.RouteOptions.Outbound)
+			return common.Contains(routingTargets, it.LogicalOptions.RouteOptions.Outbound)
 		default:
 			panic("no")
 		}

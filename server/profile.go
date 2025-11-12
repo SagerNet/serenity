@@ -159,12 +159,9 @@ func (p *Profile) Render(metadata metadata.Metadata) (*boxOption.Options, error)
 	if metadata.Version == nil || metadata.Version.LessThan(semver.ParseVersion("1.12.0-alpha.1")) {
 		ctx = boxOption.ContextWithDontUpgrade(ctx)
 	}
-	options, err := selectedTemplate.Render(ctx, metadata, p.Name, outbounds, subscriptions)
+	options, err := selectedTemplate.Render(ctx, metadata, p.Name, endpoints, outbounds, subscriptions)
 	if err != nil {
 		return nil, err
-	}
-	if metadata.Version != nil && metadata.Version.GreaterThanOrEqual(semver.ParseVersion("1.12.0-alpha.1")) {
-		options.Endpoints = endpoints
 	}
 	options, err = badjson.Omitempty(ctx, options)
 	if err != nil {
