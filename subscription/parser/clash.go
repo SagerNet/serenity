@@ -2,7 +2,10 @@ package parser
 
 import (
 	"context"
+	"encoding/base64"
+	"encoding/pem"
 	"strings"
+	"time"
 
 	C "github.com/sagernet/sing-box/constant"
 	"github.com/sagernet/sing-box/option"
@@ -162,6 +165,41 @@ func ParseClashSubscription(_ context.Context, content string) ([]option.Outboun
 				Username: httpOption.UserName,
 				Password: httpOption.Password,
 			}
+		case constant.AnyTLS:
+			anytlsOption := &clash_outbound.AnyTLSOption{}
+			err = decoder.Decode(proxyMapping, anytlsOption)
+			if err != nil {
+				return nil, err
+			}
+			echOptions, err := clashECH(anytlsOption.ECHOpts)
+			if err != nil {
+				return nil, E.Cause(err, "parse ECH options for proxy ", i)
+			}
+			outbound.Type = C.TypeAnyTLS
+			outbound.Options = &option.AnyTLSOutboundOptions{
+				ServerOptions: option.ServerOptions{
+					Server:     anytlsOption.Server,
+					ServerPort: uint16(anytlsOption.Port),
+				},
+				Password: anytlsOption.Password,
+				OutboundTLSOptionsContainer: option.OutboundTLSOptionsContainer{
+					TLS: &option.OutboundTLSOptions{
+						Enabled:         true,
+						ALPN:            anytlsOption.ALPN,
+						ServerName:      anytlsOption.SNI,
+						Insecure:        anytlsOption.SkipCertVerify,
+						ECH:             echOptions,
+						UTLS:            clashUTLS(anytlsOption.ClientFingerprint),
+						CertificatePath: anytlsOption.Fingerprint,
+					},
+				},
+				IdleSessionCheckInterval: badoption.Duration(time.Duration(anytlsOption.IdleSessionCheckInterval) * time.Second),
+				IdleSessionTimeout:       badoption.Duration(time.Duration(anytlsOption.IdleSessionTimeout) * time.Second),
+				MinIdleSession:           anytlsOption.MinIdleSession,
+			}
+		default:
+			// Skip unsupported proxy types
+			continue
 		}
 		outbounds = append(outbounds, outbound)
 	}
@@ -282,4 +320,39 @@ func clashStringList(list []string) string {
 		return list[0]
 	}
 	return ""
+}
+
+func clashECH(echOpts clash_outbound.ECHOptions) (*option.OutboundECHOptions, error) {
+	if !echOpts.Enable {
+		return nil, nil
+	}
+	echOptions := &option.OutboundECHOptions{
+		Enabled: true,
+	}
+	if echOpts.Config != "" {
+		// Decode base64 ECH config from Clash
+		decoded, err := base64.StdEncoding.DecodeString(echOpts.Config)
+		if err != nil {
+			return nil, E.Cause(err, "decode ECH config from base64")
+		}
+
+		// Convert to PEM format for sing-box
+		pemBlock := &pem.Block{
+			Type:  "ECH CONFIGS",
+			Bytes: decoded,
+		}
+		pemBytes := pem.EncodeToMemory(pemBlock)
+		echOptions.Config = []string{string(pemBytes)}
+	}
+	return echOptions, nil
+}
+
+func clashUTLS(fingerprint string) *option.OutboundUTLSOptions {
+	if fingerprint == "" {
+		return nil
+	}
+	return &option.OutboundUTLSOptions{
+		Enabled:     true,
+		Fingerprint: fingerprint,
+	}
 }
